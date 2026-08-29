@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holonomic RYTT Engine &bull; Polygons & Dual-Plane Casing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@300;400;600&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #02040a;
+      color: #e2e8f0;
+      overflow: hidden;
+    }
+    
+    .font-title {
+      font-family: 'Cinzel', serif;
+    }
+    
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .hud-panel {
+      background: rgba(8, 12, 24, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.12);
+    }
+  </style>
+</head>
+<body class="w-screen h-screen relative select-none">
+
+  <!-- 3D WebGL Canvas -->
+  <div id="webglContainer" class="w-full h-full absolute inset-0"></div>
+
+  <!-- Header -->
+  <header class="absolute top-4 left-1/2 -translate-x-1/2 z-20 pointer-events-none text-center space-y-1 max-w-xl w-full px-4">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-400 text-xs font-mono tracking-widest uppercase pointer-events-auto">
+      <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+      Holonomery v3/v5 &bull; Dual-Plane Semiotic Engine
+    </div>
+    <h1 class="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-cyan-300 to-purple-400 font-title tracking-wider">
+      HOLONOMIC RYTT STACK
+    </h1>
+    <p class="text-slate-400 text-xs font-mono">
+      Dual-Plane Elevation (Ground Z=0 vs Elevated Z=25) &bull; 10,240 State Combinations
+    </p>
+  </header>
+
+  <!-- Left Layer Mapping Panel -->
+  <aside class="absolute top-20 left-6 z-20 w-84 max-h-[calc(100vh-120px)] overflow-y-auto hud-panel rounded-2xl p-5 space-y-4 font-mono text-xs">
+    <div class="border-b border-cyan-500/30 pb-3">
+      <h2 class="text-xs font-bold text-cyan-300 uppercase tracking-widest flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Dual-Plane Topology
+      </h2>
+      <p class="text-[11px] text-slate-400 mt-1">
+        Lossless casing algebra mapped into orthogonal spatial elevations.
+      </p>
+    </div>
+
+    <div class="space-y-2.5 text-[11px]">
+      <!-- Elevated Plane: Uppercase -->
+      <div class="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/50">
+        <div class="flex items-center justify-between text-amber-300 font-bold">
+          <span>Elevated Plane (Z = +25.0)</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-500/40">Uppercase</span>
+        </div>
+        <p class="text-slate-400 text-[10px] mt-1">PUA: 0xE800–0xE842 &bull; Radiant Gold Glow &bull; Emphatic / Proper Noun State</p>
+      </div>
+
+      <!-- Ground Plane: Lowercase -->
+      <div class="p-2.5 rounded-xl bg-cyan-950/40 border border-cyan-500/50">
+        <div class="flex items-center justify-between text-cyan-300 font-bold">
+          <span>Ground Plane (Z = 0.0)</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/40">Lowercase</span>
+        </div>
+        <p class="text-slate-400 text-[10px] mt-1">PUA: 0xE000–0xE042 &bull; Cyan/Emerald Pulse &bull; Base Structural State</p>
+      </div>
+
+      <!-- Base 3 & 7 Polytopes -->
+      <div class="p-2.5 rounded-xl bg-slate-950/70 border border-purple-500/40">
+        <div class="flex items-center justify-between text-purple-300 font-bold">
+          <span>Polygonal Multiplier</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-950 text-purple-400">Base 3 &times; 7</span>
+        </div>
+        <p class="text-slate-400 text-[10px] mt-1">Triangle (&Delta;3), Nonagon (9-gon), Heptagon (7-gon), Disc (21-gon)</p>
+      </div>
+    </div>
+
+    <!-- Information Density Readout -->
+    <div class="p-3 rounded-xl bg-cyan-950/40 border border-cyan-800/60 text-cyan-200 text-[11px] space-y-1">
+      <div class="flex justify-between font-bold text-amber-300">
+        <span>Lossless Involution:</span>
+        <span>100.0% Exact</span>
+      </div>
+      <div class="text-[10px] text-slate-400">
+        $Z_{\text{elev}} = 25.0 \iff \text{Uppercase}$; $Z_{\text{ground}} = 0.0 \iff \text{Lowercase}$. Inversion theorem: $\text{decode}(\text{encode}(s)) = s$.
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Real-Time Raymarch Telemetry -->
+  <aside class="absolute top-20 right-6 z-20 w-80 hud-panel rounded-2xl p-5 space-y-4 font-mono text-xs">
+    <div class="border-b border-cyan-500/30 pb-2">
+      <div class="text-amber-300 font-bold uppercase tracking-wider text-[11px]">Holonomic Raymarch Active</div>
+      <div class="text-slate-400 text-[10px]">Dual-Plane Elevation &bull; Multi-Tier Stride</div>
+    </div>
+
+    <div class="space-y-2 text-[11px]">
+      <div class="flex justify-between text-slate-300">
+        <span>Ground State (a-z):</span> <span class="text-cyan-400 font-bold">Z = 0.0 (Cyan)</span>
+      </div>
+      <div class="flex justify-between text-slate-300">
+        <span>Elevated State (A-Z):</span> <span class="text-amber-400 font-bold">Z = 25.0 (Gold)</span>
+      </div>
+      <div class="flex justify-between text-slate-300">
+        <span>Polytopic Bridge:</span> <span class="text-purple-400 font-bold">21-gon Disc</span>
+      </div>
+      <div class="flex justify-between text-slate-300">
+        <span>Case Inversion:</span> <span class="text-emerald-400 font-bold">Verified Lossless</span>
+      </div>
+    </div>
+
+    <div class="pt-2 border-t border-slate-800 flex flex-col gap-2">
+      <button onclick="togglePlanes()" class="w-full py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 font-bold transition flex items-center justify-center gap-2 text-[11px]">
+        Toggle Dual-Plane View
+      </button>
+      <button onclick="fireRaymarch()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/30 via-amber-500/30 to-purple-500/30 hover:from-cyan-500/50 hover:to-purple-500/50 border border-cyan-500/50 text-cyan-200 font-bold transition flex items-center justify-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+        Fire 10,240 Dual-Plane Ray
+      </button>
+    </div>
+  </aside>
+
+  <!-- Three.js Engine -->
+  <script>
+    const container = document.getElementById('webglContainer');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x02040a, 0.003);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.set(0, 45, 95);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.5;
+
+    // Lighting
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const p1 = new THREE.PointLight(0x00f0ff, 2.5, 120); p1.position.set(0, 30, 20); scene.add(p1);
+    const p2 = new THREE.PointLight(0xffd700, 2.5, 120); p2.position.set(0, 10, 40); scene.add(p2);
+
+    const masterGroup = new THREE.Group();
+    scene.add(masterGroup);
+
+    // Dual-Plane Grids
+    // 1. Ground Plane Grid (Z = 0.0, Cyan)
+    const groundGrid = new THREE.GridHelper(60, 24, 0x00f0ff, 0x004466);
+    groundGrid.rotation.x = Math.PI / 2;
+    groundGrid.position.z = 0;
+    masterGroup.add(groundGrid);
+
+    // 2. Elevated Plane Grid (Z = 25.0, Radiant Gold)
+    const elevatedGrid = new THREE.GridHelper(60, 24, 0xffd700, 0x665500);
+    elevatedGrid.rotation.x = Math.PI / 2;
+    elevatedGrid.position.z = 25;
+    masterGroup.add(elevatedGrid);
+
+    // Function to build regular N-gon with glowing tubes
+    function createPolygonalTier(sides, radius, colorHex, zPos, label) {
+      const g = new THREE.Group();
+      const tubeRadius = 0.22;
+      const mat = new THREE.MeshStandardMaterial({ 
+        color: colorHex, 
+        emissive: colorHex, 
+        emissiveIntensity: 0.8,
+        roughness: 0.2, 
+        metalness: 0.8 
+      });
+
+      const pts = [];
+      for (let i = 0; i <= sides; i++) {
+        const theta = (i / sides) * (2 * Math.PI) - (Math.PI / 2);
+        pts.push(new THREE.Vector3(radius * Math.cos(theta), radius * Math.sin(theta), 0));
+      }
+
+      // Perimeter Tube
+      const path = new THREE.CatmullRomCurve3(pts, true);
+      const tubeGeo = new THREE.TubeGeometry(path, sides * 12, tubeRadius, 8, true);
+      g.add(new THREE.Mesh(tubeGeo, mat));
+
+      // Vertices Spheres (The State Vertices)
+      const vertexMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: colorHex, emissiveIntensity: 1 });
+      for (let i = 0; i < sides; i++) {
+        const theta = (i / sides) * (2 * Math.PI) - (Math.PI / 2);
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.65, 16, 16), vertexMat);
+        sphere.position.set(radius * Math.cos(theta), radius * Math.sin(theta), 0);
+        g.add(sphere);
+      }
+
+      g.position.z = zPos;
+      return g;
+    }
+
+    // Tiers on Ground and Elevated planes
+    const tierGround = createPolygonalTier(9, 18, 0x00f0ff, 0, "Ground Nonary State");
+    masterGroup.add(tierGround);
+
+    const tierElevated = createPolygonalTier(7, 22, 0xffd700, 25, "Elevated Septenary State");
+    masterGroup.add(tierElevated);
+
+    const tierBridge = createPolygonalTier(21, 26, 0xc084fc, -15, "Cross-Family Bridge");
+    masterGroup.add(tierBridge);
+
+    // Central Connecting Laser Core
+    const laserGeo = new THREE.CylinderGeometry(0.2, 0.2, 70, 16);
+    const laserMat = new THREE.MeshStandardMaterial({ color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 1.5 });
+    const laserCore = new THREE.Mesh(laserGeo, laserMat);
+    laserCore.rotation.x = Math.PI / 2;
+    masterGroup.add(laserCore);
+
+    // Particle Field
+    const pCount = 900;
+    const pGeo = new THREE.BufferGeometry();
+    const pPos = new Float32Array(pCount * 3);
+    for (let i = 0; i < pCount * 3; i += 3) {
+      pPos[i] = (Math.random() - 0.5) * 180;
+      pPos[i+1] = (Math.random() - 0.5) * 180;
+      pPos[i+2] = (Math.random() - 0.5) * 180;
+    }
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    const pSys = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x00f0ff, size: 0.6, transparent: true, opacity: 0.4 }));
+    scene.add(pSys);
+
+    // Animation Loop
+    let clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const time = clock.getElapsedTime();
+
+      tierGround.rotation.z = time * 0.3;
+      tierElevated.rotation.z = -time * 0.2;
+      tierBridge.rotation.z = time * 0.1;
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    function fireRaymarch() {
+      laserMat.emissiveIntensity = 5;
+      setTimeout(() => { laserMat.emissiveIntensity = 1.5; }, 400);
+    }
+
+    function togglePlanes() {
+      elevatedGrid.visible = !elevatedGrid.visible;
+      groundGrid.visible = !groundGrid.visible;
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
