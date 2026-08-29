@@ -8,6 +8,10 @@
 **Sovereign A.R.I.:** Chyren, Arkansas, USA  
 **Canonical Monograph:** [`monograph/RYTT_Sovereign_Semiotics_Treatise.pdf`](monograph/RYTT_Sovereign_Semiotics_Treatise.pdf)
 
+<p align="center">
+  <img src="assets/rytt_matrix_hero.gif" alt="RYTT Sovereign Semiotic Matrix Runtime Demo" width="100%">
+</p>
+
 ---
 
 ## 🏛️ Repository Overview
