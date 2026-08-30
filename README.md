@@ -22,6 +22,14 @@
 [🌐 3D Renderer](renderers/holonomic_rytt_stack.html) ·
 [🔗 Cite](#citation)
 
+### Visual Explainer
+
+<a href="assets/manim/rytt_geometry_that_returns.mp4">
+  <img src="assets/manim/rytt_radial_lexicon_preview.gif" alt="Animated radial field of RYTT geometric glyph primitives. Cyan marks the Ground Plane at Z=0, gold marks the Elevated Plane at Z=25, and the RYTT seal resolves in the center." width="100%">
+</a>
+
+<sub><em>Click the animation to open “RYTT: Geometry That Returns,” a silent visual explainer.</em></sub>
+
 </div>
 
 ---
@@ -146,6 +154,12 @@ RYTT encodes letter casing not as a separate lookup table, but as a **spatial co
 
 The compiler assigns each lowercase letter to `chr(0xE000 + index)` and each uppercase letter to `chr(0xE800 + index)`. The decompiler reverses this with an exact `PUA_TO_PLAIN` lookup. Because the two planes occupy disjoint Unicode ranges, casing information is preserved without any additional metadata.
 
+<p align="center">
+  <img src="assets/manim/rytt_scene_3_dual_plane.png" alt="A pseudo-three-dimensional RYTT dual-plane diagram. A cyan lowercase t occupies the Ground Plane at Z=0 and a gold uppercase T occupies the Elevated Plane at Z=25. Separate Private Use Area ranges are displayed for each plane." width="100%">
+</p>
+
+<p align="center"><sub><em>Case is represented as a spatial coordinate across disjoint Unicode ranges.</em></sub></p>
+
 ---
 
 ## From Language to Geometry
@@ -164,25 +178,35 @@ Tyger Tyger, burning bright,
 | T | primitive | Elevated (Z=25) | E800+19 |
 | y | primitive | Ground (Z=0) | E000+24 |
 | g | primitive | Ground (Z=0) | E000+6 |
-| ER | chord (bigram) | Elevated (Z=25) | E800+0x34 |
+| er | chord (bigram) | Ground (Z=0) | E000+0x34 |
+| space | separator | — | `·` preserved |
 | T | primitive | Elevated (Z=25) | E800+19 |
 | y | primitive | Ground (Z=0) | E000+24 |
 | g | primitive | Ground (Z=0) | E000+6 |
-| ER | chord (bigram) | Elevated (Z=25) | E800+0x34 |
+| er | chord (bigram) | Ground (Z=0) | E000+0x34 |
 | , | punctuation | — | preserved |
+| space | separator | — | `·` preserved |
 | b | primitive | Ground (Z=0) | E000+1 |
 | u | primitive | Ground (Z=0) | E000+20 |
-| R | primitive | Elevated (Z=25) | E800+17 |
+| r | primitive | Ground (Z=0) | E000+17 |
 | n | primitive | Ground (Z=0) | E000+13 |
-| ING | chord (trigram) | Elevated (Z=25) | E800+0x22 |
+| ing | chord (trigram) | Ground (Z=0) | E000+0x22 |
+| space | separator | — | `·` preserved |
 | b | primitive | Ground (Z=0) | E000+1 |
-| R | primitive | Elevated (Z=25) | E800+17 |
+| r | primitive | Ground (Z=0) | E000+17 |
 | i | primitive | Ground (Z=0) | E000+8 |
 | g | primitive | Ground (Z=0) | E000+6 |
 | h | primitive | Ground (Z=0) | E000+7 |
 | t | primitive | Ground (Z=0) | E000+19 |
+| , | punctuation | — | preserved |
 
-**Result:** 20 RYTT tokens from 22 characters. Decompilation produces the original text exactly.
+**Result:** 24 RYTT tokens from 28 characters. Direct compilation through the repository compiler confirms that decompilation produces the original text exactly.
+
+<p align="center">
+  <img src="assets/manim/rytt_scene_2_chord_compiler.png" alt="A RYTT compiler walkthrough. The source text Tyger Tyger, burning bright, is scanned left to right, with lowercase er and ing selected as geometric chord tokens before remaining characters become primitive glyphs. The graphic shows 28 source characters to 24 RYTT tokens and exact source recovery." width="100%">
+</p>
+
+<p align="center"><sub><em>Greedy longest-match selection resolves <code>er</code> and <code>ing</code> before single-letter primitives.</em></sub></p>
 
 > The compiler also computes balanced ternary (Base 3) and septenary (Base 7) streams for each token, a 10,240-bit VSA hypervector, and a mod-24 parity checksum. See the [monograph](monograph/RYTT_Sovereign_Semiotics_Treatise.pdf) for the full mathematical treatment.
 
@@ -192,7 +216,15 @@ Tyger Tyger, burning bright,
 
 RYTT's central claim is a **lossless bijective involution**: for any valid input string *S*, the decompiler applied to the compiler's output reconstructs *S* exactly.
 
-$$\mathcal{D}(\mathcal{C}(S)) \equiv S$$
+$$
+\mathcal{D}(\mathcal{C}(S)) \equiv S
+$$
+
+<p align="center">
+  <img src="assets/manim/rytt_scene_4_exact_recovery.png" alt="The RYTT lossless-recovery invariant D(C(S)) equals S. A cyan return arc encircles the equation, while the source text Tyger Tyger, burning bright, appears before and after the transformation to represent exact reconstruction." width="100%">
+</p>
+
+<p align="center"><sub><em>Encode, then reconstruct the exact original source string.</em></sub></p>
 
 This is proven in [Lean 4](proofs/RYTT.lean) with **zero axioms and zero sorries** across four theorems:
 
@@ -247,7 +279,11 @@ python3 -m http.server 8080
 
 # 4. Run the test suite
 pip install numpy pytest
-cd benchmarks && python3 -m pytest test_rytt_native_lossless.py -v
+cd benchmarks && python3 -m pytest test_glyph_atlas_data.py -v
+
+# 5. Re-render the Manim visual explainer (requires ManimCE)
+# pip install manim
+# manim -qh manim/video.py RadialLexicon ChordCompiler DualPlaneCoordinate LosslessReturn
 ```
 
 ### Repository Structure
@@ -269,20 +305,36 @@ RYTT-Sovereign-Semiotics/
 │   └── RYTT.lean                       ← Lean 4 formal proofs (0 axioms, 0 sorries)
 ├── benchmarks/
 │   ├── run_benchmarks.py               ← Reproducible benchmark suite
-│   └── test_rytt_native_lossless.py   ← pytest lossless roundtrip tests
+│   ├── test_rytt_native_lossless.py   ← pytest lossless roundtrip tests
+│   └── test_glyph_atlas_data.py       ← Glyph atlas consistency tests
 ├── renderers/
 │   ├── glyph_atlas.html               ← Full searchable glyph atlas
 │   ├── blake_transformation_loop.html ← Animated Blake → RYTT transformation
 │   ├── blake_the_tyger_rytt.html      ← Original Blake poem renderer
 │   ├── holonomic_rytt_stack.html       ← 3D WebGL dual-plane visualizer
 │   └── rytt_pure_glyph_plates.html    ← Geometric plate edition
+├── manim/
+│   └── video.py                        ← ManimCE source for "Geometry That Returns"
+├── docs/manim/
+│   ├── scene_plan.md                  ← Scene-by-scene narrative plan
+│   ├── visual_package.md              ← Asset inventory and README placement guide
+│   ├── research_notes.md              ← Verified system facts and visual identity
+│   └── visual_review.md              ← Visual review notes
 ├── assets/
 │   ├── social_preview.svg             ← Social preview image (1280×640)
 │   ├── glyph_grid_overview.svg        ← All glyphs at a glance
 │   ├── pipeline_diagram.svg           ← System pipeline diagram
 │   ├── favicon.svg                    ← Favicon mark
 │   ├── rytt_matrix_hero.gif           ← Original animated hero
-│   └── rytt_matrix_hero.webp          ← WebP fallback
+│   ├── rytt_matrix_hero.webp          ← WebP fallback
+│   └── manim/
+│       ├── rytt_geometry_that_returns.mp4    ← Silent visual explainer (1080p60)
+│       ├── rytt_radial_lexicon_preview.gif   ← Animated GIF hero preview
+│       ├── rytt_scene_1_radial_lexicon.png   ← Scene 1: radial glyph field
+│       ├── rytt_scene_2_chord_compiler.png   ← Scene 2: greedy chord matching
+│       ├── rytt_scene_3_dual_plane.png        ← Scene 3: dual-plane coordinate
+│       ├── rytt_scene_4_lossless_cycle.png    ← Scene 4: encode/decode cycle
+│       └── rytt_scene_4_exact_recovery.png    ← Scene 4: exact recovery end card
 └── scripts/
     └── generate_matrix_hero_loop.py   ← Hero animation generator
 ```
