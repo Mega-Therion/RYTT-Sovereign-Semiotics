@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RYTT Glyph Atlas · All Primitives & Chords</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --ink: #06080f;
+      --deep: #0a0e1a;
+      --panel: #0c1120;
+      --surface: #111827;
+      --parchment: #f5ecd7;
+      --bone: #e8dcc4;
+      --copper: #c8a04e;
+      --copper-bright: #e8c87c;
+      --cyan: #00e5ff;
+      --cyan-dim: #2b8aa0;
+      --violet: #7b5fff;
+      --muted: #5a6580;
+      --border: rgba(200, 160, 78, 0.15);
+      --border-bright: rgba(200, 160, 78, 0.35);
+      --border-cyan: rgba(0, 229, 255, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--ink);
+      color: var(--parchment);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Paper grain overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(200,160,78,0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0,229,255,0.02) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Blueprint grid */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(200,160,78,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,160,78,0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .font-display { font-family: 'Cormorant Garamond', serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    .hud-corner {
+      position: fixed; width: 20px; height: 20px;
+      border: 1.5px solid var(--copper);
+      pointer-events: none; z-index: 50; opacity: 0.4;
+    }
+    .hud-tl { top: 12px; left: 12px; border-right: none; border-bottom: none; }
+    .hud-tr { top: 12px; right: 12px; border-left: none; border-bottom: none; }
+    .hud-bl { bottom: 12px; left: 12px; border-right: none; border-top: none; }
+    .hud-br { bottom: 12px; right: 12px; border-left: none; border-top: none; }
+
+    .glyph-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glyph-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 0 1px var(--border-bright);
+    }
+
+    .glyph-card.ground {
+      border-color: var(--border-cyan);
+    }
+    .glyph-card.ground:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 20px rgba(0,229,255,0.08);
+      border-color: rgba(0,229,255,0.5);
+    }
+
+    .glyph-card.elevated {
+      border-color: var(--border-bright);
+    }
+    .glyph-card.elevated:hover {
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4), 0 0 20px rgba(200,160,78,0.08);
+    }
+
+    .glyph-svg {
+      filter: drop-shadow(0 0 4px rgba(0,229,255,0.3));
+    }
+    .glyph-svg.elevated {
+      filter: drop-shadow(0 0 5px rgba(232,200,124,0.4));
+    }
+
+    .plane-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+    }
+    .plane-badge.ground {
+      background: rgba(0,229,255,0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0,229,255,0.3);
+    }
+    .plane-badge.elevated {
+      background: rgba(200,160,78,0.1);
+      color: var(--copper-bright);
+      border: 1px solid rgba(200,160,78,0.3);
+    }
+
+    .symm-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7px;
+      padding: 1px 4px;
+      border-radius: 3px;
+      letter-spacing: 0.3px;
+    }
+    .symm-c1v { background: rgba(0,229,255,0.08); color: #5fecff; border: 1px solid rgba(0,229,255,0.2); }
+    .symm-c1h { background: rgba(123,95,255,0.08); color: #a99aff; border: 1px solid rgba(123,95,255,0.2); }
+    .symm-c2  { background: rgba(0,229,255,0.06); color: #4dd0e1; border: 1px solid rgba(0,229,255,0.15); }
+    .symm-c1  { background: rgba(200,160,78,0.08); color: #d4a843; border: 1px solid rgba(200,160,78,0.2); }
+
+    .filter-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .filter-btn:hover {
+      border-color: var(--border-bright);
+      color: var(--parchment);
+    }
+    .filter-btn.active {
+      border-color: var(--copper);
+      color: var(--copper-bright);
+      background: rgba(200,160,78,0.08);
+    }
+
+    .search-input {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--deep);
+      color: var(--parchment);
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--copper);
+      box-shadow: 0 0 0 2px rgba(200,160,78,0.1);
+    }
+    .search-input::placeholder { color: var(--muted); }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface);
+      border: 1px solid var(--border-bright);
+      color: var(--copper-bright);
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+    .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+    .legend-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .stat-tile {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .glyph-card { transition: none; }
+      .glyph-card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body class="py-10 px-4 sm:px-6 flex flex-col items-center relative">
+
+  <div class="hud-corner hud-tl"></div>
+  <div class="hud-corner hud-tr"></div>
+  <div class="hud-corner hud-bl"></div>
+  <div class="hud-corner hud-br"></div>
+
+  <!-- Header -->
+  <header class="max-w-7xl w-full text-center space-y-4 mb-10 relative z-10">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/50 border border-cyan-500/30 text-cyan-400 text-xs font-mono tracking-widest uppercase">
+      <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+      RYTT Sovereign Semiotics · Glyph Atlas
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-bold font-display tracking-wide" style="color: var(--parchment);">
+      The Complete Glyph Vocabulary
+    </h1>
+    <p class="text-sm sm:text-base font-mono" style="color: var(--muted);">
+      All 26 primitives & 23 compound chords currently defined in this repository
+    </p>
+    <p class="text-xs font-mono opacity-50" style="color: var(--muted);">
+      Data sourced directly from <code>src/rytt/compiler.py</code> — not hand-typed
+    </p>
+  </header>
+
+  <!-- Stats -->
+  <div class="max-w-7xl w-full grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8 relative z-10">
+    <div class="stat-tile">
+      <div class="text-2xl font-bold font-display" style="color: var(--copper-bright);">26</div>
+      <div class="text-xs font-mono mt-1" style="color: var(--muted);">Atomic Glyph Primitives</div>
+    </div>
+    <div class="stat-tile">
+      <div class="text-2xl font-bold font-display" style="color: var(--cyan);">23</div>
+      <div class="text-xs font-mono mt-1" style="color: var(--muted);">Compound Chord Ligatures</div>
+    </div>
+    <div class="stat-tile">
+      <div class="text-2xl font-bold font-display" style="color: var(--copper-bright);">4</div>
+      <div class="text-xs font-mono mt-1" style="color: var(--muted);">Symmetry Families</div>
+    </div>
+    <div class="stat-tile">
+      <div class="text-2xl font-bold font-display" style="color: var(--cyan);">2</div>
+      <div class="text-xs font-mono mt-1" style="color: var(--muted);">Dual Planes (Ground + Elevated)</div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="max-w-7xl w-full legend-box p-5 mb-8 relative z-10">
+    <h2 class="text-sm font-mono font-bold uppercase tracking-widest mb-3" style="color: var(--copper);">Legend & Taxonomy</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono" style="color: var(--muted);">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-4 rounded border" style="border-color: var(--cyan); background: rgba(0,229,255,0.05);"></span>
+          <span style="color: var(--cyan);">Ground Plane (Z=0)</span> — lowercase, PUA E000–E019, cyan stroke
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-4 rounded border" style="border-color: var(--copper); background: rgba(200,160,78,0.05);"></span>
+          <span style="color: var(--copper-bright);">Elevated Plane (Z=25)</span> — UPPERCASE, PUA E800–E819, gold stroke
+        </div>
+      </div>
+      <div class="space-y-1.5">
+        <div><span class="symm-badge symm-c1v">C₁ᵥ</span> Vertical mirror — {A, M, T, U, V, W, Y}</div>
+        <div><span class="symm-badge symm-c1h">C₁ₕ</span> Horizontal reflection — {B, C, D, E, K}</div>
+        <div><span class="symm-badge symm-c2">C₂</span> Centrosymmetric inversion — {H, I, N, O, S, X, Z}</div>
+        <div><span class="symm-badge symm-c1">C₁</span> Chiral / asymmetric — {F, G, J, L, P, Q, R}</div>
+      </div>
+    </div>
+    <p class="text-xs font-mono mt-3 opacity-60" style="color: var(--muted);">
+      Each glyph exists in both planes. Chords (multi-character ligatures) also have dual-plane forms.
+      This atlas shows all glyphs currently defined in the repository — it is not claimed to be a complete inventory of all possible RYTT symbols.
+    </p>
+  </div>
+
+  <!-- Controls -->
+  <div class="max-w-7xl w-full flex flex-col sm:flex-row gap-3 mb-6 relative z-10">
+    <input type="text" id="searchInput" class="search-input flex-1" placeholder="Search by name, family, or symmetry…" aria-label="Search glyphs">
+    <div class="flex flex-wrap gap-2">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="primitive">Primitives</button>
+      <button class="filter-btn" data-filter="chord">Chords</button>
+      <button class="filter-btn" data-filter="C1v">C₁ᵥ</button>
+      <button class="filter-btn" data-filter="C1h">C₁ₕ</button>
+      <button class="filter-btn" data-filter="C2">C₂</button>
+      <button class="filter-btn" data-filter="C1">C₁</button>
+    </div>
+  </div>
+
+  <!-- Glyph Grid -->
+  <main class="max-w-7xl w-full relative z-10" id="glyphGrid" role="grid" aria-label="RYTT glyph gallery">
+    <!-- Populated by JavaScript -->
+  </main>
+
+  <!-- Chord Section -->
+  <section class="max-w-7xl w-full mt-12 relative z-10">
+    <h2 class="text-2xl font-bold font-display mb-2" style="color: var(--copper-bright);">Compound Chord Ligatures</h2>
+    <p class="text-sm font-mono mb-6" style="color: var(--muted);">
+      Multi-character sequences mapped to single glyph forms. Each chord also exists in both Ground and Elevated planes.
+    </p>
+    <div id="chordGrid" role="grid" aria-label="RYTT chord ligatures">
+      <!-- Populated by JavaScript -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="max-w-7xl w-full mt-16 pt-6 border-t relative z-10" style="border-color: var(--border);">
+    <p class="text-xs font-mono text-center" style="color: var(--muted);">
+      RYTT Sovereign Semiotics · R. W. Yett · <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics" class="underline hover:text-cyan-400">GitHub</a> · Data from <code>src/rytt/compiler.py</code>
+    </p>
+  </footer>
+
+  <!-- Copy toast -->
+  <div class="copy-toast" id="copyToast">Copied glyph to clipboard</div>
+
+  <script>
+    // ═════════════════════════════════════════════════════════════════
+    // RYTT GENOME DATA — sourced from src/rytt/compiler.py
+    // Do NOT edit manually. This is a direct transcription of the
+    // _BASE_GENOME_SPECS dictionary from the Python source.
+    // ═════════════════════════════════════════════════════════════════
+
+    const RYTT_GENOME = {
+      'A': { family: 'POINT', vowel: true, path: 'M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0', ops: ['POINT','MARK'], trit: 0, sept: 0 },
+      'B': { family: 'VECTOR', vowel: false, path: 'M 50,20 L 50,80 M 50,50 L 75,50 M 50,32 L 68,32', ops: ['EXTEND','ORIENT'], trit: 1, sept: 1 },
+      'C': { family: 'CHEVRON', vowel: false, path: 'M 70,25 L 35,50 L 70,75', ops: ['EXTEND','BEND','ORIENT'], trit: -1, sept: -1 },
+      'D': { family: 'CHEVRON', vowel: false, path: 'M 70,25 L 35,50 L 70,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0', ops: ['EXTEND','BEND','ORIENT','MARK'], trit: -1, sept: 2 },
+      'E': { family: 'DIAMOND', vowel: true, path: 'M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0', ops: ['ENCLOSE','MARK'], trit: 0, sept: -2 },
+      'F': { family: 'DIAMOND', vowel: false, path: 'M 50,20 L 80,50 L 50,80 L 20,50 Z', ops: ['ENCLOSE'], trit: 1, sept: 3 },
+      'G': { family: 'VECTOR', vowel: false, path: 'M 20,50 L 80,50', ops: ['EXTEND','ORIENT'], trit: -1, sept: -3 },
+      'H': { family: 'FRAME', vowel: false, path: 'M 30,80 L 30,20 L 80,20', ops: ['EXTEND','BEND','ORIENT'], trit: 1, sept: 1 },
+      'I': { family: 'FRAME', vowel: true, path: 'M 75,25 L 30,25 L 30,75 L 75,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0', ops: ['OPEN','EXTEND','MARK'], trit: 0, sept: 0 },
+      'J': { family: 'FRAME', vowel: false, path: 'M 75,25 L 30,25 L 30,75 L 75,75', ops: ['OPEN','EXTEND'], trit: -1, sept: 2 },
+      'K': { family: 'FRAME', vowel: false, path: 'M 25,25 L 75,25 L 75,75 L 25,75 Z', ops: ['ENCLOSE'], trit: 1, sept: -2 },
+      'L': { family: 'ARC', vowel: false, path: 'M 70,25 A 30,30 0 0,0 70,75', ops: ['OPEN','BEND','ORIENT'], trit: -1, sept: 3 },
+      'M': { family: 'ARC', vowel: false, path: 'M 25,70 A 30,30 0 0,1 75,70', ops: ['OPEN','BEND','ORIENT'], trit: 1, sept: -3 },
+      'N': { family: 'ARC', vowel: false, path: 'M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75', ops: ['OPEN','DUPLICATE','REFLECT'], trit: -1, sept: 1 },
+      'O': { family: 'ARC', vowel: true, path: 'M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0', ops: ['DUPLICATE','REFLECT','MARK'], trit: 0, sept: 0 },
+      'P': { family: 'ARC', vowel: false, path: 'M 20,25 A 35,25 0 0,0 20,75 M 80,25 A 35,25 0 0,1 80,75', ops: ['OPEN','DUPLICATE','REFLECT','ORIENT'], trit: 1, sept: 2 },
+      'Q': { family: 'RING', vowel: false, path: 'M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0', ops: ['ENCLOSE'], trit: -1, sept: -2 },
+      'R': { family: 'RING', vowel: false, path: 'M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0', ops: ['ENCLOSE','NEST','MARK'], trit: 1, sept: 3 },
+      'S': { family: 'VECTOR', vowel: false, path: 'M 50,20 L 50,80', ops: ['EXTEND','ORIENT'], trit: -1, sept: -3 },
+      'T': { family: 'VECTOR', vowel: false, path: 'M 20,20 L 80,20 M 50,20 L 50,80', ops: ['EXTEND','INTERSECT','ORIENT'], trit: 1, sept: 1 },
+      'U': { family: 'VECTOR', vowel: true, path: 'M 40,20 L 40,80 M 65,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0', ops: ['EXTEND','ORIENT','MARK'], trit: 0, sept: 0 },
+      'V': { family: 'CHEVRON', vowel: false, path: 'M 25,25 L 50,75 L 75,25', ops: ['EXTEND','BEND','ORIENT'], trit: -1, sept: 2 },
+      'W': { family: 'CHEVRON', vowel: false, path: 'M 20,25 L 50,75 L 80,25 M 35,50 L 65,50', ops: ['EXTEND','BEND','NEST','ORIENT'], trit: 1, sept: -2 },
+      'X': { family: 'VECTOR', vowel: false, path: 'M 25,25 L 75,75 M 75,25 L 25,75', ops: ['EXTEND','INTERSECT'], trit: -1, sept: 3 },
+      'Y': { family: 'BRANCH', vowel: false, path: 'M 25,25 L 50,50 L 75,25 M 50,50 L 50,80', ops: ['EXTEND','BRANCH','ORIENT'], trit: 1, sept: -3 },
+      'Z': { family: 'BRANCH', vowel: false, path: 'M 50,80 L 50,20 M 30,40 L 50,20 L 70,40', ops: ['EXTEND','BRANCH','ORIENT'], trit: -1, sept: 1 }
+    };
+
+    // Symmetry groups from monograph (Section 2.4: Curvature Invariant and Symmetry Groups)
+    const SYMMETRY = {
+      'A': 'C1v', 'M': 'C1v', 'T': 'C1v', 'U': 'C1v', 'V': 'C1v', 'W': 'C1v', 'Y': 'C1v',
+      'B': 'C1h', 'C': 'C1h', 'D': 'C1h', 'E': 'C1h', 'K': 'C1h',
+      'H': 'C2', 'I': 'C2', 'N': 'C2', 'O': 'C2', 'S': 'C2', 'X': 'C2', 'Z': 'C2',
+      'F': 'C1', 'G': 'C1', 'J': 'C1', 'L': 'C1', 'P': 'C1', 'Q': 'C1', 'R': 'C1'
+    };
+
+    const SYMM_LABELS = {
+      'C1v': 'C₁ᵥ Vertical Mirror',
+      'C1h': 'C₁ₕ Horizontal Reflection',
+      'C2':  'C₂ Centrosymmetric',
+      'C1':  'C₁ Chiral / Asymmetric'
+    };
+
+    // ═════════════════════════════════════════════════════════════════
+    // RYTT LIGATURES — sourced from _BASE_LIGATURES in compiler.py
+    // ═════════════════════════════════════════════════════════════════
+
+    const RYTT_LIGATURES = {
+      // 4-Letter Tetragram Chords
+      'TION': { meaning: 'Process / State', path: 'M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 A 15,15 0 1,0 65,50 A 15,15 0 1,0 35,50' },
+      'MENT': { meaning: 'Artifact / Entity', path: 'M 25,70 A 30,30 0 0,1 75,70 M 50,20 L 80,50 L 50,80 L 20,50 Z' },
+      'RYTT': { meaning: 'Sovereign Inscription Seal', path: 'M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 L 65,50' },
+      // 3-Letter Trigram Chords
+      'PSY': { meaning: 'Mind / Intent / Vector', path: 'M 50,20 L 50,80 M 20,40 L 50,60 L 80,40 M 25,25 L 75,25' },
+      'STR': { meaning: 'Structure / Lattice', path: 'M 20,20 L 80,20 M 50,20 L 50,80 M 20,80 L 80,80 M 20,20 L 80,80' },
+      'ING': { meaning: 'Continuous Action', path: 'M 50,20 L 80,50 L 50,80 L 20,50 Z M 20,50 L 80,50' },
+      'ALL': { meaning: 'Totality / Universe', path: 'M 50,50 m -30,0 a 30,30 0 1,0 60,0 a 30,30 0 1,0 -60,0 M 50,20 L 50,80' },
+      'THE': { meaning: 'Definite Ground Truth', path: 'M 20,20 L 80,20 M 50,20 L 50,80 M 30,80 L 30,40 L 70,40 L 70,80' },
+      'AND': { meaning: 'Conjunction / Tensor Product', path: 'M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0 M 70,25 L 35,50 L 70,75' },
+      'NOT': { meaning: 'Negation / Mirror Inversion', path: 'M 20,20 L 80,80 M 80,20 L 20,80 M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0' },
+      'FOR': { meaning: 'Iteration / Purpose Loop', path: 'M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0' },
+      'CON': { meaning: 'Convergence / Collective', path: 'M 70,25 L 35,50 L 70,75 M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0' },
+      'PRO': { meaning: 'Forward Projection', path: 'M 20,25 A 35,25 0 0,0 20,75 M 80,25 A 35,25 0 0,1 80,75 M 50,50 m -10,0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0' },
+      // 2-Letter Bigram Chords
+      'TH': { meaning: 'Aspiration / Horizon', path: 'M 20,20 L 80,20 M 50,20 L 50,80 M 50,50 L 80,50 L 80,80' },
+      'ST': { meaning: 'Standing State', path: 'M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 L 65,50' },
+      'IN': { meaning: 'Interior Admission', path: 'M 65,25 A 25,25 0 0,0 65,75 M 85,25 A 25,25 0 0,1 85,75 M 45,35 L 20,35 L 20,65 L 45,65' },
+      'EE': { meaning: 'Twin Resonant Eye', path: 'M 35,20 L 65,50 L 35,80 L 05,50 Z M 35,50 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 M 65,20 L 95,50 L 65,80 L 35,50 Z M 65,50 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0' },
+      'ER': { meaning: 'Agent / Operator', path: 'M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0' },
+      'ON': { meaning: 'Ontological Presence', path: 'M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75 M 50,50 m -10,0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0' },
+      'AT': { meaning: 'Locality / Coordinate', path: 'M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0 M 20,20 L 80,20 M 50,20 L 50,80' },
+      'RY': { meaning: 'Sovereign Root Sign', path: 'M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 25,25 L 50,50 L 75,25 M 50,50 L 50,80' },
+      'TT': { meaning: 'Dual Pillar Invariant', path: 'M 15,20 L 45,20 M 30,20 L 30,80 M 55,20 L 85,20 M 70,20 L 70,80' },
+      'RE': { meaning: 'Recursive Return', path: 'M 50,50 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0 M 50,30 L 70,50 L 50,70 L 30,50 Z' }
+    };
+
+    // PUA codepoint assignments (from compiler.py construction logic)
+    function getPuaUpper(idx) { return 0xE800 + idx; }
+    function getPuaLower(idx) { return 0xE000 + idx; }
+
+    // Chord PUA offsets (from _BASE_LIGATURES upper_offset values)
+    const CHORD_OFFSETS = {
+      'TION': 0x40, 'MENT': 0x41, 'RYTT': 0x42,
+      'PSY': 0x20, 'STR': 0x21, 'ING': 0x22, 'ALL': 0x23, 'THE': 0x24,
+      'AND': 0x25, 'NOT': 0x26, 'FOR': 0x27, 'CON': 0x28, 'PRO': 0x29,
+      'TH': 0x30, 'ST': 0x31, 'IN': 0x32, 'EE': 0x33, 'ER': 0x34,
+      'ON': 0x35, 'AT': 0x36, 'RY': 0x37, 'TT': 0x38, 'RE': 0x39
+    };
+
+    // ── Rendering ──────────────────────────────────────────────────
+
+    function createGlyphCard(char, spec, isUpper, symm) {
+      const planeClass = isUpper ? 'elevated' : 'ground';
+      const strokeColor = isUpper ? '#e8c87c' : '#00e5ff';
+      const svgClass = isUpper ? 'glyph-svg elevated' : 'glyph-svg';
+      const planeLabel = isUpper ? 'Z=25 · ELEVATED' : 'Z=0 · GROUND';
+      const charDisplay = isUpper ? char : char.toLowerCase();
+      const symmClass = `symm-${(symm || 'C1').toLowerCase()}`;
+      const symmBadge = symm ? `<span class="symm-badge ${symmClass}">${symm}</span>` : '';
+      const puaHex = isUpper
+        ? `0x${getPuaUpper(char.charCodeAt(0) - 65).toString(16).toUpperCase()}`
+        : `0x${getPuaLower(char.charCodeAt(0) - 97).toString(16).toUpperCase()}`;
+
+      return `
+        <div class="glyph-card ${planeClass} p-3 flex flex-col items-center"
+             role="gridcell"
+             data-char="${charDisplay}"
+             data-family="${spec.family}"
+             data-symm="${symm || ''}"
+             data-type="primitive"
+             tabindex="0"
+             aria-label="Glyph ${charDisplay}, family ${spec.family}, symmetry ${symm || 'none'}, plane ${planeLabel}">
+          <svg viewBox="0 0 100 100" class="${svgClass} w-12 h-12 sm:w-14 sm:h-14" aria-hidden="true">
+            <path d="${spec.path}" stroke="${strokeColor}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <div class="flex items-center gap-1.5 mt-2">
+            <span class="text-sm font-mono font-bold" style="color: ${isUpper ? '#e8c87c' : '#5fecff'};">${charDisplay}</span>
+            ${symmBadge}
+          </div>
+          <div class="text-[9px] font-mono mt-0.5 opacity-60" style="color: var(--muted);">${spec.family}</div>
+          <div class="plane-badge ${planeClass} mt-1">${planeLabel}</div>
+          <div class="text-[8px] font-mono mt-0.5 opacity-40" style="color: var(--muted);">PUA ${puaHex}</div>
+          ${spec.vowel ? '<div class="text-[8px] font-mono mt-0.5" style="color: var(--violet); opacity:0.7;">vowel</div>' : ''}
+        </div>
+      `;
+    }
+
+    function createChordCard(chord, spec, isUpper) {
+      const planeClass = isUpper ? 'elevated' : 'ground';
+      const strokeColor = isUpper ? '#e8c87c' : '#00e5ff';
+      const svgClass = isUpper ? 'glyph-svg elevated' : 'glyph-svg';
+      const planeLabel = isUpper ? 'Z=25 · ELEVATED' : 'Z=0 · GROUND';
+      const chordDisplay = isUpper ? chord : chord.toLowerCase();
+      const offset = CHORD_OFFSETS[chord];
+      const puaHex = isUpper
+        ? `0x${(0xE800 + offset).toString(16).toUpperCase()}`
+        : `0x${(0xE000 + offset).toString(16).toUpperCase()}`;
+      const chordLen = chord.length;
+      const lenLabel = chordLen === 4 ? 'Tetragram' : chordLen === 3 ? 'Trigram' : 'Bigram';
+
+      return `
+        <div class="glyph-card ${planeClass} p-3 flex flex-col items-center"
+             role="gridcell"
+             data-char="${chordDisplay}"
+             data-family="CHORD"
+             data-type="chord"
+             tabindex="0"
+             aria-label="Chord ${chordDisplay}, meaning ${spec.meaning}, plane ${planeLabel}">
+          <svg viewBox="0 0 100 100" class="${svgClass} w-12 h-12 sm:w-14 sm:h-14" aria-hidden="true">
+            <path d="${spec.path}" stroke="${strokeColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <div class="flex items-center gap-1.5 mt-2">
+            <span class="text-sm font-mono font-bold" style="color: ${isUpper ? '#e8c87c' : '#5fecff'};">${chordDisplay}</span>
+            <span class="symm-badge symm-c1" style="font-size:7px;">${lenLabel}</span>
+          </div>
+          <div class="text-[9px] font-mono mt-0.5 opacity-70 text-center" style="color: var(--parchment);">${spec.meaning}</div>
+          <div class="plane-badge ${planeClass} mt-1">${planeLabel}</div>
+          <div class="text-[8px] font-mono mt-0.5 opacity-40" style="color: var(--muted);">PUA ${puaHex}</div>
+        </div>
+      `;
+    }
+
+    function renderPrimitives() {
+      const grid = document.getElementById('glyphGrid');
+      let html = '';
+      html += '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">';
+      Object.entries(RYTT_GENOME).forEach(([char, spec]) => {
+        const symm = SYMMETRY[char] || '';
+        // Show both ground and elevated for each
+        html += createGlyphCard(char, spec, false, symm);
+        html += createGlyphCard(char, spec, true, symm);
+      });
+      html += '</div>';
+      grid.innerHTML = html;
+    }
+
+    function renderChords() {
+      const grid = document.getElementById('chordGrid');
+      let html = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">';
+      Object.entries(RYTT_LIGATURES).forEach(([chord, spec]) => {
+        html += createChordCard(chord, spec, false);
+        html += createChordCard(chord, spec, true);
+      });
+      html += '</div>';
+      grid.innerHTML = html;
+    }
+
+    // ── Filtering & Search ──────────────────────────────────────────
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+      const allCards = document.querySelectorAll('.glyph-card');
+      allCards.forEach(card => {
+        const char = card.dataset.char || '';
+        const family = card.dataset.family || '';
+        const symm = card.dataset.symm || '';
+        const type = card.dataset.type || '';
+        const searchText = (char + ' ' + family + ' ' + symm + ' ' + type).toLowerCase();
+
+        let matchesFilter = true;
+        if (currentFilter === 'primitive') matchesFilter = type === 'primitive';
+        else if (currentFilter === 'chord') matchesFilter = type === 'chord';
+        else if (currentFilter !== 'all') matchesFilter = symm === currentFilter;
+
+        let matchesSearch = true;
+        if (searchQuery) matchesSearch = searchText.includes(searchQuery);
+
+        card.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
+      });
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase();
+      applyFilters();
+    });
+
+    // ── Copy to clipboard ───────────────────────────────────────────
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'c' && e.ctrlKey && document.activeElement.classList.contains('glyph-card')) {
+        const card = document.activeElement;
+        const char = card.dataset.char;
+        navigator.clipboard.writeText(char).then(() => {
+          showToast(`Copied "${char}" to clipboard`);
+        });
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const card = e.target.closest('.glyph-card');
+      if (card) {
+        const char = card.dataset.char;
+        navigator.clipboard.writeText(char).then(() => {
+          showToast(`Copied "${char}" to clipboard`);
+        }).catch(() => {});
+      }
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById('copyToast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // ── Init ────────────────────────────────────────────────────────
+    renderPrimitives();
+    renderChords();
+  </script>
+</body>
+</html>

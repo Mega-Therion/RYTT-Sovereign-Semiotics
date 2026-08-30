@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" fill="#06080f" rx="10"/>
+  <defs>
+    <filter id="glow"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#c8a04e" stroke-width="0.5" opacity="0.3"/>
+  <circle cx="32" cy="32" r="20" fill="none" stroke="#00e5ff" stroke-width="0.5" opacity="0.2" stroke-dasharray="2 3"/>
+  <!-- RYTT seal chord -->
+  <g transform="translate(32,32) scale(0.22) translate(-50,-50)">
+    <path d="M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 L 65,50" stroke="#e8c87c" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  </g>
+</svg>
