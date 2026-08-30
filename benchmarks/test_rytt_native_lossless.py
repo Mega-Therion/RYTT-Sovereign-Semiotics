@@ -8,11 +8,12 @@ import pytest
 import sys
 import os
 
-# Ensure package is on sys.path
-sys.path.insert(0, "/home/mega/Chyren/Codebase/l5_meaning/python")
+# Ensure package is on sys.path — resolves relative to repo root
+_repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(_repo_root, "src"))
 
-from chyren.rytt.compiler import RyttCompiler, RYTT_GENOME, RYTT_LIGATURES, PUA_TO_PLAIN
-from chyren.rytt.vocabulary import RyttNativeTokenizer
+from rytt.compiler import RyttCompiler, RYTT_GENOME, RYTT_LIGATURES, PUA_TO_PLAIN
+from rytt.vocabulary import RyttNativeTokenizer
 
 
 class TestRyttDualPlaneLossless:
