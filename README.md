@@ -395,3 +395,8 @@ The repository does not claim external peer review, independent compression benc
   <em>RYTT Sovereign Semiotics · R. W. Yett · 2026</em><br>
   <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics">github.com/Mega-Therion/RYTT-Sovereign-Semiotics</a>
 </p>
+
+
+## 4Leibniz integration contract
+
+The machine-readable [`integration/4leibniz_bridge.json`](integration/4leibniz_bridge.json) records the formal theorem identifiers that the modern RYTT layer extends. It keeps the historical corpus, Lean kernel, and modern balanced-ternary/base-24/Stiefel constructions distinct while making the relationship testable. The bridge test runs as part of the normal benchmark test suite.
