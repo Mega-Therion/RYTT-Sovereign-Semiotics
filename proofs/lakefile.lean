@@ -3,11 +3,10 @@ import Lake
 open Lake DSL
 
 package rytt where
-  name := `rytt
-  version := "0.2.0"
+  version := v!"0.2.0"
 
 require mathlib from git
-  "https://github.com/leanprover-community/mathlib4"
+  "https://github.com/leanprover-community/mathlib4.git" @ "5eec30bc56ed5a23be2e27c544a949ba0bceddeb"
 
 lean_lib RYTT where
   roots := #[`RYTT]

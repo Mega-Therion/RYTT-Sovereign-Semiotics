@@ -23,7 +23,7 @@
 | Elevated Plane PUA range | U+E800 – U+E819 |
 | Non-Latin characters | Pass through unchanged |
 | Round-trip guarantee | D(C(S)) ≡ S for all inputs |
-| Formal verification | Lean 4 (see `proofs/RYTT.lean`) |
+| Formal verification | Lean 4, in progress — see `proofs/RYTTProofs/TODO.md` for current build status |
 
 Full details in [`SPECIFICATION.md`](SPECIFICATION.md).
 

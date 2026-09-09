@@ -1,3 +1,8 @@
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.List.Basic
+import Mathlib.Data.String.Basic
+import Mathlib.Algebra.Group.Basic
+
 /-!
 # RYTT Sovereign Semiotics — Core Lean 4 Library
 
@@ -15,11 +20,6 @@ over the finite chord table in RYTTProofs.Chords).
 Author: R. W. Yett — Chyren Sovereign Intelligence
 Version: 0.3.0 (2026-09-09)
 -/
-
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.List.Basic
-import Mathlib.Data.String.Basic
-import Mathlib.Algebra.Group.Basic
 
 namespace RYTT
 
