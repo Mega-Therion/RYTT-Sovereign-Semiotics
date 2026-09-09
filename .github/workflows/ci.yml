@@ -7,6 +7,44 @@ on:
     branches: [main]
 
 jobs:
+  # Gates the one Lean file in this repository whose content is actually
+  # verified. proofs/RYTT_standalone.lean has no imports -- core Lean only, no
+  # Mathlib -- so this job needs no cache, no lake build, and finishes in
+  # seconds. It was previously absent from the lakefile, from CI, and from every
+  # document including the retraction record, so nothing anywhere would have
+  # noticed it breaking.
+  #
+  # This deliberately does NOT build proofs/RYTT.lean or proofs/RYTTProofs/*.
+  # Those import Mathlib and do not compile; see CLAUDE.md. Adding them here
+  # would only make CI permanently red without proving anything new.
+  lean-standalone:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan (pinned toolchain from proofs/lean-toolchain)
+        run: |
+          curl -sSfL https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz \
+            | tar xz
+          ./elan-init -y --default-toolchain "$(cat proofs/lean-toolchain)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Verify the standalone proofs compile
+        run: |
+          cd proofs
+          lean --version
+          lean RYTT_standalone.lean
+          echo "RYTT_standalone.lean: compiled clean"
+
+      - name: Assert no sorry / admit crept in
+        run: |
+          cd proofs
+          if grep -nE '\bsorry\b|\badmit\b' RYTT_standalone.lean; then
+            echo "::error::sorry/admit found in RYTT_standalone.lean" >&2
+            exit 1
+          fi
+          echo "no sorry or admit"
+
   test:
     runs-on: ubuntu-latest
     strategy:

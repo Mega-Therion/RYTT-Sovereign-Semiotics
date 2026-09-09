@@ -1,5 +1,26 @@
 # Proof TODO — tracked work items
 
+## VERIFIED (2026-09-09): `../RYTT_standalone.lean`
+
+Before the retraction below, record what does hold. `proofs/RYTT_standalone.lean`
+compiles clean on the pinned toolchain, zero `sorry`, **no imports** (core Lean,
+no Mathlib). It proves the round-trip identity
+`pua_decode (pua_encode c) = c` for all four chord constructors, on the domains
+`id < 27` (primitives) and `id < 100` (compounds).
+
+Non-vacuity was tested, not assumed: widening `id < 27` to `id < 28` breaks the
+proof, because `0xE000 + 27 = 0xE01B` collides with the first compound codepoint.
+
+Scope, stated precisely: these are **left inverses on bounded domains**. Not
+bijections, not involutions — both were claimed in the file's own docstrings and
+neither is proved. `len` is carried through decode rather than recovered, since
+the codepoint does not encode it.
+
+This file was previously in no lakefile root and no CI job. It is now gated by
+the `lean-standalone` workflow job.
+
+---
+
 ## RETRACTED (2026-09-09): the "Completed in v0.3.0" section below is false
 
 Commit `71bc723` ("feat(proofs): complete formal suite") claimed everything in the
