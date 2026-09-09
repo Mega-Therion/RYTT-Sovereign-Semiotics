@@ -7,3 +7,4 @@ __pycache__/
 # `lake build` after `lake exe cache get` or by pointing at a sibling checkout; never commit.
 proofs/.lake/
 proofs/lake-manifest.json
+benchmarks/results/
