@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RYTT Sovereign Semiotics — interactive browser playground: client-side encode, decode, inspect, and round-trip verification.">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300..700&family=Geist+Mono:wght@300..500&display=swap" rel="stylesheet">
+  <title>RYTT Playground — Interactive Compiler</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #060a12; --ink-1: #0c1120; --ink-2: #111827;
+      --line: rgba(120,160,210,.18); --line-hi: rgba(120,160,210,.32);
+      --text: #edf0f5; --muted: #7a8ba0; --faint: #3d4f62;
+      --cyan: #3ee8ff; --cyan-dim: rgba(62,232,255,.08); --cyan-glow: rgba(62,232,255,.2);
+      --gold: #e8c87c; --gold-dim: rgba(232,200,124,.1);
+      --r: 6px; --ease: cubic-bezier(.16,1,.3,1);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Geist', ui-sans-serif, system-ui, sans-serif;
+      --font-mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;}
+    body{
+      font-family:var(--font-body);
+      font-size:clamp(.9rem,.85rem + .25vw,1rem);
+      color:var(--text);
+      background:var(--ink);
+      min-height:100dvh;
+      display:flex; flex-direction:column;
+    }
+    a{color:inherit;} button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
+    :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px;}
+
+    /* layout */
+    .bar{display:flex;align-items:center;gap:1rem;padding:.9rem 1.4rem;
+      background:rgba(6,10,18,.9);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+    .bar-brand{font-family:var(--font-display);font-style:italic;color:var(--cyan);font-size:1.05rem;}
+    .bar-brand span{color:var(--muted);font-style:normal;font-family:var(--font-body);font-size:.76rem;margin-left:.5rem;}
+    .bar-home{margin-left:auto;font-size:.78rem;color:var(--muted);text-decoration:none;
+      transition:color .18s var(--ease);}
+    .bar-home:hover{color:var(--cyan);}
+
+    .app{display:grid;grid-template-rows:auto 1fr auto;flex:1;padding:1.5rem;gap:1rem;max-width:1240px;margin:0 auto;width:100%;}
+
+    /* mode toggle */
+    .mode-bar{display:flex;gap:.5rem;align-items:center;}
+    .mode-btn{
+      padding:.35rem .85rem;font-size:.76rem;font-weight:600;
+      border:1px solid var(--line);border-radius:3px;
+      color:var(--muted);transition:all .18s var(--ease);
+    }
+    .mode-btn.active{border-color:var(--cyan);background:var(--cyan-dim);color:var(--cyan);}
+    .mode-btn:hover:not(.active){border-color:var(--line-hi);color:var(--text);}
+
+    /* main panels */
+    .panels{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .panel{
+      border:1px solid var(--line);border-radius:var(--r);
+      overflow:hidden;background:var(--ink-1);
+      display:flex;flex-direction:column;
+    }
+    .panel-head{
+      display:flex;align-items:center;gap:.75rem;
+      padding:.65rem 1rem;
+      border-bottom:1px solid var(--line);
+      background:var(--ink-2);
+      font-size:.72rem;font-weight:700;
+      color:var(--muted);text-transform:uppercase;letter-spacing:.1em;
+    }
+    .panel-head .tag{padding:.1rem .5rem;border-radius:3px;
+      background:rgba(62,232,255,.1);color:var(--cyan);font-size:.66rem;}
+    .panel-head .tag.gold{background:rgba(232,200,124,.1);color:var(--gold);}
+    textarea,
+    .output-area{
+      flex:1;padding:1rem;min-height:220px;
+      font-family:var(--font-mono);font-size:.84rem;line-height:1.7;
+      background:transparent;border:none;outline:none;
+      color:var(--text);resize:vertical;
+    }
+    .output-area{color:var(--cyan);overflow:auto;white-space:pre-wrap;}
+
+    /* metrics */
+    .metrics-row{
+      display:grid;grid-template-columns:repeat(6,1fr);
+      border:1px solid var(--line);border-radius:var(--r);
+      overflow:hidden;background:var(--ink-1);
+    }
+    .m{
+      padding:.85rem 1rem;border-right:1px solid var(--line);
+      font-size:.72rem;
+    }
+    .m:last-child{border-right:none;}
+    .m .v{display:block;font-family:var(--font-mono);
+      font-size:1.1rem;color:var(--gold);letter-spacing:-.03em;}
+    .m .l{color:var(--muted);margin-top:.25rem;}
+
+    /* toolbar */
+    .toolbar{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+    .tb-btn{
+      padding:.35rem .8rem;font-size:.76rem;font-weight:600;
+      border:1px solid var(--line);border-radius:3px;
+      color:var(--text);transition:all .18s var(--ease);
+    }
+    .tb-btn:hover{border-color:var(--cyan);background:var(--cyan-dim);color:var(--cyan);}
+    .tb-btn.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);}
+    .rt-badge{
+      display:inline-flex;align-items:center;gap:.35rem;
+      font-size:.7rem;padding:.25rem .6rem;
+      border-radius:3px;border:1px solid rgba(62,232,255,.25);
+      background:rgba(62,232,255,.08);color:var(--cyan);
+    }
+    .rt-badge.fail{border-color:rgba(255,90,90,.3);background:rgba(255,90,90,.08);color:#ff7070;}
+    .rt-dot{width:.38rem;height:.38rem;border-radius:50%;background:currentColor;}
+    .spacer{flex:1;}
+
+    /* token inspect table */
+    .token-table{
+      width:100%;border-collapse:collapse;
+      font-size:.78rem;font-family:var(--font-mono);
+      table-layout:fixed;
+    }
+    .token-table th{
+      padding:.55rem .75rem;text-align:left;
+      border-bottom:1px solid var(--line);
+      color:var(--muted);font-weight:600;font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;
+    }
+    .token-table td{padding:.4rem .75rem;border-bottom:1px solid rgba(120,160,210,.07);}
+    .token-table tr:hover td{background:rgba(62,232,255,.03);}
+    .pua-cell{color:var(--cyan);}
+    .chord-cell{color:var(--gold);}
+    .src-cell{color:var(--muted);}
+    .pass-cell{color:#6be49a;}
+    .tbl-wrap{overflow:auto;max-height:320px;border:1px solid var(--line);border-radius:var(--r);background:var(--ink-1);}
+
+    /* responsive */
+    @media(max-width:700px){
+      .panels{grid-template-columns:1fr;}
+      .metrics-row{grid-template-columns:repeat(3,1fr);}
+      .metrics-row .m:nth-child(3){border-right:none;}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}
+    }
+  </style>
+</head>
+<body>
+<header class="bar">
+  <span class="bar-brand">RYTT <span>Sovereign Semiotics &mdash; Playground</span></span>
+  <nav style="display:flex;gap:1rem;font-size:.78rem;margin-left:auto;">
+    <a href="/" class="bar-home">&#x2190; Home</a>
+    <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics"
+       target="_blank" rel="noreferrer" class="bar-home">GitHub ↗</a>
+  </nav>
+</header>
+
+<main class="app">
+  <!-- toolbar -->
+  <div class="toolbar">
+    <div class="mode-bar" role="group" aria-label="Compiler mode">
+      <button class="mode-btn active" id="btn-encode">Encode</button>
+      <button class="mode-btn" id="btn-decode">Decode</button>
+      <button class="mode-btn" id="btn-roundtrip">Round-trip</button>
+    </div>
+    <span id="rt-badge" class="rt-badge" aria-live="polite">
+      <span class="rt-dot"></span> Ready
+    </span>
+    <span class="spacer"></span>
+    <button class="tb-btn" id="btn-sample">Load sample</button>
+    <button class="tb-btn" id="btn-copy">Copy output</button>
+    <button class="tb-btn" id="btn-clear">Clear</button>
+    <button class="tb-btn" id="btn-swap">Swap ⇆</button>
+  </div>
+
+  <!-- panels -->
+  <div class="panels">
+    <div class="panel">
+      <div class="panel-head">
+        Source
+        <span class="tag" id="in-tag">Plain text</span>
+      </div>
+      <textarea id="src" rows="10" spellcheck="false"
+        aria-label="Source input"
+        placeholder="Type or paste text here…"></textarea>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        Output
+        <span class="tag gold" id="out-tag">RYTT PUA</span>
+        <span id="byte-delta" style="margin-left:auto;color:var(--muted);font-weight:400;font-family:var(--font-mono);"></span>
+      </div>
+      <div class="output-area" id="out" role="region" aria-live="polite" aria-label="Compiler output"></div>
+    </div>
+  </div>
+
+  <!-- metrics -->
+  <div class="metrics-row" aria-label="Compilation metrics">
+    <div class="m"><span class="v" id="m-src">—</span><span class="l">Source chars</span></div>
+    <div class="m"><span class="v" id="m-tok">—</span><span class="l">Tokens</span></div>
+    <div class="m"><span class="v" id="m-cho">—</span><span class="l">Chord tokens</span></div>
+    <div class="m"><span class="v" id="m-rat">—</span><span class="l">Char/token ratio</span></div>
+    <div class="m"><span class="v" id="m-bsrc">—</span><span class="l">Bytes (source)</span></div>
+    <div class="m"><span class="v" id="m-benc">—</span><span class="l">Bytes (encoded)</span></div>
+  </div>
+</main>
+
+<!-- token table (only shown in encode mode) -->
+<section style="max-width:1240px;margin:0 auto;padding:0 1.5rem 2rem;" id="inspect-section">
+  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.75rem;">
+    <h2 style="font-family:var(--font-display);font-weight:400;font-size:1.1rem;color:var(--muted);"
+        id="inspect-heading">Token inspection</h2>
+    <span style="font-size:.72rem;color:var(--faint);" id="inspect-count"></span>
+  </div>
+  <div class="tbl-wrap" id="tbl-wrap">
+    <table class="token-table" aria-label="Token detail">
+      <thead>
+        <tr>
+          <th style="width:4ch">#</th>
+          <th style="width:14ch">Source sequence</th>
+          <th style="width:12ch">PUA codepoint</th>
+          <th style="width:10ch">Type</th>
+          <th style="width:8ch">Plane</th>
+          <th>Round-trip</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+(function(){
+  'use strict';
+  // ---- RYTT compiler ----
+  const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+  const GENOME = {};
+  for(let i=0;i<26;i++){
+    GENOME[ALPHA[i]] = String.fromCodePoint(0xE000+i);
+    GENOME[ALPHA[i].toUpperCase()] = String.fromCodePoint(0xE800+i);
+  }
+  const LIGS_RAW = [
+    ['TION',0x40],['tion',0x40],['MENT',0x41],['ment',0x41],
+    ['RYTT',0x42],['rytt',0x42],['PSY',0x20],['psy',0x20],
+    ['STR',0x21],['str',0x21],['ING',0x22],['ing',0x22],
+    ['ALL',0x23],['all',0x23],['THE',0x24],['the',0x24],
+    ['AND',0x25],['and',0x25],['NOT',0x26],['not',0x26],
+    ['FOR',0x27],['for',0x27],['CON',0x28],['con',0x28],
+    ['PRO',0x29],['pro',0x29],['TH',0x30],['th',0x30],
+    ['ST',0x31],['st',0x31],['IN',0x32],['in',0x32],
+    ['ER',0x34],['er',0x34],['ON',0x35],['on',0x35],
+    ['AT',0x36],['at',0x36],['RY',0x37],['ry',0x37],
+    ['TT',0x38],['tt',0x38],['RE',0x39],['re',0x39],
+    ['EE',0x33],['ee',0x33],
+  ];
+  LIGS_RAW.sort((a,b)=>b[0].length-a[0].length);
+  const LIGS = {};
+  const PLANE = s => /[A-Z]/.test(s[0]) ? 0xE800 : 0xE000;
+  for(const [seq,off] of LIGS_RAW) LIGS[seq] = String.fromCodePoint(PLANE(seq)+off);
+  const REV = {};
+  for(const [k,v] of Object.entries(GENOME)) REV[v] = k;
+  for(const [k,v] of Object.entries(LIGS)) REV[v] = k;
+
+  function compile(text){
+    const tokens = [];
+    let i = 0;
+    while(i < text.length){
+      let matched = false;
+      for(const [seq,pua] of Object.entries(LIGS)){
+        if(text.startsWith(seq,i)){
+          tokens.push({src:seq, pua, type:'chord',
+            plane: /[A-Z]/.test(seq[0]) ? 'Elevated' : 'Ground',
+            cp: '0x' + pua.codePointAt(0).toString(16).toUpperCase()});
+          i += seq.length; matched = true; break;
+        }
+      }
+      if(!matched){
+        const c = text[i];
+        const pua = GENOME[c] || c;
+        const isAlpha = /[a-zA-Z]/.test(c);
+        tokens.push({src:c, pua, type: isAlpha ? 'glyph' : 'passthrough',
+          plane: /[A-Z]/.test(c) ? 'Elevated' : isAlpha ? 'Ground' : '—',
+          cp: isAlpha ? '0x'+pua.codePointAt(0).toString(16).toUpperCase() : '—'});
+        i++;
+      }
+    }
+    const encoded = tokens.map(t=>t.pua).join('');
+    const recovered = tokens.map(t=>REV[t.pua]||t.pua).join('');
+    return { tokens, encoded, recovered, exact: recovered === text };
+  }
+
+  function decompile(pua){
+    let out = '';
+    for(const ch of pua) out += REV[ch] || ch;
+    return out;
+  }
+
+  function byteLen(s){ return new TextEncoder().encode(s).length; }
+
+  // ---- DOM ----
+  const srcEl = document.getElementById('src');
+  const outEl = document.getElementById('out');
+  const badge = document.getElementById('rt-badge');
+  const inTag = document.getElementById('in-tag');
+  const outTag = document.getElementById('out-tag');
+  const byteD  = document.getElementById('byte-delta');
+  const mSrc = document.getElementById('m-src');
+  const mTok = document.getElementById('m-tok');
+  const mCho = document.getElementById('m-cho');
+  const mRat = document.getElementById('m-rat');
+  const mBs  = document.getElementById('m-bsrc');
+  const mBe  = document.getElementById('m-benc');
+  const tblBody = document.getElementById('tbl-body');
+  const inspSec = document.getElementById('inspect-section');
+  const inspCnt = document.getElementById('inspect-count');
+  const inspHd  = document.getElementById('inspect-heading');
+
+  let mode = 'encode'; // encode | decode | roundtrip
+
+  function setMode(m){
+    mode = m;
+    document.getElementById('btn-encode').classList.toggle('active', m==='encode');
+    document.getElementById('btn-decode').classList.toggle('active', m==='decode');
+    document.getElementById('btn-roundtrip').classList.toggle('active', m==='roundtrip');
+    inTag.textContent  = m==='decode' ? 'RYTT PUA' : 'Plain text';
+    outTag.textContent = m==='decode' ? 'Decoded plain' :
+                         m==='roundtrip' ? 'Round-trip result' : 'RYTT PUA';
+    inspSec.style.display = m==='encode' ? '' : 'none';
+    srcEl.placeholder = m==='decode'
+      ? 'Paste RYTT-encoded PUA text here…'
+      : 'Type or paste text here…';
+    run();
+  }
+
+  function run(){
+    const text = srcEl.value;
+    if(!text){
+      outEl.textContent='';
+      badge.textContent='Ready'; badge.className='rt-badge';
+      [mSrc,mTok,mCho,mRat,mBs,mBe].forEach(e=>e.textContent='—');
+      byteD.textContent='';
+      tblBody.innerHTML=''; inspCnt.textContent='';
+      return;
+    }
+
+    if(mode==='decode'){
+      const plain = decompile(text);
+      outEl.textContent = plain;
+      badge.innerHTML = '<span class="rt-dot"></span> Decoded';
+      badge.className = 'rt-badge';
+      mSrc.textContent = [...text].length;
+      mTok.textContent = '—'; mCho.textContent = '—'; mRat.textContent = '—';
+      mBs.textContent = byteLen(text); mBe.textContent = byteLen(plain);
+      byteD.textContent = '';
+      tblBody.innerHTML=''; inspCnt.textContent='';
+      return;
+    }
+
+    const r = compile(text);
+
+    if(mode==='roundtrip'){
+      const display = r.exact
+        ? '\u2714 EXACT \u2014 '+r.recovered
+        : '\u2717 MISMATCH\n\nExpected: '+text+'\nGot:      '+r.recovered;
+      outEl.textContent = display;
+      badge.innerHTML = r.exact
+        ? '<span class="rt-dot"></span> Round-trip exact'
+        : '<span class="rt-dot"></span> Mismatch';
+      badge.className = 'rt-badge' + (r.exact ? '' : ' fail');
+    } else {
+      outEl.textContent = r.encoded;
+      badge.innerHTML = r.exact
+        ? '<span class="rt-dot"></span> Round-trip exact'
+        : '<span class="rt-dot"></span> Mismatch';
+      badge.className = 'rt-badge' + (r.exact ? '' : ' fail');
+    }
+
+    const chords = r.tokens.filter(t=>t.type==='chord').length;
+    mSrc.textContent = r.tokens.reduce((a,t)=>a+t.src.length,0);
+    mTok.textContent = r.tokens.length;
+    mCho.textContent = chords;
+    const ratio = r.tokens.length ? (text.length/r.tokens.length).toFixed(2) : '—';
+    mRat.textContent = ratio;
+    const bs = byteLen(text), be = byteLen(r.encoded);
+    mBs.textContent = bs; mBe.textContent = be;
+    const delta = be - bs;
+    byteD.textContent = (delta >= 0 ? '+' : '') + delta + ' B';
+    byteD.style.color = delta <= 0 ? '#6be49a' : '#ff9a7a';
+
+    // token table
+    if(mode==='encode'){
+      inspCnt.textContent = r.tokens.length + ' tokens';
+      inspHd.textContent = 'Token inspection';
+      const rows = r.tokens.map((t,i)=>{
+        const rt = REV[t.pua] || t.pua;
+        const ok = rt === t.src;
+        return `<tr>
+          <td class="src-cell">${i+1}</td>
+          <td class="src-cell">${escH(t.src)}</td>
+          <td class="pua-cell">${t.cp}</td>
+          <td class="${t.type==='chord'?'chord-cell':'src-cell'}">${t.type}</td>
+          <td class="src-cell">${t.plane}</td>
+          <td class="pass-cell">${ok ? '\u2714' : '\u2717 '+escH(rt)}</td>
+        </tr>`;
+      }).join('');
+      tblBody.innerHTML = rows;
+    }
+  }
+
+  function escH(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  srcEl.addEventListener('input', run);
+  document.getElementById('btn-encode').addEventListener('click',()=>setMode('encode'));
+  document.getElementById('btn-decode').addEventListener('click',()=>setMode('decode'));
+  document.getElementById('btn-roundtrip').addEventListener('click',()=>setMode('roundtrip'));
+
+  document.getElementById('btn-copy').addEventListener('click',()=>{
+    const text = outEl.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      const b = document.getElementById('btn-copy');
+      b.textContent='Copied \u2713'; setTimeout(()=>b.textContent='Copy output',1400);
+    });
+  });
+
+  document.getElementById('btn-clear').addEventListener('click',()=>{
+    srcEl.value=''; run(); srcEl.focus();
+  });
+
+  document.getElementById('btn-swap').addEventListener('click',()=>{
+    const enc = outEl.textContent;
+    if(!enc) return;
+    srcEl.value = enc;
+    setMode(mode==='decode' ? 'encode' : 'decode');
+  });
+
+  const SAMPLES = [
+    'Hello, RYTT \u2014 a lossless semiotic grammar.',
+    'The quick brown fox jumps over the lazy dog.',
+    'SOVEREIGN intelligence: formal, reversible, exact.',
+    'all things return to their origin through RYTT.',
+    'TION MENT ING STR THE AND FOR CON PRO — chord-rich.',
+  ];
+  let sampleIdx = 0;
+  document.getElementById('btn-sample').addEventListener('click',()=>{
+    srcEl.value = SAMPLES[sampleIdx++ % SAMPLES.length];
+    setMode('encode');
+    run();
+  });
+
+  setMode('encode');
+  srcEl.value = 'Hello, RYTT \u2014 lossless by design.';
+  run();
+})();
+</script>
+</body>
+</html>
