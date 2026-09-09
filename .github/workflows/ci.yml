@@ -29,21 +29,32 @@ jobs:
           ./elan-init -y --default-toolchain "$(cat proofs/lean-toolchain)"
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-      - name: Verify the standalone proofs compile
+      - name: Verify the standalone proofs compile, with no sorry
         run: |
           cd proofs
           lean --version
-          lean RYTT_standalone.lean
-          echo "RYTT_standalone.lean: compiled clean"
 
-      - name: Assert no sorry / admit crept in
-        run: |
-          cd proofs
-          if grep -nE '\bsorry\b|\badmit\b' RYTT_standalone.lean; then
-            echo "::error::sorry/admit found in RYTT_standalone.lean" >&2
+          # Ask the COMPILER whether a declaration uses sorry, rather than
+          # grepping the source for the word. A grep is a proxy for the property
+          # and gets it wrong in both directions: it fires on the word appearing
+          # in a comment (it did -- on this file's own documentation), and it
+          # would miss a sorry introduced through a macro or an imported
+          # declaration. Lean emits "declaration uses 'sorry'" as a warning, and
+          # that is the authoritative signal.
+          lean RYTT_standalone.lean 2>&1 | tee /tmp/lean-out.txt
+          test "${PIPESTATUS[0]}" -eq 0 || { echo "::error::RYTT_standalone.lean failed to compile" >&2; exit 1; }
+
+          # Lean writes this with BACKTICKS: declaration uses `sorry`
+          # A pattern using straight quotes matches nothing and the guard passes
+          # silently -- which is how the first version of this check was written,
+          # and it was caught only by injecting a real sorry and watching the
+          # guard stay quiet. The character class accepts either quoting style.
+          if grep -qE "declaration uses [\`']sorry[\`']" /tmp/lean-out.txt; then
+            echo "::error::the compiler reports a declaration using sorry" >&2
+            grep -nE "declaration uses [\`']sorry[\`']" /tmp/lean-out.txt >&2
             exit 1
           fi
-          echo "no sorry or admit"
+          echo "RYTT_standalone.lean: compiled clean, compiler reports no sorry"
 
   test:
     runs-on: ubuntu-latest
