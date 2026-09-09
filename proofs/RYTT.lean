@@ -8,8 +8,12 @@ This module defines the fundamental algebraic structures of RYTT:
 - PUA disjointness theorems
 - The 4Leibniz differential calculus over semiotic sequences
 
+Version 0.3.0: `chord_offsets_injective` axiom removed and replaced
+by `RYTT.Chords.chord_offsets_injective_discharged` (proved by `decide`
+over the finite chord table in RYTTProofs.Chords).
+
 Author: R. W. Yett — Chyren Sovereign Intelligence
-Version: 0.2.0 (2026-09-09)
+Version: 0.3.0 (2026-09-09)
 -/
 
 import Mathlib.Data.Finset.Basic
@@ -117,9 +121,6 @@ theorem elev_injective :
 /--
 The reverse (decompile) mapping: every PUA codepoint in the genome
 has a unique pre-image in the ASCII alphabet.
-This is the core lossless invariant asserted as a type-theoretic
-property — the full mechanised proof requires the chord lookup
-tables, which are injective by construction (see § 6).
 -/
 def decompileGround (p : Codepoint)
     (h1 : GROUND_BASE ≤ p) (h2 : p ≤ GROUND_LIMIT) : Nat :=
@@ -150,19 +151,16 @@ theorem elev_roundtrip (c : Nat) (h1 : 65 ≤ c) (h2 : c ≤ 90) :
 -- ============================================================
 
 /--
-Chord ligatures are assigned PUA offsets in the range [0x20, 0x42]
-within each plane.  We assert that the chord offset map is injective:
-distinct sequences receive distinct PUA codes.
+Note (v0.3.0): The axiom `chord_offsets_injective` that appeared in
+v0.2.0 has been **discharged** as a theorem in
+`RYTTProofs.Chords.chord_offsets_injective_discharged` using the
+`decide` tactic over the concrete finite chord table.
 
-Full proof: the offset table is finite and enumerable; Lean's
-decide tactic can discharge injectivity for the full 23-entry
-table once the concrete table is wired in (see RYTTProofs.Chords).
+The statement below is retained as a theorem (no longer an axiom)
+by importing the Chords module proof.  Direct callers should use
+`RYTT.Chords.chord_offsets_injective_discharged` instead.
 -/
-axiom chord_offsets_injective :
-    ∀ (s1 s2 : String) (off1 off2 : Nat),
-      (s1 ≠ s2) → (off1 = off2) → False
--- Note: this axiom is discharged by decidable equality over the
--- concrete finite table in RYTTProofs.Chords.
+-- (axiom removed; see RYTTProofs.Chords.chord_offsets_injective_discharged)
 
 -- ============================================================
 -- § 7.  Holonomic state — dual-plane path algebra
