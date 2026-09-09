@@ -473,8 +473,25 @@ class RyttCompiler:
             if matched_lig:
                 continue
 
+            # Alphabetic per str.isalpha() (e.g. Greek, accented Latin) but outside
+            # the 52-glyph ASCII genome -- passes through unchanged, same as the
+            # non-alpha branch above. Previously defaulted to RYTT_GENOME['A'],
+            # which silently mapped every such character to a literal 'A' on
+            # decode and broke the passthrough invariant.
+            if char not in RYTT_GENOME:
+                pua_chars.append(char)
+                tokens.append(RyttToken(
+                    raw=char, pua=char, is_chord=False, chord_len=1,
+                    family='PUNCT', path='', is_upper=False, case_plane=-1, elevation_z=0.0
+                ))
+                trit_stream.append(0)
+                sept_stream.append(0)
+                parity_sum += ord(char)
+                i += 1
+                continue
+
             # Single Glyph (lowercase or uppercase)
-            glyph_info = RYTT_GENOME.get(char, RYTT_GENOME['A'])
+            glyph_info = RYTT_GENOME[char]
             tok = RyttToken(
                 raw=char,
                 pua=glyph_info['pua'],
