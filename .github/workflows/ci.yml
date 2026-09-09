@@ -30,9 +30,23 @@ jobs:
         run: |
           python -m pytest benchmarks/test_glyph_atlas_data.py -v
 
-      - name: Run native lossless tests
+      - name: Run native lossless and integration tests
         run: |
-          python -m pytest benchmarks/test_rytt_native_lossless.py -v
+          python -m pytest benchmarks/test_rytt_native_lossless.py benchmarks/test_4leibniz_bridge.py -v
+
+      - name: Validate static deployment surface
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f vercel.json
+          test -f robots.txt
+          test -f sitemap.xml
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          json.loads(Path('vercel.json').read_text())
+          assert '<title>' in Path('index.html').read_text()
+          PY
 
       - name: Run benchmark suite
         run: |
