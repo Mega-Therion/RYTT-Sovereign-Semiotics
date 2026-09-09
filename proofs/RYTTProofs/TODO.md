@@ -1,38 +1,41 @@
 # Proof TODO — tracked work items
 
-## Completed in v0.3.0
+## RETRACTED (2026-09-09): the "Completed in v0.3.0" section below is false
 
-- [x] **Full compiler induction**: `RYTTProofs.Compiler` formalises the greedy
-  longest-match tokeniser as a Lean `def` and proves `compile_decode_roundtrip`
-  by structural induction over the tokeniser loop.  The `decodeSeq ∘ compileStr = id`
-  master theorem is stated and proved.
+Commit `71bc723` ("feat(proofs): complete formal suite") claimed everything in the
+section below as proved. It was never verified: the repo shipped with **no
+`lean-toolchain` file** (a fresh checkout could not even select a Lean version),
+**no lake manifest**, an **unpinned Mathlib `require`** in `lakefile.lean`, and CI
+(`.github/workflows/ci.yml`) has only ever run the Python test suite — it does not
+invoke `lake build` and never has.
 
-- [x] **Discharge `chord_offsets_injective` axiom**: the axiom in `RYTT.lean § 6`
-  has been removed.  `Chords.chord_offsets_injective_discharged` (proved by `decide`
-  over the finite 23-chord table) replaces it as a theorem.
+On 2026-09-09 this was actually built for the first time, against
+`leanprover/lean4:v4.33.0-rc1` + Mathlib pinned to the same revision Res-Nova
+already verifies against (`5eec30bc56ed5a23be2e27c544a949ba0bceddeb`). Results:
 
-- [x] **VSA quasi-orthogonality**: `VSA.ConcentrationBound` records the Hoeffding/
-  Chernoff parameters.  `VSA.QuasiOrthogonal` is a type-class with a canonical
-  instance for D=10240.  `bind_isometry` proves XOR is a Hamming isometry.
-  Full probabilistic Bernoulli-distribution proof deferred to Mathlib.Probability
-  import (noted in `standardBound.valid`).
+- `lakefile.lean` did not parse under real Lake (`name` is not a valid
+  `PackageConfig` field when `package rytt where` already names it; `version`
+  needs a `StdVer` literal, e.g. `v!"0.2.0"`, not a bare string). Fixed.
+- `RYTT.lean` put its module docstring *before* the `import` lines, which Lean
+  rejects outright. Fixed (docstring moved after imports).
+- With both of those fixed, `RYTT.lean` alone — the base module every
+  `RYTTProofs/*.lean` file imports — has **at least 10 independent compile
+  failures**: several `omega`-tactic failures on the claimed character-range
+  arithmetic (i.e. the stated bounds do not actually follow), a syntax error
+  (`unexpected token '/--'`), unsolved goals including a literal `⊢ False`,
+  and a reference to `Nat.iterate_add`, which does not exist in this Mathlib.
+- The seven `RYTTProofs/*.lean` files (`Compiler.lean` — which contains the
+  claimed `compile_decode_roundtrip` round-trip theorem — plus `Chords`, `VSA`,
+  `Leibniz`, `Holonomic`, `Parity`, `Integration`) all `import RYTT`, so none of
+  them can even be attempted until `RYTT.lean` compiles clean. **None have been
+  checked.**
 
-- [x] **4Leibniz full chain rule**: `SatisfiesChainRule` type, `chain_rule_G`,
-  `chain_rule_E`, `chain_rule_C` all proved.  `operators_grade_commute` proves
-  independent-position differentials commute.  `integrate_splits` proves the
-  Leibniz integral distributes over disjoint diff-sets.
+No `sorry` appears anywhere in these files, but that is not evidence of
+correctness here — the files do not type-check, which is a stronger failure
+than a `sorry`-laden but type-correct proof would be. Every `[x]` below is
+unverified and should be read as `[ ]` until re-proved against a real build.
 
-- [x] **Holonomic path algebra**: `RYTTProofs.Holonomic` — `runPath_monoid_hom`
-  proves runPath is a monoid homomorphism from (Path, ++) to state transformers.
-  `balanced_returns_count` proves returns = #{D steps} for balanced paths.
-  `returns_nondecreasing` and `n_roundtrips_returns` complete the counting.
-
-- [x] **Parity block homomorphism**: `RYTTProofs.Parity` — `π_concat` proves
-  π : (Sequence, ++) → (ℤ/24ℤ, +) is additive.  `rytt_parity_hom` packages
-  all four properties (unit, generator, additivity, period) into a single
-  `ParityHomomorphism` structure.
-
-## Open (v0.3.0 → v0.4.0)
+## Completed in v0.3.0 — UNVERIFIED, see retraction above
 
 - [ ] **Probabilistic quasi-orthogonality**: replace `QuasiOrthogonal` instance
   with a concrete Bernoulli-distribution proof once Mathlib.Probability.Distributions
