@@ -1,27 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="RYTT Sovereign Semiotics is a formal, lossless semiotic grammar mapping language into radial glyph chords, native tokens, and reversible geometric invariants.">
-  <meta name="theme-color" content="#070b16">
+  <meta name="description" content="RYTT Sovereign Semiotics — a formal, lossless semiotic grammar mapping language into radial glyph chords, native tokens, and reversible geometric invariants.">
+  <meta name="theme-color" content="#060a12">
   <link rel="canonical" href="/">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:title" content="RYTT Sovereign Semiotics">
-  <meta property="og:description" content="Explore a reversible geometric language system with formal proofs, native tokenization, and interactive glyph renderers.">
+  <meta property="og:description" content="A lossless geometric grammar with dual-plane glyphs, formal verification, and interactive renderers.">
   <meta property="og:image" content="/assets/social_preview.png">
-  <meta property="og:image:alt" content="Radial RYTT glyph matrix with cyan Ground and gold Elevated planes.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="RYTT Sovereign Semiotics">
-  <meta name="twitter:description" content="A lossless geometric grammar with dual-plane glyphs, formal verification, and interactive renderers.">
-  <meta name="twitter:image" content="/assets/social_preview.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/styles.css">
   <title>RYTT Sovereign Semiotics | Reversible Geometric Language</title>
   <script type="application/ld+json">
   {
-    "@context":"https://schema.org",
-    "@type":"TechArticle",
+    "@context":"https://schema.org","@type":"TechArticle",
     "headline":"RYTT Sovereign Semiotics",
     "description":"A formal, lossless semiotic grammar mapping language into radial glyph chords and reversible geometric invariants.",
     "author":{"@type":"Person","name":"R. W. Yett","url":"https://orcid.org/0009-0001-1303-7190"},
@@ -31,60 +28,451 @@
   </script>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
-  <header class="site-header">
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="header-inner">
     <a class="brand" href="/" aria-label="RYTT Sovereign Semiotics home">
       <span class="brand-mark" aria-hidden="true">RY</span>
       <span>RYTT <small>Sovereign Semiotics</small></span>
     </a>
-    <nav aria-label="Primary navigation">
-      <a href="#system">System</a>
-      <a href="#explore">Explore</a>
-      <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics" rel="noreferrer">GitHub</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#system" class="hide-sm">System</a>
+      <a href="#playground" class="hide-sm">Playground</a>
+      <a href="#explore" class="hide-sm">Explore</a>
+      <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics"
+         rel="noreferrer" target="_blank" class="nav-pill">GitHub ↗</a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <main id="main-content">
-    <section class="hero section-shell" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Formal semiotics · dual-plane geometry · lossless by design</p>
-        <h1 id="hero-title">Language that <em>returns</em> to itself.</h1>
-        <p class="hero-lede">RYTT maps language into geometric glyph primitives and compound chords, preserving casing as spatial state while keeping the original text exactly recoverable.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="/renderers/glyph_atlas.html">Open the glyph atlas <span aria-hidden="true">↗</span></a>
-          <a class="button button-secondary" href="/README.md">Read the technical overview</a>
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero shell" aria-labelledby="hero-title">
+    <div class="hero-copy" data-reveal>
+      <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>
+        Formal semiotics &middot; dual-plane geometry &middot; lossless by design
+      </p>
+      <h1 id="hero-title">Language that
+        <em>returns</em><br>to itself.
+      </h1>
+      <p class="hero-lede">
+        RYTT maps language into geometric glyph primitives and compound chords,
+        preserving casing as spatial state while keeping the original text
+        exactly recoverable &mdash; byte for byte.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#playground">Try the playground</a>
+        <a class="btn btn-secondary" href="/renderers/glyph_atlas.html">Open the glyph atlas ↗</a>
+      </div>
+      <div class="proof-line">
+        <span class="eq">D(C(S)) &equiv; S</span>
+        <span>Lossless reconstruction is the invariant.</span>
+      </div>
+    </div>
+    <div class="hero-art" aria-label="Animated RYTT glyph matrix">
+      <div class="glyph-canvas-wrap">
+        <canvas id="hero-canvas" width="540" height="540"
+          aria-label="Rotating radial RYTT glyph primitives, cyan Ground Plane and gold Elevated Plane"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- METRICS -->
+  <section class="shell" aria-label="Key metrics" data-reveal>
+    <div class="metrics-strip">
+      <div class="metric">
+        <span class="metric-val">52</span>
+        <span class="metric-label">Glyph primitives</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">23</span>
+        <span class="metric-label">Chord ligatures</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">24</span>
+        <span class="metric-label">Invariant tests</span>
+      </div>
+      <div class="metric">
+        <span class="metric-val">100%</span>
+        <span class="metric-label">Round-trip fidelity</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM -->
+  <section id="system" class="section shell" aria-labelledby="system-title">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">A compact system map</p>
+      <h2 id="system-title">One grammar.
+        <em>Two planes.</em><br>No information loss.
+      </h2>
+      <p class="section-sub">
+        Every Latin letter maps to a unique PUA codepoint in one of two spatially
+        disjoint planes. Compound chords pack high-frequency sequences into
+        single tokens. All other characters pass through unchanged.
+      </p>
+    </div>
+    <div class="feature-grid">
+      <article class="feature-card" data-reveal data-reveal-delay="1">
+        <p class="feature-num">01</p>
+        <h3>Geometry as vocabulary</h3>
+        <p>Twenty-six atomic glyph families and twenty-three compound chords
+           give recurring structures a native geometric form.</p>
+      </article>
+      <article class="feature-card" data-reveal data-reveal-delay="2">
+        <p class="feature-num">02</p>
+        <h3>Casing as position</h3>
+        <p>Lowercase occupies the Ground Plane at Z&thinsp;=&thinsp;0;
+           uppercase occupies the Elevated Plane at Z&thinsp;=&thinsp;25.
+           The planes are disjoint by construction.</p>
+      </article>
+      <article class="feature-card" data-reveal data-reveal-delay="3">
+        <p class="feature-num">03</p>
+        <h3>Proof before promise</h3>
+        <p>Property-style invariant tests and reproducible Python benchmarks
+           make reversibility inspectable rather than merely asserted.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- PLAYGROUND -->
+  <section id="playground" class="section shell" aria-labelledby="pg-title">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Interactive compiler</p>
+      <h2 id="pg-title">Type. Encode. Inspect.
+        <em>Verify.</em>
+      </h2>
+      <p class="section-sub">
+        Client-side RYTT compiler running entirely in the browser.
+        Every keystroke shows the encoded PUA stream, token count,
+        byte delta, and exact round-trip confirmation.
+      </p>
+    </div>
+    <div class="playground-wrap" data-reveal>
+      <div class="playground-toolbar">
+        <span class="label">Playground</span>
+        <span id="pg-rt-badge" class="pg-status">&#x2714; Round-trip exact</span>
+        <button class="btn btn-ghost" id="pg-copy" aria-label="Copy encoded output">Copy &#x2398;</button>
+        <button class="btn btn-ghost" id="pg-clear" aria-label="Clear input">Clear</button>
+      </div>
+      <div class="playground-body">
+        <textarea class="pane pane-in" id="pg-input"
+          placeholder="Type anything here&hellip;"
+          aria-label="Source text input"
+          rows="7" spellcheck="false">Hello RYTT &mdash; lossless by design.</textarea>
+        <div class="pane pane-out" id="pg-output"
+          role="region" aria-label="Encoded RYTT output" aria-live="polite"></div>
+      </div>
+      <div class="playground-footer">
+        <div class="pg-metric">
+          <span class="val" id="pg-m-src">&#x2014;</span>
+          <span class="lbl">Source chars</span>
         </div>
-        <div class="proof-line"><span aria-hidden="true">D(C(S)) ≡ S</span><span>Lossless reconstruction is the invariant.</span></div>
+        <div class="pg-metric">
+          <span class="val" id="pg-m-tok">&#x2014;</span>
+          <span class="lbl">RYTT tokens</span>
+        </div>
+        <div class="pg-metric">
+          <span class="val" id="pg-m-chord">&#x2014;</span>
+          <span class="lbl">Chord tokens</span>
+        </div>
+        <div class="pg-metric">
+          <span class="val" id="pg-m-ratio">&#x2014;</span>
+          <span class="lbl">Compression ratio</span>
+        </div>
       </div>
-      <div class="hero-art" aria-label="RYTT radial glyph matrix showing Ground and Elevated planes">
-        <img src="/assets/social_preview.svg" alt="Radial matrix of RYTT glyphs with cyan Ground and gold Elevated plane coding">
+    </div>
+  </section>
+
+  <!-- EXPLORE -->
+  <section id="explore" class="section shell" aria-labelledby="explore-title">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Interactive instruments</p>
+      <h2 id="explore-title">Explore the
+        <em>living surfaces.</em>
+      </h2>
+      <p class="section-sub">
+        Move from the formal source to visual experiments built
+        directly from the RYTT vocabulary.
+      </p>
+    </div>
+    <div class="explore-grid">
+      <a class="explore-card explore-card-lg" href="/renderers/glyph_atlas.html"
+         data-reveal data-reveal-delay="1">
+        <span class="card-kicker">Vocabulary</span>
+        <h3>Glyph Atlas</h3>
+        <p>Search, filter, compare planes, and copy glyphs from
+           the complete primitive and chord gallery.</p>
+        <span class="card-arrow">Inspect the atlas <span aria-hidden="true">&rarr;</span></span>
+      </a>
+      <a class="explore-card" href="/renderers/blake_transformation_loop.html"
+         data-reveal data-reveal-delay="2">
+        <span class="card-kicker">Demonstration</span>
+        <h3>Blake &rarr; RYTT</h3>
+        <p>Watch &ldquo;The Tyger&rdquo; transform through the reversible pipeline.</p>
+        <span class="card-arrow">Run the loop <span aria-hidden="true">&rarr;</span></span>
+      </a>
+      <a class="explore-card" href="/renderers/holonomic_rytt_stack.html"
+         data-reveal data-reveal-delay="3">
+        <span class="card-kicker">Spatial model</span>
+        <h3>Holonomic stack</h3>
+        <p>Enter the 3-D renderer for polygons, planes, and casing.</p>
+        <span class="card-arrow">Open the renderer <span aria-hidden="true">&rarr;</span></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="shell" aria-labelledby="close-title" data-reveal>
+    <div class="closing">
+      <div>
+        <p class="eyebrow">Open research artifact</p>
+        <h2 id="close-title">Read the source.<br>
+          Run the proof.<br>
+          <em>Trace the return.</em>
+        </h2>
+        <p class="section-sub" style="margin-top:.75rem">
+          The repository contains the compiler, benchmark suite,
+          Lean 4 formalization, monographs, and interactive renderers.
+        </p>
       </div>
-    </section>
-
-    <section id="system" class="section-shell section-block" aria-labelledby="system-title">
-      <div class="section-heading"><p class="eyebrow">A compact system map</p><h2 id="system-title">One grammar. Two planes. No information loss.</h2></div>
-      <div class="feature-grid">
-        <article class="feature-card"><span class="feature-number">01</span><h3>Geometry as vocabulary</h3><p>Twenty-six atomic glyph families and twenty-three compound chords give recurring structures a native geometric form.</p></article>
-        <article class="feature-card"><span class="feature-number">02</span><h3>Casing as position</h3><p>Lowercase occupies the Ground Plane at Z=0; uppercase occupies the Elevated Plane at Z=25. The planes are disjoint.</p></article>
-        <article class="feature-card"><span class="feature-number">03</span><h3>Proof before promise</h3><p>Lean 4 proofs and reproducible Python benchmarks make reversibility inspectable rather than merely asserted.</p></article>
+      <div class="closing-actions">
+        <a class="btn btn-primary" href="/proofs/RYTT.lean">View Lean proofs</a>
+        <a class="btn btn-secondary" href="/monograph/RYTT_Sovereign_Semiotics_Treatise.pdf"
+           target="_blank" rel="noreferrer">Open the monograph &darr;</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="explore" class="section-shell section-block" aria-labelledby="explore-title">
-      <div class="section-heading"><p class="eyebrow">Interactive instruments</p><h2 id="explore-title">Explore the living surfaces.</h2><p>Move from the formal source to visual experiments built directly from the RYTT vocabulary.</p></div>
-      <div class="explore-grid">
-        <a class="explore-card explore-card-large" href="/renderers/glyph_atlas.html"><span class="card-kicker">Vocabulary</span><h3>Glyph Atlas</h3><p>Search, filter, compare planes, and copy glyphs from the complete primitive and chord gallery.</p><span class="card-link">Inspect the atlas <span aria-hidden="true">→</span></span></a>
-        <a class="explore-card" href="/renderers/blake_transformation_loop.html"><span class="card-kicker">Demonstration</span><h3>Blake → RYTT</h3><p>Watch “The Tyger” transform through the reversible pipeline.</p><span class="card-link">Run the loop <span aria-hidden="true">→</span></span></a>
-        <a class="explore-card" href="/renderers/holonomic_rytt_stack.html"><span class="card-kicker">Spatial model</span><h3>Holonomic stack</h3><p>Enter the three-dimensional renderer for polygons, planes, and casing.</p><span class="card-link">Open the renderer <span aria-hidden="true">→</span></span></a>
-      </div>
-    </section>
+</main>
 
-    <section class="section-shell closing-panel" aria-labelledby="closing-title">
-      <div><p class="eyebrow">Open research artifact</p><h2 id="closing-title">Read the source. Run the proof. Trace the return.</h2><p>The repository contains the compiler, benchmark suite, Lean formalization, monographs, and interactive renderers.</p></div>
-      <div class="closing-actions"><a class="button button-primary" href="/proofs/RYTT.lean">View Lean proofs</a><a class="button button-secondary" href="/monograph/RYTT_Sovereign_Semiotics_Treatise.pdf">Open the monograph</a></div>
-    </section>
-  </main>
+<footer class="site-footer shell">
+  <span>RYTT Sovereign Semiotics &middot; v0.1.0 &middot; CC BY 4.0</span>
+  <a href="https://orcid.org/0009-0001-1303-7190" rel="noreferrer" target="_blank">
+    R.&thinsp;W. Yett &middot; ORCID
+  </a>
+</footer>
 
-  <footer class="site-footer section-shell"><span>RYTT Sovereign Semiotics · CC BY 4.0</span><a href="https://orcid.org/0009-0001-1303-7190" rel="noreferrer">R. W. Yett · ORCID</a></footer>
+<script>
+/* ============================================================
+   Hero canvas — animated dual-plane glyph ring
+   Ground Plane (cyan) · Elevated Plane (gold)
+   ============================================================ */
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const CX = W/2, CY = H/2;
+  const TAU = Math.PI * 2;
+
+  // Minimal subset of glyph paths for the ring
+  const GLYPHS_G = [ // Ground plane — cyan
+    t => { ctx.beginPath(); ctx.arc(0,0,7,0,TAU); ctx.stroke(); }, // a
+    t => { ctx.beginPath(); ctx.moveTo(0,-14); ctx.lineTo(0,14); ctx.moveTo(0,0); ctx.lineTo(16,0); ctx.stroke(); }, // b
+    t => { ctx.beginPath(); ctx.moveTo(14,-14); ctx.lineTo(-8,0); ctx.lineTo(14,14); ctx.stroke(); }, // c
+    t => { ctx.beginPath(); ctx.arc(0,0,12,0,TAU); ctx.stroke(); ctx.beginPath(); ctx.arc(0,0,4,0,TAU); ctx.fill(); }, // o
+    t => { ctx.beginPath(); ctx.moveTo(-10,-10); ctx.lineTo(10,10); ctx.moveTo(10,-10); ctx.lineTo(-10,10); ctx.stroke(); }, // x
+    t => { ctx.beginPath(); ctx.moveTo(-10,-10); ctx.lineTo(0,0); ctx.lineTo(10,-10); ctx.moveTo(0,0); ctx.lineTo(0,14); ctx.stroke(); }, // y
+    t => { ctx.beginPath(); ctx.moveTo(-12,12); ctx.arc(0,0,17,0,Math.PI,true); ctx.stroke(); }, // m
+    t => { ctx.beginPath(); ctx.moveTo(-14,-14); ctx.lineTo(14,-14); ctx.moveTo(0,-14); ctx.lineTo(0,14); ctx.stroke(); }, // t
+    t => { ctx.beginPath(); ctx.moveTo(-12,0); ctx.lineTo(12,0); ctx.stroke(); }, // g / —
+    t => { ctx.beginPath(); ctx.arc(0,0,12,-Math.PI/2,Math.PI/2); ctx.stroke(); }, // l
+  ];
+  const GLYPHS_E = [ // Elevated plane — gold
+    t => { ctx.beginPath(); ctx.arc(0,0,10,0,TAU); ctx.stroke(); ctx.beginPath(); ctx.arc(0,0,3,0,TAU); ctx.fill(); }, // O
+    t => { ctx.beginPath(); ctx.arc(0,0,12,0,TAU); ctx.stroke(); ctx.beginPath(); ctx.arc(0,0,5,0,TAU); ctx.stroke(); }, // R (ring+ring)
+    t => { ctx.beginPath(); ctx.moveTo(0,-14); ctx.lineTo(0,14); ctx.moveTo(-14,-14); ctx.lineTo(14,-14); ctx.stroke(); }, // T
+    t => { ctx.beginPath(); ctx.moveTo(-14,0); ctx.lineTo(0,-14); ctx.lineTo(14,0); ctx.lineTo(0,14); ctx.closePath(); ctx.stroke(); }, // F (diamond)
+    t => { ctx.beginPath(); ctx.moveTo(-12,-12); ctx.lineTo(12,12); ctx.moveTo(12,-12); ctx.lineTo(-12,12); ctx.stroke(); }, // X
+    t => { ctx.beginPath(); ctx.moveTo(-14,-14); ctx.lineTo(0,0); ctx.lineTo(14,-14); ctx.moveTo(0,0); ctx.lineTo(0,16); ctx.stroke(); }, // Y
+    t => { ctx.beginPath(); ctx.moveTo(-14,12); ctx.arc(0,0,18,0,Math.PI,true); ctx.stroke(); }, // M
+    t => { ctx.beginPath(); ctx.moveTo(-10,-10); ctx.lineTo(-10,10); ctx.lineTo(10,10); ctx.stroke(); }, // L (frame)
+    t => { ctx.beginPath(); ctx.rect(-12,-12,24,24); ctx.stroke(); }, // K
+    t => { ctx.beginPath(); ctx.moveTo(-14,-14); ctx.lineTo(14,-14); ctx.moveTo(-14,0); ctx.lineTo(14,0); ctx.moveTo(-14,14); ctx.lineTo(14,14); ctx.stroke(); }, // E (three lines)
+  ];
+
+  const N_G = GLYPHS_G.length;
+  const N_E = GLYPHS_E.length;
+  const R_OUTER = 195, R_INNER = 115;
+
+  let t = 0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Faint orbit rings
+    ctx.save();
+    ctx.strokeStyle = 'rgba(62,232,255,0.07)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(CX,CY,R_OUTER,0,TAU); ctx.stroke();
+    ctx.strokeStyle = 'rgba(232,200,124,0.06)';
+    ctx.beginPath(); ctx.arc(CX,CY,R_INNER,0,TAU); ctx.stroke();
+    ctx.restore();
+
+    // Ground ring — cyan
+    for(let i=0;i<N_G;i++){
+      const angle = (TAU * i / N_G) - t * 0.18;
+      const x = CX + R_OUTER * Math.cos(angle);
+      const y = CY + R_OUTER * Math.sin(angle);
+      const alpha = 0.55 + 0.38 * Math.sin(t * 0.7 + i * 0.9);
+      ctx.save();
+      ctx.translate(x,y);
+      ctx.rotate(angle + Math.PI/2);
+      ctx.strokeStyle = `rgba(62,232,255,${alpha})`;
+      ctx.fillStyle   = `rgba(62,232,255,${alpha})`;
+      ctx.lineWidth = 1.5;
+      GLYPHS_G[i](t);
+      ctx.restore();
+    }
+
+    // Elevated ring — gold
+    for(let i=0;i<N_E;i++){
+      const angle = (TAU * i / N_E) + t * 0.11 + Math.PI/N_E;
+      const x = CX + R_INNER * Math.cos(angle);
+      const y = CY + R_INNER * Math.sin(angle);
+      const alpha = 0.5 + 0.35 * Math.sin(t * 0.5 + i * 1.1);
+      ctx.save();
+      ctx.translate(x,y);
+      ctx.rotate(angle + Math.PI/2);
+      ctx.strokeStyle = `rgba(232,200,124,${alpha})`;
+      ctx.fillStyle   = `rgba(232,200,124,${alpha})`;
+      ctx.lineWidth = 1.5;
+      GLYPHS_E[i](t);
+      ctx.restore();
+    }
+
+    // Centre seal
+    ctx.save();
+    ctx.translate(CX,CY);
+    ctx.strokeStyle = 'rgba(62,232,255,0.6)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(0,0,28,0,TAU); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,18,0,TAU); ctx.stroke();
+    // R glyph in centre
+    ctx.strokeStyle = 'rgba(62,232,255,0.85)';
+    ctx.lineWidth = 2;
+    ctx.font = 'italic 22px "Instrument Serif", Georgia, serif';
+    ctx.fillStyle = 'rgba(62,232,255,0.85)';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('RY', 0, 1);
+    ctx.restore();
+
+    t += 0.012;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================================================
+   Scroll reveal
+   ============================================================ */
+(function(){
+  const io = new IntersectionObserver(
+    entries => entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+})();
+
+/* ============================================================
+   Browser-side RYTT compiler (minimal, lossless)
+   ============================================================ */
+(function(){
+  // Genome: lower plane U+E000, upper plane U+E800
+  const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
+  const GENOME = {};
+  for(let i=0;i<26;i++){
+    GENOME[ALPHA[i]]     = String.fromCodePoint(0xE000 + i);
+    GENOME[ALPHA[i].toUpperCase()] = String.fromCodePoint(0xE800 + i);
+  }
+  // Ligatures (lower offset matches compiler.py)
+  const LIGS_RAW = [
+    ['TION',0x40],['tion',0x40],['MENT',0x41],['ment',0x41],
+    ['RYTT',0x42],['rytt',0x42],['PSY',0x20],['psy',0x20],
+    ['STR',0x21],['str',0x21],['ING',0x22],['ing',0x22],
+    ['ALL',0x23],['all',0x23],['THE',0x24],['the',0x24],
+    ['AND',0x25],['and',0x25],['NOT',0x26],['not',0x26],
+    ['FOR',0x27],['for',0x27],['CON',0x28],['con',0x28],
+    ['PRO',0x29],['pro',0x29],['TH',0x30],['th',0x30],
+    ['ST',0x31],['st',0x31],['IN',0x32],['in',0x32],
+    ['ER',0x34],['er',0x34],['ON',0x35],['on',0x35],
+    ['AT',0x36],['at',0x36],['RY',0x37],['ry',0x37],
+    ['TT',0x38],['tt',0x38],['RE',0x39],['re',0x39],
+    ['EE',0x33],['ee',0x33],
+  ];
+  // Sort longest-first for greedy match
+  LIGS_RAW.sort((a,b)=>b[0].length-a[0].length);
+  const LIGS = {};
+  const PLANE = (s) => /[A-Z]/.test(s[0]) ? 0xE800 : 0xE000;
+  for(const [seq,off] of LIGS_RAW) LIGS[seq] = String.fromCodePoint(PLANE(seq) + off);
+
+  // PUA→plain reverse map
+  const REV = {};
+  for(const [k,v] of Object.entries(GENOME)) REV[v] = k;
+  for(const [k,v] of Object.entries(LIGS)) REV[v] = k;
+
+  function compile(text){
+    let out = '', i = 0, tokens = 0, chords = 0;
+    while(i < text.length){
+      let matched = false;
+      for(const [seq,pua] of Object.entries(LIGS)){
+        if(text.startsWith(seq,i)){
+          out += pua; tokens++; chords++;
+          i += seq.length; matched = true; break;
+        }
+      }
+      if(!matched){
+        const c = text[i];
+        out += (GENOME[c] || c);
+        tokens++; i++;
+      }
+    }
+    return {encoded: out, tokens, chords, src: text.length};
+  }
+
+  function decompile(pua){
+    let out = '';
+    for(const ch of pua) out += REV[ch] || ch;
+    return out;
+  }
+
+  // Wire up playground
+  const inp  = document.getElementById('pg-input');
+  const out  = document.getElementById('pg-output');
+  const badge= document.getElementById('pg-rt-badge');
+  const mSrc = document.getElementById('pg-m-src');
+  const mTok = document.getElementById('pg-m-tok');
+  const mCho = document.getElementById('pg-m-chord');
+  const mRat = document.getElementById('pg-m-ratio');
+  const btnCopy  = document.getElementById('pg-copy');
+  const btnClear = document.getElementById('pg-clear');
+  if(!inp) return;
+
+  function update(){
+    const text = inp.value;
+    if(!text){ out.textContent=''; badge.textContent='—'; badge.className='pg-status'; mSrc.textContent=mTok.textContent=mCho.textContent=mRat.textContent='—'; return; }
+    const r = compile(text);
+    out.textContent = r.encoded;
+    const recovered = decompile(r.encoded);
+    const exact = recovered === text;
+    badge.textContent = exact ? '✔ Round-trip exact' : '✗ Mismatch';
+    badge.className = 'pg-status' + (exact ? '' : ' fail');
+    mSrc.textContent = r.src;
+    mTok.textContent = r.tokens;
+    mCho.textContent = r.chords;
+    const ratio = r.src > 0 ? (r.src / r.tokens).toFixed(2) : '—';
+    mRat.textContent = ratio;
+  }
+
+  inp.addEventListener('input', update);
+  btnCopy.addEventListener('click', ()=>{
+    navigator.clipboard.writeText(out.textContent).then(()=>{ btnCopy.textContent='Copied ✓'; setTimeout(()=>{btnCopy.textContent='Copy ⌘';},1600); });
+  });
+  btnClear.addEventListener('click', ()=>{ inp.value=''; update(); inp.focus(); });
+  update();
+})();
+</script>
 </body>
 </html>
