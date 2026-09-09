@@ -40,8 +40,6 @@ that nothing does.
 
 ### What is NOT verified
 
-
-
 `proofs/` claims a "complete formal suite" (commit `71bc723`) covering the round-trip
 identity, chord injectivity, VSA quasi-orthogonality, the 4Leibniz chain rule, holonomic
 path algebra, and parity homomorphism. **That claim is false.** As of 2026-09-09 it had
@@ -73,6 +71,23 @@ nonsense and see whether the same proof still closes.
 
 ## CI
 
-`.github/workflows/ci.yml` runs the Python suite (pytest, benchmarks, CLI smoke test)
-across Python 3.10–3.12. It does not build or check `proofs/` in any way; a red Lean
-build will not be caught by CI as it currently stands.
+`.github/workflows/ci.yml` runs two things:
+
+- **`test`** — the Python suite (pytest, benchmarks, CLI smoke test) across
+  Python 3.10–3.12.
+- **`lean-standalone`** — compiles `proofs/RYTT_standalone.lean` on the pinned
+  toolchain and fails if the *compiler* reports a declaration using `sorry`. No
+  Mathlib, no cache, no `lake build`; it finishes in about 15 seconds.
+
+It still does **not** build `proofs/RYTT.lean` or `proofs/RYTTProofs/*`. Those do
+not compile (see above), so gating them would make CI permanently red without
+proving anything new. Add them the moment they build.
+
+One note on the `sorry` check, because the first two versions of it were both
+wrong in instructive ways. Grepping the source for the word fires on the word
+appearing in a comment — it did, on this file's own documentation. Reading the
+compiler's output instead is right, but Lean writes ``declaration uses `sorry` ``
+with **backticks**; a pattern using straight quotes matches nothing and the guard
+passes silently on any file, however many sorries it contains. That second bug
+was found only by injecting a real `sorry` and watching the guard stay quiet.
+If you touch that check, sabotage-test it in both directions before trusting it.
