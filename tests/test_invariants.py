@@ -48,7 +48,6 @@ def test_round_trip_exact(label, text):
 
 
 # ── PUA disjointness (2 tests) ───────────────────────────────────────────────
-de
 def test_pua_genome_ligature_disjoint():
     """Genome and ligature PUA codepoints must not share any value."""
     genome_puas = {v["pua"] for v in RYTT_GENOME.values()}
