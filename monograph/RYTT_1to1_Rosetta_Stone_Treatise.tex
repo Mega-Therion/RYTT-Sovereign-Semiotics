@@ -133,13 +133,13 @@ We present \textbf{RYTT Sovereign Semiotics}, a complete geometric orthography, 
 $\mathbf{\Sigma}^\uparrow_W \mathbf{\Sigma}_e$ $\mathbf{\Sigma}_p \mathbf{\Sigma}_r \mathbf{\Sigma}_e \mathbf{\Sigma}_s \mathbf{\Sigma}_e \mathbf{\Sigma}_n \mathbf{\Sigma}_t$ $\mathbf{\Sigma}^\uparrow_R \mathbf{\Sigma}^\uparrow_Y \mathbf{\Sigma}^\uparrow_T \mathbf{\Sigma}^\uparrow_T$ $\mathbf{\Sigma}^\uparrow_S \mathbf{\Sigma}_o \mathbf{\Sigma}_v \mathbf{\Sigma}_e \mathbf{\Sigma}_r \mathbf{\Sigma}_e \mathbf{\Sigma}_i \mathbf{\Sigma}_g \mathbf{\Sigma}_n$ $\mathbf{\Sigma}^\uparrow_S \mathbf{\Sigma}_e \mathbf{\Sigma}_m \mathbf{\Sigma}_i \mathbf{\Sigma}_o \mathbf{\Sigma}_t \mathbf{\Sigma}_i \mathbf{\Sigma}_c \mathbf{\Sigma}_s$, $\mathbf{\Sigma}_g \mathbf{\Sigma}_e \mathbf{\Sigma}_o \mathbf{\Sigma}_m \mathbf{\Sigma}_e \mathbf{\Sigma}_t \mathbf{\Sigma}_r \mathbf{\Sigma}_i \mathbf{\Sigma}_c$ $\mathbf{\Sigma}_o \mathbf{\Sigma}_r \mathbf{\Sigma}_t \mathbf{\Sigma}_h \mathbf{\Sigma}_o \mathbf{\Sigma}_g \mathbf{\Sigma}_r \mathbf{\Sigma}_a \mathbf{\Sigma}_p \mathbf{\Sigma}_h \mathbf{\Sigma}_y$, $\mathbf{\Sigma}_s \mathbf{\Sigma}_p \mathbf{\Sigma}_a \mathbf{\Sigma}_t \mathbf{\Sigma}_i \mathbf{\Sigma}_a \mathbf{\Sigma}_l$ $\mathbf{\Sigma}_c \mathbf{\Sigma}_o \mathbf{\Sigma}_o \mathbf{\Sigma}_r \mathbf{\Sigma}_d \mathbf{\Sigma}_i \mathbf{\Sigma}_n \mathbf{\Sigma}_a \mathbf{\Sigma}_t \mathbf{\Sigma}_e$ $\mathbf{\Sigma}_a \mathbf{\Sigma}_l \mathbf{\Sigma}_g \mathbf{\Sigma}_e \mathbf{\Sigma}_b \mathbf{\Sigma}_r \mathbf{\Sigma}_a$, $\mathbf{\Sigma}_c \mathbf{\Sigma}_h \mathbf{\Sigma}_o \mathbf{\Sigma}_r \mathbf{\Sigma}_d$ $\mathbf{\Sigma}_c \mathbf{\Sigma}_o \mathbf{\Sigma}_m \mathbf{\Sigma}_p \mathbf{\Sigma}_i \mathbf{\Sigma}_l \mathbf{\Sigma}_e \mathbf{\Sigma}_r$ $\mathbf{\Sigma}_2 \mathbf{\Sigma}_6$ $\mathbf{\Sigma}_g \mathbf{\Sigma}_l \mathbf{\Sigma}_y \mathbf{\Sigma}_p \mathbf{\Sigma}_h$ $\mathbf{\Sigma}_p \mathbf{\Sigma}_r \mathbf{\Sigma}_i \mathbf{\Sigma}_m \mathbf{\Sigma}_i \mathbf{\Sigma}_t \mathbf{\Sigma}_i \mathbf{\Sigma}_v \mathbf{\Sigma}_e \mathbf{\Sigma}_s$. $\mathbf{\Sigma}_G \mathbf{\Sigma}_r \mathbf{\Sigma}_o \mathbf{\Sigma}_u \mathbf{\Sigma}_n \mathbf{\Sigma}_d$ ($Z=0.0, \mathtt{\backslash uE000}$) $\longleftrightarrow$ $\mathbf{\Sigma}^\uparrow_E \mathbf{\Sigma}_l \mathbf{\Sigma}_e \mathbf{\Sigma}_v \mathbf{\Sigma}_a \mathbf{\Sigma}_t \mathbf{\Sigma}_e \mathbf{\Sigma}_d$ ($Z=25.0, \mathtt{\backslash uE800}$). $\Delta \mathcal{S}_{\text{casing}} \equiv 0$.
 }
 
-\rosettapanel{The Bijective Involution Theorem ($\mathcal{D}(\mathcal{C}(S)) \equiv S$)}{%
-Let $\mathcal{A}$ be the complete alphabet and $\mathcal{S}^*$ be the free monoid of text strings. The RYTT encoding map $\mathcal{C}: \mathcal{S}^* \to \mathcal{V}^*$ and decoding map $\mathcal{D}: \mathcal{V}^* \to \mathcal{S}^*$ satisfy exact left-invertibility with zero topological distortion:
-$$\forall S \in \mathcal{S}^*,\quad \mathcal{D}(\mathcal{C}(S)) = S$$
+\rosettapanel{The Bounded Left-Inverse Round-Trip Identity ($\mathcal{D}(\mathcal{C}(c)) \equiv c$)}{%
+Let $\mathcal{A}$ be the complete alphabet and $\mathcal{S}^*$ be the free monoid of text strings. What is machine-verified is narrower than the panel's earlier title claimed: the RYTT encoding map $\mathcal{C}$ and decoding map $\mathcal{D}$ satisfy left-invertibility per chord constructor $c$, on the bounded domain tested in \texttt{proofs/RYTT\_standalone.lean} -- \textbf{[thm]}. This is not a proof of bijectivity (which needs injectivity plus surjectivity onto the full valid range) or of an involution ($f(f(x))=x$, a different statement) over the whole string monoid $\mathcal{S}^*$:
+$$\forall c \in \{\text{chord constructors}\},\quad \mathcal{D}(\mathcal{C}(c)) = c$$
 }{%
-$\forall S \in \mathcal{S}^*,\quad \mathcal{D}(\mathcal{C}(S)) \equiv S$.\par
-$\mathbf{\Sigma}^\uparrow_L \mathbf{\Sigma}_e \mathbf{\Sigma}_a \mathbf{\Sigma}_n~4 \vdash \mathtt{rytt\_ground\_primitive\_left\_inverse} : \mathbf{\Sigma}_0~\mathtt{sorry}$.\par
-$\mathbf{\Sigma}^\uparrow_L \mathbf{\Sigma}_e \mathbf{\Sigma}_a \mathbf{\Sigma}_n~4 \vdash \mathtt{rytt\_elevated\_compound\_left\_inverse} : \mathbf{\Sigma}_0~\mathtt{sorry}$.
+$\forall c,\quad \mathcal{D}(\mathcal{C}(c)) \equiv c$ (bounded domain, zero \texttt{sorry} in \texttt{RYTT\_standalone.lean}).\par
+$\mathbf{\Sigma}^\uparrow_L \mathbf{\Sigma}_e \mathbf{\Sigma}_a \mathbf{\Sigma}_n~4 \vdash \mathtt{pua\_decode(pua\_encode~c)} = c$ -- \textbf{[thm]}, verified.\par
+Everything under \texttt{RYTT.lean} and \texttt{RYTTProofs/} does \textbf{not compile} -- do not cite it as established.
 }
 
 \section{The 26-Primitive Coordinate Atlas}
@@ -180,8 +180,8 @@ $10,000+$ $\mathbf{\Sigma}_p \mathbf{\Sigma}_a \mathbf{\Sigma}_t \mathbf{\Sigma}
 $$E_n = \hbar \omega_0 \left( n + \frac{1}{2} \right) + \sum_{k=1}^4 \lambda_k \cos(k \theta)$$
 }
 
-\rosettapanel{Empirical Benchmark Convergence}{%
-Across technical, philosophical, and codebase corpora, RYTT reduces token sequence length by 24.8\%--31.2\% compared to raw character streams with 100\% mathematical invertibility.
+\rosettapanel{Empirical Benchmark Convergence -- \textbf{[retracted]}}{%
+Across technical, philosophical, and codebase corpora, RYTT was previously claimed to reduce token sequence length by 24.8\%--31.2\% compared to raw character streams. Independent measurement against tiktoken instead found RYTT producing 4--11$\times$ \emph{more} tokens, not fewer. The per-corpus figures below are the original (now-falsified) claim, retained for the record rather than deleted.
 }{%
 $\mathbf{\Sigma}^\uparrow_E \mathbf{\Sigma}_m \mathbf{\Sigma}_p \mathbf{\Sigma}_i \mathbf{\Sigma}_r \mathbf{\Sigma}_i \mathbf{\Sigma}_c \mathbf{\Sigma}_a \mathbf{\Sigma}_l$ $\mathbf{\Sigma}_R \mathbf{\Sigma}_e \mathbf{\Sigma}_s \mathbf{\Sigma}_u \mathbf{\Sigma}_l \mathbf{\Sigma}_t \mathbf{\Sigma}_s$:\par
 $\mathbf{\Sigma}_C \mathbf{\Sigma}_h \mathbf{\Sigma}_a \mathbf{\Sigma}_r \mathbf{\Sigma}_s \to \mathbf{\Sigma}_P \mathbf{\Sigma}_U \mathbf{\Sigma}_A : -16.0\% \text{ (Blake)}$\par

@@ -140,7 +140,7 @@
 \maketitle
 
 \begin{abstract}
-\noindent\textbf{Abstract}---Modern computational linguistics and large neural architectures decouple statistical subword tokenization from symbolic geometry. Greedy subword algorithms such as Byte-Pair Encoding (BPE), WordPiece, and SentencePiece fragment novel orthographies, mathematical symbols, and domain ligatures into multi-byte UTF-8 fallback streams while imposing artificial entropy penalties on uppercase casing shifts. We present \textbf{RYTT Sovereign Semiotics}, a complete geometric orthography, spatial coordinate algebra, and native integer chord compiler that unifies 26 fundamental geometric glyph primitives with lossless dual-plane casing mechanics. By assigning structural lowercase glyphs to the Ground Plane ($Z=0.0$, Unicode Private Use Area \texttt{\textbackslash uE000}--\texttt{\textbackslash uE7FF}) and emphatic uppercase glyphs to the Elevated Plane ($Z=25.0$, Unicode PUA \texttt{\textbackslash uE800}--\texttt{\textbackslash uEFFF}), RYTT eliminates case-switching token penalties while preserving full semantic topology. We present the complete 26-primitive vector geometry atlas, formulate the compound chord trie compiler, prove the Lossless Bijective Involution Theorem ($\mathcal{D}(\mathcal{C}(S)) \equiv S$) with zero sorry axioms in Lean~4, and demonstrate a 24.8\%--31.2\% integer token reduction over raw character streams across technical, literary, and codebase corpora. Furthermore, we integrate the semiotic stream into a 4-tier holonomic polygon stacking kernel ($\Delta_3 \to 9\text{-gon} \to 7\text{-gon} \to 21\text{-gon}$) enabling over 10,000 parallel SIMD cognitive raymarch paths per scan cycle.
+\noindent\textbf{Abstract}---Modern computational linguistics and large neural architectures decouple statistical subword tokenization from symbolic geometry. Greedy subword algorithms such as Byte-Pair Encoding (BPE), WordPiece, and SentencePiece fragment novel orthographies, mathematical symbols, and domain ligatures into multi-byte UTF-8 fallback streams while imposing artificial entropy penalties on uppercase casing shifts. We present \textbf{RYTT Sovereign Semiotics}, a complete geometric orthography, spatial coordinate algebra, and native integer chord compiler that unifies 26 fundamental geometric glyph primitives with lossless dual-plane casing mechanics. By assigning structural lowercase glyphs to the Ground Plane ($Z=0.0$, Unicode Private Use Area \texttt{\textbackslash uE000}--\texttt{\textbackslash uE7FF}) and emphatic uppercase glyphs to the Elevated Plane ($Z=25.0$, Unicode PUA \texttt{\textbackslash uE800}--\texttt{\textbackslash uEFFF}), RYTT eliminates case-switching token penalties while preserving full semantic topology. We present the complete 26-primitive vector geometry atlas, formulate the compound chord trie compiler, and prove a left-inverse round-trip identity ($\mathcal{D}(\mathcal{C}(c)) \equiv c$) on a bounded per-chord domain with zero sorry axioms in Lean~4 -- \textbf{[thm]}, weaker than the full bijective involution this document previously claimed (bijectivity requires injectivity plus surjectivity onto the valid range; an involution is $f(f(x))=x$, a different statement). Measured token compression against tiktoken shows RYTT producing 4--11$\times$ \emph{more} tokens than raw character streams, not fewer -- \textbf{[open, retracted]}: the previously claimed 24.8\%--31.2\% reduction does not hold under independent measurement. Furthermore, we integrate the semiotic stream into a 4-tier holonomic polygon stacking kernel ($\Delta_3 \to 9\text{-gon} \to 7\text{-gon} \to 21\text{-gon}$) enabling over 10,000 parallel SIMD cognitive raymarch paths per scan cycle.
 
 \vspace{0.4em}
 \noindent\textbf{Keywords}---Semiotic Grammar, Geometric Orthography, Dual-Plane Coordinate Algebra, Integer Chord Tokenization, Lean~4 Formal Verification, Holonomic Physics, Visionary Mechanics.
@@ -180,7 +180,7 @@ In this treatise, we provide the complete mathematical specification, geometric 
   \node[draw=blue!60, fill=white, rounded corners=2pt, font=\ttfamily\scriptsize] at (2.0, 0.1) {$\mathtt{[THE]}_{\text{chord}}$ ($Z=25$)};
   \node[draw=blue!60, fill=white, rounded corners=2pt, font=\ttfamily\scriptsize] at (5.0, 0.1) {$\mathtt{[T]}_{\text{elev}}$};
   \node[draw=blue!60, fill=white, rounded corners=2pt, font=\ttfamily\scriptsize] at (7.0, 0.1) {$\mathtt{[iger]}_{\text{chord}}$ ($Z=0$)};
-  \node[font=\scriptsize\itshape, align=center] at (4.5, -0.9) {Continuous Dual-Plane Shift $\Delta Z = 25.0$\\Lossless Bijective Involution $\mathcal{D}(\mathcal{C}(S)) \equiv S$};
+  \node[font=\scriptsize\itshape, align=center] at (4.5, -0.9) {Continuous Dual-Plane Shift $\Delta Z = 25.0$\\Bounded Left-Inverse Round-Trip $\mathcal{D}(\mathcal{C}(c)) \equiv c$};
 \end{tikzpicture}
 \caption{Architectural comparison between conventional BPE tokenization and the RYTT Native Semiotic Chord Pipeline. While BPE fragments novel and capitalized words into multi-byte pieces, RYTT maps atomic strokes and compound chords into dedicated geometric coordinate tokens on dual spatial planes.}
 \label{fig:bpe_vs_rytt}
@@ -452,7 +452,7 @@ For all well-formed Unicode strings $S \in \mathcal{S}$, the composition of the 
 \end{equation}
 \end{theorem}
 
-\begin{lstlisting}[caption={Lean 4 Formal Proof of Lossless Bijective Involution.}]
+\begin{lstlisting}[caption={Lean 4 Formal Proof of Bounded Left-Inverse Round-Trip Identity.}]
 import Mathlib.Data.String.Basic
 import Mathlib.Data.Real.Basic
 
@@ -511,7 +511,7 @@ theorem plane_disjointness (id1 id2 : Nat) (h1 : id1 < 0x0800) (h2 : id2 < 0x080
 end RYTT
 \end{lstlisting}
 
-The entire Lean~4 proof module compiles with \textbf{0 sorry axioms and 0 warnings}, confirming that the spatial PUA mapping is mathematically injective and invertible.
+The entire Lean~4 proof module compiles with \textbf{0 sorry axioms and 0 warnings}, confirming a left inverse on the bounded per-chord domain tested -- \textbf{not} full injectivity or invertibility over the whole PUA mapping, which was never proved. See repository CLAUDE.md for the corrected scope.
 
 \subsection{Partition Determinism Lemma}
 \begin{lemma}[Greedy Prefix Uniqueness]
@@ -578,7 +578,7 @@ OpenAI \texttt{o200k} & 354 & 1,940 & 3,620 & 0.244$\times$ \\
   \draw[fill=blue!70] (4.0, 3.4) rectangle (4.3, 3.6);
   \node[right, font=\tiny] at (4.3, 3.5) {RYTT};
 \end{tikzpicture}
-\caption{Compression efficiency comparison: RYTT achieves a consistent 24.8\%--31.2\% reduction in sequence length over modern subword tokenizers.}
+\caption{Compression efficiency comparison: RYTT was previously claimed to achieve a 24.8\%--31.2\% reduction in sequence length over modern subword tokenizers; independent measurement against tiktoken instead found 4--11$\times$ MORE tokens. \textbf{[retracted]}.}
 \label{fig:chart}
 \end{figure}
 
