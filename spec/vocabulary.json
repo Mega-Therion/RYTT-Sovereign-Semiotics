@@ -1,0 +1,1014 @@
+{
+  "chords": [
+    {
+      "codepoint": "U+E840",
+      "codepoint_int": 59456,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Process / State",
+      "plane": "elevated",
+      "source": "TION"
+    },
+    {
+      "codepoint": "U+E040",
+      "codepoint_int": 57408,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Process / State",
+      "plane": "ground",
+      "source": "tion"
+    },
+    {
+      "codepoint": "U+E841",
+      "codepoint_int": 59457,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Artifact / Entity",
+      "plane": "elevated",
+      "source": "MENT"
+    },
+    {
+      "codepoint": "U+E041",
+      "codepoint_int": 57409,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Artifact / Entity",
+      "plane": "ground",
+      "source": "ment"
+    },
+    {
+      "codepoint": "U+E842",
+      "codepoint_int": 59458,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Sovereign Inscription Seal",
+      "plane": "elevated",
+      "source": "RYTT"
+    },
+    {
+      "codepoint": "U+E042",
+      "codepoint_int": 57410,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Sovereign Inscription Seal",
+      "plane": "ground",
+      "source": "rytt"
+    },
+    {
+      "codepoint": "U+E820",
+      "codepoint_int": 59424,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Mind / Intent / Vector",
+      "plane": "elevated",
+      "source": "PSY"
+    },
+    {
+      "codepoint": "U+E020",
+      "codepoint_int": 57376,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Mind / Intent / Vector",
+      "plane": "ground",
+      "source": "psy"
+    },
+    {
+      "codepoint": "U+E821",
+      "codepoint_int": 59425,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Structure / Lattice",
+      "plane": "elevated",
+      "source": "STR"
+    },
+    {
+      "codepoint": "U+E021",
+      "codepoint_int": 57377,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Structure / Lattice",
+      "plane": "ground",
+      "source": "str"
+    },
+    {
+      "codepoint": "U+E822",
+      "codepoint_int": 59426,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Continuous Action",
+      "plane": "elevated",
+      "source": "ING"
+    },
+    {
+      "codepoint": "U+E022",
+      "codepoint_int": 57378,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Continuous Action",
+      "plane": "ground",
+      "source": "ing"
+    },
+    {
+      "codepoint": "U+E823",
+      "codepoint_int": 59427,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Totality / Universe",
+      "plane": "elevated",
+      "source": "ALL"
+    },
+    {
+      "codepoint": "U+E023",
+      "codepoint_int": 57379,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Totality / Universe",
+      "plane": "ground",
+      "source": "all"
+    },
+    {
+      "codepoint": "U+E824",
+      "codepoint_int": 59428,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Definite Ground Truth",
+      "plane": "elevated",
+      "source": "THE"
+    },
+    {
+      "codepoint": "U+E024",
+      "codepoint_int": 57380,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Definite Ground Truth",
+      "plane": "ground",
+      "source": "the"
+    },
+    {
+      "codepoint": "U+E825",
+      "codepoint_int": 59429,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Conjunction / Tensor Product",
+      "plane": "elevated",
+      "source": "AND"
+    },
+    {
+      "codepoint": "U+E025",
+      "codepoint_int": 57381,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Conjunction / Tensor Product",
+      "plane": "ground",
+      "source": "and"
+    },
+    {
+      "codepoint": "U+E826",
+      "codepoint_int": 59430,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Negation / Mirror Inversion",
+      "plane": "elevated",
+      "source": "NOT"
+    },
+    {
+      "codepoint": "U+E026",
+      "codepoint_int": 57382,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Negation / Mirror Inversion",
+      "plane": "ground",
+      "source": "not"
+    },
+    {
+      "codepoint": "U+E827",
+      "codepoint_int": 59431,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Iteration / Purpose Loop",
+      "plane": "elevated",
+      "source": "FOR"
+    },
+    {
+      "codepoint": "U+E027",
+      "codepoint_int": 57383,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Iteration / Purpose Loop",
+      "plane": "ground",
+      "source": "for"
+    },
+    {
+      "codepoint": "U+E828",
+      "codepoint_int": 59432,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Convergence / Collective",
+      "plane": "elevated",
+      "source": "CON"
+    },
+    {
+      "codepoint": "U+E028",
+      "codepoint_int": 57384,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Convergence / Collective",
+      "plane": "ground",
+      "source": "con"
+    },
+    {
+      "codepoint": "U+E829",
+      "codepoint_int": 59433,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Forward Projection",
+      "plane": "elevated",
+      "source": "PRO"
+    },
+    {
+      "codepoint": "U+E029",
+      "codepoint_int": 57385,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Forward Projection",
+      "plane": "ground",
+      "source": "pro"
+    },
+    {
+      "codepoint": "U+E830",
+      "codepoint_int": 59440,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Aspiration / Horizon",
+      "plane": "elevated",
+      "source": "TH"
+    },
+    {
+      "codepoint": "U+E030",
+      "codepoint_int": 57392,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Aspiration / Horizon",
+      "plane": "ground",
+      "source": "th"
+    },
+    {
+      "codepoint": "U+E831",
+      "codepoint_int": 59441,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Standing State",
+      "plane": "elevated",
+      "source": "ST"
+    },
+    {
+      "codepoint": "U+E031",
+      "codepoint_int": 57393,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Standing State",
+      "plane": "ground",
+      "source": "st"
+    },
+    {
+      "codepoint": "U+E832",
+      "codepoint_int": 59442,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Interior Admission",
+      "plane": "elevated",
+      "source": "IN"
+    },
+    {
+      "codepoint": "U+E032",
+      "codepoint_int": 57394,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Interior Admission",
+      "plane": "ground",
+      "source": "in"
+    },
+    {
+      "codepoint": "U+E833",
+      "codepoint_int": 59443,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Twin Resonant Eye",
+      "plane": "elevated",
+      "source": "EE"
+    },
+    {
+      "codepoint": "U+E033",
+      "codepoint_int": 57395,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Twin Resonant Eye",
+      "plane": "ground",
+      "source": "ee"
+    },
+    {
+      "codepoint": "U+E834",
+      "codepoint_int": 59444,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Agent / Operator",
+      "plane": "elevated",
+      "source": "ER"
+    },
+    {
+      "codepoint": "U+E034",
+      "codepoint_int": 57396,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Agent / Operator",
+      "plane": "ground",
+      "source": "er"
+    },
+    {
+      "codepoint": "U+E835",
+      "codepoint_int": 59445,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Ontological Presence",
+      "plane": "elevated",
+      "source": "ON"
+    },
+    {
+      "codepoint": "U+E035",
+      "codepoint_int": 57397,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Ontological Presence",
+      "plane": "ground",
+      "source": "on"
+    },
+    {
+      "codepoint": "U+E836",
+      "codepoint_int": 59446,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Locality / Coordinate",
+      "plane": "elevated",
+      "source": "AT"
+    },
+    {
+      "codepoint": "U+E036",
+      "codepoint_int": 57398,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Locality / Coordinate",
+      "plane": "ground",
+      "source": "at"
+    },
+    {
+      "codepoint": "U+E837",
+      "codepoint_int": 59447,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Sovereign Root Sign",
+      "plane": "elevated",
+      "source": "RY"
+    },
+    {
+      "codepoint": "U+E037",
+      "codepoint_int": 57399,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Sovereign Root Sign",
+      "plane": "ground",
+      "source": "ry"
+    },
+    {
+      "codepoint": "U+E838",
+      "codepoint_int": 59448,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Dual Pillar Invariant",
+      "plane": "elevated",
+      "source": "TT"
+    },
+    {
+      "codepoint": "U+E038",
+      "codepoint_int": 57400,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Dual Pillar Invariant",
+      "plane": "ground",
+      "source": "tt"
+    },
+    {
+      "codepoint": "U+E839",
+      "codepoint_int": 59449,
+      "elevation_z": 25.0,
+      "is_upper": true,
+      "meaning": "Recursive Return",
+      "plane": "elevated",
+      "source": "RE"
+    },
+    {
+      "codepoint": "U+E039",
+      "codepoint_int": 57401,
+      "elevation_z": 0.0,
+      "is_upper": false,
+      "meaning": "Recursive Return",
+      "plane": "ground",
+      "source": "re"
+    }
+  ],
+  "format": {
+    "display_serialization": "Unicode Private Use Area codepoints with U+00B7 for literal spaces",
+    "matching": "greedy-longest-first; declaration order breaks equal-length ties",
+    "name": "RYTT token model",
+    "passthrough": "unsupported alphabetic scripts and non-alphabetic characters survive unchanged",
+    "round_trip": "decode(encode(source)) == source"
+  },
+  "package_version": "0.2.0",
+  "passthrough": {
+    "pua_to_plain_count": 98
+  },
+  "planes": {
+    "elevated": {
+      "case": "uppercase",
+      "elevation_z": 25
+    },
+    "ground": {
+      "case": "lowercase",
+      "elevation_z": 0
+    }
+  },
+  "primitives": [
+    {
+      "codepoint": "U+E800",
+      "codepoint_int": 59392,
+      "elevation_z": 25.0,
+      "family": "POINT",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 0,
+      "source": "A",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E000",
+      "codepoint_int": 57344,
+      "elevation_z": 0.0,
+      "family": "POINT",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 0,
+      "source": "a",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E801",
+      "codepoint_int": 59393,
+      "elevation_z": 25.0,
+      "family": "VECTOR",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 1,
+      "source": "B",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E001",
+      "codepoint_int": 57345,
+      "elevation_z": 0.0,
+      "family": "VECTOR",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 1,
+      "source": "b",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E802",
+      "codepoint_int": 59394,
+      "elevation_z": 25.0,
+      "family": "CHEVRON",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -1,
+      "source": "C",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E002",
+      "codepoint_int": 57346,
+      "elevation_z": 0.0,
+      "family": "CHEVRON",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -1,
+      "source": "c",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E803",
+      "codepoint_int": 59395,
+      "elevation_z": 25.0,
+      "family": "CHEVRON",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 2,
+      "source": "D",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E003",
+      "codepoint_int": 57347,
+      "elevation_z": 0.0,
+      "family": "CHEVRON",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 2,
+      "source": "d",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E804",
+      "codepoint_int": 59396,
+      "elevation_z": 25.0,
+      "family": "DIAMOND",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -2,
+      "source": "E",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E004",
+      "codepoint_int": 57348,
+      "elevation_z": 0.0,
+      "family": "DIAMOND",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -2,
+      "source": "e",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E805",
+      "codepoint_int": 59397,
+      "elevation_z": 25.0,
+      "family": "DIAMOND",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 3,
+      "source": "F",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E005",
+      "codepoint_int": 57349,
+      "elevation_z": 0.0,
+      "family": "DIAMOND",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 3,
+      "source": "f",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E806",
+      "codepoint_int": 59398,
+      "elevation_z": 25.0,
+      "family": "VECTOR",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -3,
+      "source": "G",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E006",
+      "codepoint_int": 57350,
+      "elevation_z": 0.0,
+      "family": "VECTOR",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -3,
+      "source": "g",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E807",
+      "codepoint_int": 59399,
+      "elevation_z": 25.0,
+      "family": "FRAME",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 1,
+      "source": "H",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E007",
+      "codepoint_int": 57351,
+      "elevation_z": 0.0,
+      "family": "FRAME",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 1,
+      "source": "h",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E808",
+      "codepoint_int": 59400,
+      "elevation_z": 25.0,
+      "family": "FRAME",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 0,
+      "source": "I",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E008",
+      "codepoint_int": 57352,
+      "elevation_z": 0.0,
+      "family": "FRAME",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 0,
+      "source": "i",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E809",
+      "codepoint_int": 59401,
+      "elevation_z": 25.0,
+      "family": "FRAME",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 2,
+      "source": "J",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E009",
+      "codepoint_int": 57353,
+      "elevation_z": 0.0,
+      "family": "FRAME",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 2,
+      "source": "j",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E80A",
+      "codepoint_int": 59402,
+      "elevation_z": 25.0,
+      "family": "FRAME",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -2,
+      "source": "K",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E00A",
+      "codepoint_int": 57354,
+      "elevation_z": 0.0,
+      "family": "FRAME",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -2,
+      "source": "k",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E80B",
+      "codepoint_int": 59403,
+      "elevation_z": 25.0,
+      "family": "ARC",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 3,
+      "source": "L",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E00B",
+      "codepoint_int": 57355,
+      "elevation_z": 0.0,
+      "family": "ARC",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 3,
+      "source": "l",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E80C",
+      "codepoint_int": 59404,
+      "elevation_z": 25.0,
+      "family": "ARC",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -3,
+      "source": "M",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E00C",
+      "codepoint_int": 57356,
+      "elevation_z": 0.0,
+      "family": "ARC",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -3,
+      "source": "m",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E80D",
+      "codepoint_int": 59405,
+      "elevation_z": 25.0,
+      "family": "ARC",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 1,
+      "source": "N",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E00D",
+      "codepoint_int": 57357,
+      "elevation_z": 0.0,
+      "family": "ARC",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 1,
+      "source": "n",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E80E",
+      "codepoint_int": 59406,
+      "elevation_z": 25.0,
+      "family": "ARC",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 0,
+      "source": "O",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E00E",
+      "codepoint_int": 57358,
+      "elevation_z": 0.0,
+      "family": "ARC",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 0,
+      "source": "o",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E80F",
+      "codepoint_int": 59407,
+      "elevation_z": 25.0,
+      "family": "ARC",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 2,
+      "source": "P",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E00F",
+      "codepoint_int": 57359,
+      "elevation_z": 0.0,
+      "family": "ARC",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 2,
+      "source": "p",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E810",
+      "codepoint_int": 59408,
+      "elevation_z": 25.0,
+      "family": "RING",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -2,
+      "source": "Q",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E010",
+      "codepoint_int": 57360,
+      "elevation_z": 0.0,
+      "family": "RING",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -2,
+      "source": "q",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E811",
+      "codepoint_int": 59409,
+      "elevation_z": 25.0,
+      "family": "RING",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 3,
+      "source": "R",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E011",
+      "codepoint_int": 57361,
+      "elevation_z": 0.0,
+      "family": "RING",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 3,
+      "source": "r",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E812",
+      "codepoint_int": 59410,
+      "elevation_z": 25.0,
+      "family": "VECTOR",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -3,
+      "source": "S",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E012",
+      "codepoint_int": 57362,
+      "elevation_z": 0.0,
+      "family": "VECTOR",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -3,
+      "source": "s",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E813",
+      "codepoint_int": 59411,
+      "elevation_z": 25.0,
+      "family": "VECTOR",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 1,
+      "source": "T",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E013",
+      "codepoint_int": 57363,
+      "elevation_z": 0.0,
+      "family": "VECTOR",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 1,
+      "source": "t",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E814",
+      "codepoint_int": 59412,
+      "elevation_z": 25.0,
+      "family": "VECTOR",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 0,
+      "source": "U",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E014",
+      "codepoint_int": 57364,
+      "elevation_z": 0.0,
+      "family": "VECTOR",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 0,
+      "source": "u",
+      "trit": 0
+    },
+    {
+      "codepoint": "U+E815",
+      "codepoint_int": 59413,
+      "elevation_z": 25.0,
+      "family": "CHEVRON",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 2,
+      "source": "V",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E015",
+      "codepoint_int": 57365,
+      "elevation_z": 0.0,
+      "family": "CHEVRON",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 2,
+      "source": "v",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E816",
+      "codepoint_int": 59414,
+      "elevation_z": 25.0,
+      "family": "CHEVRON",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -2,
+      "source": "W",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E016",
+      "codepoint_int": 57366,
+      "elevation_z": 0.0,
+      "family": "CHEVRON",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -2,
+      "source": "w",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E817",
+      "codepoint_int": 59415,
+      "elevation_z": 25.0,
+      "family": "VECTOR",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 3,
+      "source": "X",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E017",
+      "codepoint_int": 57367,
+      "elevation_z": 0.0,
+      "family": "VECTOR",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 3,
+      "source": "x",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E818",
+      "codepoint_int": 59416,
+      "elevation_z": 25.0,
+      "family": "BRANCH",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": -3,
+      "source": "Y",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E018",
+      "codepoint_int": 57368,
+      "elevation_z": 0.0,
+      "family": "BRANCH",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": -3,
+      "source": "y",
+      "trit": 1
+    },
+    {
+      "codepoint": "U+E819",
+      "codepoint_int": 59417,
+      "elevation_z": 25.0,
+      "family": "BRANCH",
+      "is_upper": true,
+      "plane": "elevated",
+      "sept": 1,
+      "source": "Z",
+      "trit": -1
+    },
+    {
+      "codepoint": "U+E019",
+      "codepoint_int": 57369,
+      "elevation_z": 0.0,
+      "family": "BRANCH",
+      "is_upper": false,
+      "plane": "ground",
+      "sept": 1,
+      "source": "z",
+      "trit": -1
+    }
+  ],
+  "spec_version": "0.1"
+}

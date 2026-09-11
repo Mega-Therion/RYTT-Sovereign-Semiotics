@@ -34,6 +34,8 @@
     }
     a{color:inherit;} button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
     :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px;}
+    .skip{position:absolute;left:1rem;top:-4rem;background:var(--cyan);color:#061018;padding:.65rem 1rem;z-index:30;border-radius:3px;font-weight:700}.skip:focus{top:1rem}
+    :target,:focus{scroll-margin-top:80px}
 
     /* layout */
     .bar{display:flex;align-items:center;gap:1rem;padding:.9rem 1.4rem;
@@ -56,6 +58,11 @@
     }
     .mode-btn.active{border-color:var(--cyan);background:var(--cyan-dim);color:var(--cyan);}
     .mode-btn:hover:not(.active){border-color:var(--line-hi);color:var(--text);}
+    .engine-bar{display:flex;gap:.35rem;align-items:center;padding-left:.6rem;border-left:1px solid var(--line);}
+    .engine-label{font-size:.66rem;color:var(--faint);font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+    .engine-btn{padding:.3rem .65rem;font-size:.7rem;font-weight:600;border:1px solid var(--line);border-radius:3px;color:var(--muted);transition:all .18s var(--ease);}
+    .engine-btn.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);}
+    .engine-btn:hover:not(.active){border-color:var(--line-hi);color:var(--text);}
 
     /* main panels */
     .panels{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
@@ -116,6 +123,11 @@
     }
     .rt-badge.fail{border-color:rgba(255,90,90,.3);background:rgba(255,90,90,.08);color:#ff7070;}
     .rt-dot{width:.38rem;height:.38rem;border-radius:50%;background:currentColor;}
+    .parity-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.7rem;padding:.25rem .6rem;border-radius:3px;border:1px solid rgba(107,228,154,.3);background:rgba(107,228,154,.08);color:#6be49a;}
+    .parity-badge.fail{border-color:rgba(255,90,90,.3);background:rgba(255,90,90,.08);color:#ff7070;}
+    .parity-badge.wait{border-color:rgba(232,200,124,.3);background:var(--gold-dim);color:var(--gold);}
+    .diff-view{margin-top:.75rem;padding:.65rem;border-left:2px solid #ff7070;background:rgba(255,90,90,.06);font-size:.7rem;line-height:1.55;overflow-wrap:anywhere;}
+    .diff-view code{color:#ffb0a7;font-family:var(--font-mono);}
     .spacer{flex:1;}
 
     /* token inspect table */
@@ -149,6 +161,7 @@
   </style>
 </head>
 <body>
+<a class="skip" href="#playground-main">Skip to compiler workspace</a>
 <header class="bar">
   <span class="bar-brand">RYTT <span>Sovereign Semiotics &mdash; Playground</span></span>
   <nav style="display:flex;gap:1rem;font-size:.78rem;margin-left:auto;">
@@ -158,22 +171,32 @@
   </nav>
 </header>
 
-<main class="app">
+<main class="app" id="playground-main">
   <!-- toolbar -->
   <div class="toolbar">
     <div class="mode-bar" role="group" aria-label="Compiler mode">
       <button class="mode-btn active" id="btn-encode">Encode</button>
       <button class="mode-btn" id="btn-decode">Decode</button>
       <button class="mode-btn" id="btn-roundtrip">Round-trip</button>
+      <button class="mode-btn" id="btn-trace">Trace</button>
+    </div>
+    <div class="engine-bar" role="group" aria-label="Compiler engine">
+      <span class="engine-label">Engine</span>
+      <button class="engine-btn active" id="btn-reference" aria-pressed="true">Reference grammar</button>
+      <button class="engine-btn" id="btn-wasm" aria-pressed="false">WASM portable core</button>
     </div>
     <span id="rt-badge" class="rt-badge" aria-live="polite">
       <span class="rt-dot"></span> Ready
+    </span>
+    <span id="parity-badge" class="parity-badge wait" aria-live="polite">
+      <span class="rt-dot"></span> WASM loading
     </span>
     <span class="spacer"></span>
     <button class="tb-btn" id="btn-sample">Load sample</button>
     <button class="tb-btn" id="btn-copy">Copy output</button>
     <button class="tb-btn" id="btn-clear">Clear</button>
     <button class="tb-btn" id="btn-swap">Swap ⇆</button>
+    <button class="tb-btn" id="btn-export">Export artifact</button>
   </div>
 
   <!-- panels -->
@@ -232,9 +255,21 @@
   </div>
 </section>
 
+<section style="max-width:1240px;margin:0 auto;padding:0 1.5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;" id="lab-panels">
+  <div class="panel" style="padding:1rem;min-height:180px;"><div class="panel-head">Explainable trace</div><pre id="trace-output" style="padding:1rem;white-space:pre-wrap;overflow:auto;color:var(--muted);font: .72rem/1.6 var(--font-mono);">Compile text to inspect candidate chords and decisions.</pre></div>
+  <div class="panel" style="padding:1rem;min-height:180px;"><div class="panel-head">Named metrics</div><div id="compare-output" style="padding:1rem;color:var(--muted);font: .78rem/1.8 var(--font-mono);">Characters, UTF-8 bytes, and RYTT tokens are reported independently.</div></div>
+</section>
+
 <script>
 (function(){
   'use strict';
+  const TELEMETRY_URL = 'https://kklbpsupfvdrbfxikcow.supabase.co/functions/v1/record-rytt-trace';
+  const TELEMETRY_KEY = 'sb_publishable_DE88uKkeAj0o0WzcAYyMvg_ojVBOIw_';
+  const SESSION_STORAGE_KEY = 'rytt-codex-session-id';
+  let engine = 'reference';
+  let wasmCore = null;
+  let wasmLoadError = '';
+
   // ---- RYTT compiler ----
   const ALPHA = 'abcdefghijklmnopqrstuvwxyz';
   const GENOME = {};
@@ -263,15 +298,19 @@
   const REV = {};
   for(const [k,v] of Object.entries(GENOME)) REV[v] = k;
   for(const [k,v] of Object.entries(LIGS)) REV[v] = k;
+  REV['·'] = ' ';
 
   function compile(text){
     const tokens = [];
     let i = 0;
     while(i < text.length){
       let matched = false;
+      const candidates = [];
       for(const [seq,pua] of Object.entries(LIGS)){
         if(text.startsWith(seq,i)){
-          tokens.push({src:seq, pua, type:'chord',
+          candidates.push(seq);
+          tokens.push({src:seq, pua, type:'chord', candidates,
+            decision:'selected longest matching chord',
             plane: /[A-Z]/.test(seq[0]) ? 'Elevated' : 'Ground',
             cp: '0x' + pua.codePointAt(0).toString(16).toUpperCase()});
           i += seq.length; matched = true; break;
@@ -279,9 +318,10 @@
       }
       if(!matched){
         const c = text[i];
-        const pua = GENOME[c] || c;
+        const pua = c===' ' ? '·' : (GENOME[c] || c);
         const isAlpha = /[a-zA-Z]/.test(c);
-        tokens.push({src:c, pua, type: isAlpha ? 'glyph' : 'passthrough',
+        tokens.push({src:c, pua, type: isAlpha ? 'glyph' : (c===' ' ? 'space' : 'passthrough'), candidates,
+          decision: isAlpha ? 'no matching chord; primitive glyph' : (c===' ' ? 'canonical space marker' : 'preserved passthrough'),
           plane: /[A-Z]/.test(c) ? 'Elevated' : isAlpha ? 'Ground' : '—',
           cp: isAlpha ? '0x'+pua.codePointAt(0).toString(16).toUpperCase() : '—'});
         i++;
@@ -300,6 +340,42 @@
 
   function byteLen(s){ return new TextEncoder().encode(s).length; }
 
+  function getSessionId(){
+    let sessionId = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if(!sessionId){
+      if(crypto.randomUUID){
+        sessionId = crypto.randomUUID();
+      }else{
+        const values = new Uint32Array(4);
+        crypto.getRandomValues(values);
+        sessionId = 'rytt-' + Array.from(values, value=>value.toString(16)).join('-');
+      }
+      sessionStorage.setItem(SESSION_STORAGE_KEY, sessionId);
+    }
+    return sessionId;
+  }
+
+  function recordTrace(trace){
+    fetch(TELEMETRY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': TELEMETRY_KEY, 'Authorization': 'Bearer ' + TELEMETRY_KEY },
+      body: JSON.stringify(trace),
+      keepalive: true,
+    }).catch(()=>{});
+  }
+
+  function compilePortable(text){
+    if(!wasmCore) return null;
+    try{
+      const envelope = JSON.parse(wasmCore.encode_json(text));
+      const recovered = wasmCore.decode_json(JSON.stringify(envelope));
+      return { envelope, encoded: envelope.encoded_display, recovered, exact: recovered === text };
+    }catch(error){
+      wasmLoadError = error instanceof Error ? error.message : String(error);
+      return null;
+    }
+  }
+
   // ---- DOM ----
   const srcEl = document.getElementById('src');
   const outEl = document.getElementById('out');
@@ -314,11 +390,34 @@
   const mBs  = document.getElementById('m-bsrc');
   const mBe  = document.getElementById('m-benc');
   const tblBody = document.getElementById('tbl-body');
+  const traceOut = document.getElementById('trace-output');
+  const compareOut = document.getElementById('compare-output');
   const inspSec = document.getElementById('inspect-section');
   const inspCnt = document.getElementById('inspect-count');
   const inspHd  = document.getElementById('inspect-heading');
+  const parityBadge = document.getElementById('parity-badge');
 
   let mode = 'encode'; // encode | decode | roundtrip
+
+  function setParityBadge(status, detail){
+    parityBadge.className = 'parity-badge ' + status;
+    parityBadge.innerHTML = '<span class="rt-dot"></span> ' + detail;
+  }
+
+  async function loadWasmCore(){
+    try{
+      const module = await import('/web/wasm/rytt_core.js');
+      await module.default();
+      wasmCore = module;
+      setParityBadge('', 'Portable core ready');
+    }catch(error){
+      wasmLoadError = error instanceof Error ? error.message : String(error);
+      setParityBadge('fail', 'Portable core unavailable');
+      document.getElementById('btn-wasm').disabled = true;
+      document.getElementById('btn-wasm').title = 'WASM core failed to load; reference grammar remains available.';
+    }
+    run();
+  }
 
   function setMode(m){
     mode = m;
@@ -337,14 +436,7 @@
 
   function run(){
     const text = srcEl.value;
-    if(!text){
-      outEl.textContent='';
-      badge.textContent='Ready'; badge.className='rt-badge';
-      [mSrc,mTok,mCho,mRat,mBs,mBe].forEach(e=>e.textContent='—');
-      byteD.textContent='';
-      tblBody.innerHTML=''; inspCnt.textContent='';
-      return;
-    }
+    const startedAt = performance.now();
 
     if(mode==='decode'){
       const plain = decompile(text);
@@ -359,42 +451,64 @@
       return;
     }
 
-    const r = compile(text);
+    const reference = compile(text);
+    const portable = compilePortable(text);
+    const parity = Boolean(portable) && reference.encoded === portable.encoded && reference.exact === portable.exact && portable.recovered === reference.recovered;
+    const active = engine==='wasm' && portable
+      ? { encoded: portable.encoded, recovered: portable.recovered, exact: portable.exact }
+      : reference;
 
-    if(mode==='roundtrip'){
-      const display = r.exact
-        ? '\u2714 EXACT \u2014 '+r.recovered
-        : '\u2717 MISMATCH\n\nExpected: '+text+'\nGot:      '+r.recovered;
-      outEl.textContent = display;
-      badge.innerHTML = r.exact
-        ? '<span class="rt-dot"></span> Round-trip exact'
-        : '<span class="rt-dot"></span> Mismatch';
-      badge.className = 'rt-badge' + (r.exact ? '' : ' fail');
+    if(portable){
+      setParityBadge(parity ? '' : 'fail', parity ? 'Engines agree' : 'Engines differ');
+    } else if(wasmLoadError){
+      setParityBadge('fail', 'Portable core unavailable');
     } else {
-      outEl.textContent = r.encoded;
-      badge.innerHTML = r.exact
-        ? '<span class="rt-dot"></span> Round-trip exact'
-        : '<span class="rt-dot"></span> Mismatch';
-      badge.className = 'rt-badge' + (r.exact ? '' : ' fail');
+      setParityBadge('wait', 'WASM loading');
     }
 
-    const chords = r.tokens.filter(t=>t.type==='chord').length;
-    mSrc.textContent = r.tokens.reduce((a,t)=>a+t.src.length,0);
-    mTok.textContent = r.tokens.length;
+    if(mode==='roundtrip'){
+      const display = active.exact
+        ? '\u2714 EXACT \u2014 '+active.recovered
+        : '\u2717 MISMATCH\n\nExpected: '+text+'\nGot:      '+active.recovered;
+      outEl.textContent = display;
+      badge.innerHTML = active.exact
+        ? '<span class="rt-dot"></span> Round-trip exact'
+        : '<span class="rt-dot"></span> Mismatch';
+      badge.className = 'rt-badge' + (active.exact ? '' : ' fail');
+    } else {
+      outEl.textContent = active.encoded;
+      badge.innerHTML = active.exact
+        ? '<span class="rt-dot"></span> Round-trip exact'
+        : '<span class="rt-dot"></span> Mismatch';
+      badge.className = 'rt-badge' + (active.exact ? '' : ' fail');
+    }
+
+    const chords = reference.tokens.filter(t=>t.type==='chord').length;
+    const sourceCharacters = [...text].length;
+    mSrc.textContent = sourceCharacters;
+    mTok.textContent = reference.tokens.length;
     mCho.textContent = chords;
-    const ratio = r.tokens.length ? (text.length/r.tokens.length).toFixed(2) : '—';
+    const ratio = reference.tokens.length ? (sourceCharacters/reference.tokens.length).toFixed(2) : '—';
     mRat.textContent = ratio;
-    const bs = byteLen(text), be = byteLen(r.encoded);
+    const bs = byteLen(text), be = byteLen(active.encoded);
     mBs.textContent = bs; mBe.textContent = be;
     const delta = be - bs;
     byteD.textContent = (delta >= 0 ? '+' : '') + delta + ' B';
+    const parityView = portable
+      ? (parity
+        ? '<br><small style="color:#6be49a">✓ Reference grammar and WASM portable core match exactly.</small>'
+        : '<div class="diff-view"><strong>Engine parity mismatch</strong><br>Reference: <code>'+escH(reference.encoded)+'</code><br>WASM: <code>'+escH(portable.encoded)+'</code><br>Reference recovery: <code>'+escH(reference.recovered)+'</code><br>WASM recovery: <code>'+escH(portable.recovered)+'</code></div>')
+      : '<br><small style="color:#e8c87c">WASM parity will appear when the portable core is available.</small>';
+    compareOut.innerHTML = `engine: <strong>${engine==='wasm' && portable ? 'WASM portable core' : 'Reference grammar'}</strong><br>raw characters: <strong>${sourceCharacters}</strong><br>RYTT tokens: <strong>${reference.tokens.length}</strong><br>UTF-8 source bytes: <strong>${bs}</strong><br>RYTT display bytes: <strong>${be}</strong><br>character/token ratio: <strong>${ratio}</strong><br><small>These are separate units, not one compression score.</small>${parityView}`;
+    traceOut.textContent = JSON.stringify({engine: engine==='wasm' && portable ? 'wasm-portable-core' : 'reference-grammar', parity: portable ? (parity ? 'exact' : 'mismatch') : 'unavailable', tokens: reference.tokens.map((token, index) => ({index: index + 1, source: token.src, decision: token.decision, candidates: token.candidates, type: token.type, plane: token.plane, codepoint: token.cp, exact: (REV[token.pua] || token.pua) === token.src}))}, null, 2);
     byteD.style.color = delta <= 0 ? '#6be49a' : '#ff9a7a';
+    recordTrace({session_id: getSessionId(), input_text_length: sourceCharacters, pua_stream_length: [...reference.encoded].length, token_count: reference.tokens.length, runtime_ms: Number((performance.now() - startedAt).toFixed(3)), is_exact_recovery: reference.exact});
 
     // token table
     if(mode==='encode'){
-      inspCnt.textContent = r.tokens.length + ' tokens';
+      inspCnt.textContent = reference.tokens.length + ' tokens';
       inspHd.textContent = 'Token inspection';
-      const rows = r.tokens.map((t,i)=>{
+      const rows = reference.tokens.map((t,i)=>{
         const rt = REV[t.pua] || t.pua;
         const ok = rt === t.src;
         return `<tr>
@@ -416,6 +530,19 @@
   document.getElementById('btn-encode').addEventListener('click',()=>setMode('encode'));
   document.getElementById('btn-decode').addEventListener('click',()=>setMode('decode'));
   document.getElementById('btn-roundtrip').addEventListener('click',()=>setMode('roundtrip'));
+  document.getElementById('btn-trace').addEventListener('click',()=>{ document.getElementById('lab-panels').scrollIntoView({behavior:'smooth'}); traceOut.focus?.(); });
+  function setEngine(nextEngine){
+    if(nextEngine==='wasm' && !wasmCore) return;
+    engine = nextEngine;
+    const referenceActive = engine==='reference';
+    document.getElementById('btn-reference').classList.toggle('active', referenceActive);
+    document.getElementById('btn-reference').setAttribute('aria-pressed', String(referenceActive));
+    document.getElementById('btn-wasm').classList.toggle('active', !referenceActive);
+    document.getElementById('btn-wasm').setAttribute('aria-pressed', String(!referenceActive));
+    run();
+  }
+  document.getElementById('btn-reference').addEventListener('click',()=>setEngine('reference'));
+  document.getElementById('btn-wasm').addEventListener('click',()=>setEngine('wasm'));
 
   document.getElementById('btn-copy').addEventListener('click',()=>{
     const text = outEl.textContent;
@@ -444,6 +571,13 @@
     'TION MENT ING STR THE AND FOR CON PRO — chord-rich.',
   ];
   let sampleIdx = 0;
+  document.getElementById('btn-export').addEventListener('click',()=>{
+    const r = compile(srcEl.value);
+    const artifact = {format:'rytt', format_version:'0.1', spec_version:'0.1', source_text:srcEl.value, encoded_display:r.encoded, tokens:r.tokens, metrics:{source_characters:srcEl.value.length, rytt_tokens:r.tokens.length, source_utf8_bytes:byteLen(srcEl.value), encoded_utf8_bytes:byteLen(r.encoded)}, verification:{round_trip_exact:r.exact, decoded_text:r.recovered}};
+    const blob = new Blob([JSON.stringify(artifact,null,2)], {type:'application/json'});
+    const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'rytt-artifact.json'; link.click(); URL.revokeObjectURL(link.href);
+  });
+
   document.getElementById('btn-sample').addEventListener('click',()=>{
     srcEl.value = SAMPLES[sampleIdx++ % SAMPLES.length];
     setMode('encode');
@@ -453,6 +587,7 @@
   setMode('encode');
   srcEl.value = 'Hello, RYTT \u2014 lossless by design.';
   run();
+  loadWasmCore();
 })();
 </script>
 </body>

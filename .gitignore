@@ -8,3 +8,14 @@ __pycache__/
 proofs/.lake/
 proofs/lake-manifest.json
 benchmarks/results/
+
+# Local build and interpreter artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+target/
+tmp/
+crates/rytt-core/Cargo.lock

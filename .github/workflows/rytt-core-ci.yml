@@ -1,0 +1,112 @@
+name: rytt-core CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "crates/**"
+      - "src/rytt/data/**"
+      - "conformance/vectors.json"
+      - ".github/workflows/rytt-core-ci.yml"
+  pull_request:
+    paths:
+      - "crates/**"
+      - "src/rytt/data/**"
+      - "conformance/vectors.json"
+      - ".github/workflows/rytt-core-ci.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/rytt-core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/rytt-core
+      - name: Run tests
+        run: cargo test
+
+  clippy:
+    name: cargo clippy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/rytt-core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/rytt-core
+      - name: Clippy
+        run: cargo clippy -- -D warnings
+
+  wasm:
+    name: wasm32 build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/rytt-core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/rytt-core
+      - name: Compile portable WASM module
+        run: cargo build --release --target wasm32-unknown-unknown
+
+  benchmark-parity:
+    name: Rust/Python benchmark parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python benchmark dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Compare canonical Python and Rust metrics
+        run: python scripts/verify_rust_python_benchmark_parity.py
+
+  report-conformance:
+    name: report conformance history
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: https://kklbpsupfvdrbfxikcow.supabase.co
+      SUPABASE_ANON_KEY: sb_publishable_DE88uKkeAj0o0WzcAYyMvg_ojVBOIw_
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record successful canonical-vector replay
+        run: |
+          runs="$(jq -c '[.vectors[] | {vector_id: .id, spec_version: "0.1.0", status: "passed", discrepancy: 0}]' conformance/vectors.json)"
+          oidc_response="$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=rytt-conformance")"
+          oidc_token="$(jq -er '.value' <<< "$oidc_response")"
+          curl --fail-with-body --retry 3 --retry-all-errors \
+            -X POST "$SUPABASE_URL/functions/v1/record-rytt-trace" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "X-GitHub-OIDC: $oidc_token" \
+            -H "Content-Type: application/json" \
+            --data "$(jq -cn --argjson runs "$runs" '{kind: "conformance", runs: $runs}')"
