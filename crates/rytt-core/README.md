@@ -1,22 +1,25 @@
 # rytt-core
 
-JSON-first portable boundary for the RYTT sovereign semiotics grammar.
+The Rust implementation of the JSON-first portable boundary for the RYTT sovereign semiotics grammar.
 
-## Stages
+## Contract
 
-1. **Contract surface (this scaffold).** Spec loading, PUA bound constants
-   (`U+E020` / `U+E820`), versioned envelope types. The canonical spec is
-   loaded via `include_str!` from `src/rytt/data/rytt-spec-v0.1.0.json`; the
-   grammar is not vendored here.
-2. **Chord mapping.** Implement `encode`/`decode` against the spec, then
-   unignore the conformance replay test.
-3. **Extraction.** Once the contract is stable, this crate can move to its
-   own repository; downstream repos (chyren-selin, chyren-aeon) then depend on
-   it rather than forking the grammar.
+The canonical grammar remains `src/rytt/data/rytt-spec-v0.1.0.json`. This crate loads it with `include_str!`; it does not duplicate or fork vocabulary data.
 
-## Bounds
+- **Greedy-longest-match** selection across 52 genome entries and 46 ligatures
+- Lowercase ground plane: `z = 0`, base `U+E000`
+- Uppercase elevated plane: `z = 25`, base `U+E800`
+- Configured space display token: `·`
+- Non-letter Unicode: unchanged passthrough
+- Envelope integrity: canonical raw-artifact BLAKE3 vocabulary hash plus spec-version validation
+- Unknown PUA codepoints: rejected during decode
 
-- Lower PUA compound boundary: `U+E020`
-- Upper PUA compound boundary: `U+E820`
+## Verification
+
+`tests/conformance.rs` replays every record in `conformance/vectors.json`: exact encoded display, token count, and inverse recovery. GitHub Actions runs `cargo test` and `cargo clippy` whenever the crate, canonical spec, or vector file changes.
+
+## Next Boundary
+
+After CI passes and the API is externally reviewed, extract `rytt-core` into a versioned standalone Cargo repository. `chyren-selin` and `chyren-aeon` consume it as a dependency; neither vendors the grammar.
 
 Tracked in https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/issues/6
