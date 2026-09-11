@@ -166,16 +166,18 @@ RYTT-Sovereign-Semiotics/
 
 ---
 
-## Versioned vocabulary
+## Canonical versioned vocabulary
 
-The fixtures and browser data are generated from the live compiler:
+The machine-readable grammar contract is [`src/rytt/data/rytt-spec-v0.1.0.json`](src/rytt/data/rytt-spec-v0.1.0.json). It contains the complete genome and chord vocabulary and is checked against the Python compiler at import time. The fixture and browser data are generated projections:
 
 ```bash
 python scripts/generate_web_data.py
 ```
 
-Commit `fixtures/rytt_vocabulary.json` and `web/rytt-data.js` whenever the
-vocabulary changes.
+Commit the canonical specification, `fixtures/rytt_vocabulary.json`, and
+`web/rytt-data.js` whenever the vocabulary changes. The Lean definitions are
+currently checked independently and are not yet generated from the JSON
+artifact.
 
 ---
 

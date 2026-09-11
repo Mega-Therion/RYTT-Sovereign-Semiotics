@@ -1,0 +1,1990 @@
+{
+  "schema": "rytt.sovereign-semiotics/1",
+  "version": "0.1.0",
+  "title": "RYTT Sovereign Semiotics canonical grammar",
+  "encoding": {
+    "alphabet": "ASCII Latin letters",
+    "space_token": "·",
+    "passthrough": "Characters outside the ASCII letter genome pass through unchanged.",
+    "matching": "greedy-longest-match",
+    "pua": {
+      "min": "0xE000",
+      "max": "0xF8FF"
+    },
+    "planes": {
+      "ground": {
+        "case_plane": 0,
+        "elevation_z": 0.0,
+        "base": "0xE000"
+      },
+      "elevated": {
+        "case_plane": 1,
+        "elevation_z": 25.0,
+        "base": "0xE800"
+      }
+    }
+  },
+  "genome": {
+    "A": {
+      "family": "POINT",
+      "vowel": true,
+      "path": "M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0",
+      "ops": [
+        "POINT",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.1,
+        0.0,
+        0.1,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.9,
+        0.2
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE800"
+    },
+    "B": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 50,20 L 50,80 M 50,50 L 75,50 M 50,32 L 68,32",
+      "ops": [
+        "EXTEND",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 1,
+      "vectors": [
+        0.6,
+        0.1,
+        0.4,
+        0.4,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.6,
+        0.4
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE801"
+    },
+    "C": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 70,25 L 35,50 L 70,75",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": -1,
+      "vectors": [
+        0.5,
+        0.8,
+        0.3,
+        0.4,
+        0.0,
+        0.3,
+        0.0,
+        0.4,
+        0.7,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE802"
+    },
+    "D": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 70,25 L 35,50 L 70,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT",
+        "MARK"
+      ],
+      "trit_val": -1,
+      "sept_val": 2,
+      "vectors": [
+        0.4,
+        0.7,
+        0.4,
+        0.4,
+        0.0,
+        0.3,
+        0.0,
+        0.4,
+        0.6,
+        0.7
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE803"
+    },
+    "E": {
+      "family": "DIAMOND",
+      "vowel": true,
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "ENCLOSE",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": -2,
+      "vectors": [
+        0.8,
+        0.9,
+        0.5,
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.5,
+        0.4,
+        0.8
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE804"
+    },
+    "F": {
+      "family": "DIAMOND",
+      "vowel": false,
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z",
+      "ops": [
+        "ENCLOSE"
+      ],
+      "trit_val": 1,
+      "sept_val": 3,
+      "vectors": [
+        0.9,
+        0.9,
+        0.4,
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE805"
+    },
+    "G": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 20,50 L 80,50",
+      "ops": [
+        "EXTEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": -3,
+      "vectors": [
+        0.9,
+        0.0,
+        0.2,
+        0.5,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.8,
+        0.3
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE806"
+    },
+    "H": {
+      "family": "FRAME",
+      "vowel": false,
+      "path": "M 30,80 L 30,20 L 80,20",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 1,
+      "vectors": [
+        0.7,
+        0.9,
+        0.3,
+        0.4,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE807"
+    },
+    "I": {
+      "family": "FRAME",
+      "vowel": true,
+      "path": "M 75,25 L 30,25 L 30,75 L 75,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "OPEN",
+        "EXTEND",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.5,
+        0.9,
+        0.4,
+        0.4,
+        0.0,
+        0.4,
+        0.0,
+        0.9,
+        0.6,
+        0.7
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE808"
+    },
+    "J": {
+      "family": "FRAME",
+      "vowel": false,
+      "path": "M 75,25 L 30,25 L 30,75 L 75,75",
+      "ops": [
+        "OPEN",
+        "EXTEND"
+      ],
+      "trit_val": -1,
+      "sept_val": 2,
+      "vectors": [
+        0.6,
+        0.9,
+        0.3,
+        0.4,
+        0.0,
+        0.4,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE809"
+    },
+    "K": {
+      "family": "FRAME",
+      "vowel": false,
+      "path": "M 25,25 L 75,25 L 75,75 L 25,75 Z",
+      "ops": [
+        "ENCLOSE"
+      ],
+      "trit_val": 1,
+      "sept_val": -2,
+      "vectors": [
+        0.9,
+        0.9,
+        0.5,
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.9,
+        0.4,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE80A"
+    },
+    "L": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 70,25 A 30,30 0 0,0 70,75",
+      "ops": [
+        "OPEN",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": 3,
+      "vectors": [
+        0.8,
+        0.2,
+        0.3,
+        0.4,
+        0.0,
+        0.3,
+        0.9,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE80B"
+    },
+    "M": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 25,70 A 30,30 0 0,1 75,70",
+      "ops": [
+        "OPEN",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": -3,
+      "vectors": [
+        0.8,
+        0.2,
+        0.3,
+        0.5,
+        0.0,
+        0.7,
+        0.9,
+        0.0,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE80C"
+    },
+    "N": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75",
+      "ops": [
+        "OPEN",
+        "DUPLICATE",
+        "REFLECT"
+      ],
+      "trit_val": -1,
+      "sept_val": 1,
+      "vectors": [
+        0.5,
+        0.2,
+        0.4,
+        0.5,
+        0.0,
+        0.5,
+        0.9,
+        0.9,
+        0.6,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE80D"
+    },
+    "O": {
+      "family": "ARC",
+      "vowel": true,
+      "path": "M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "DUPLICATE",
+        "REFLECT",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.4,
+        0.2,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.9,
+        0.9,
+        0.5,
+        0.8
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE80E"
+    },
+    "P": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 20,25 A 35,25 0 0,0 20,75 M 80,25 A 35,25 0 0,1 80,75",
+      "ops": [
+        "OPEN",
+        "DUPLICATE",
+        "REFLECT",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 2,
+      "vectors": [
+        0.5,
+        0.2,
+        0.5,
+        0.5,
+        0.0,
+        0.8,
+        0.9,
+        0.9,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE80F"
+    },
+    "Q": {
+      "family": "RING",
+      "vowel": false,
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0",
+      "ops": [
+        "ENCLOSE"
+      ],
+      "trit_val": -1,
+      "sept_val": -2,
+      "vectors": [
+        0.9,
+        0.0,
+        0.4,
+        0.5,
+        1.0,
+        0.5,
+        1.0,
+        0.5,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE810"
+    },
+    "R": {
+      "family": "RING",
+      "vowel": false,
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "ENCLOSE",
+        "NEST",
+        "MARK"
+      ],
+      "trit_val": 1,
+      "sept_val": 3,
+      "vectors": [
+        0.8,
+        0.0,
+        0.5,
+        0.5,
+        1.0,
+        0.5,
+        1.0,
+        0.5,
+        0.4,
+        0.8
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE811"
+    },
+    "S": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 50,20 L 50,80",
+      "ops": [
+        "EXTEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": -3,
+      "vectors": [
+        0.9,
+        0.0,
+        0.2,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.9,
+        0.8,
+        0.3
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE812"
+    },
+    "T": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80",
+      "ops": [
+        "EXTEND",
+        "INTERSECT",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 1,
+      "vectors": [
+        0.7,
+        0.5,
+        0.3,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE813"
+    },
+    "U": {
+      "family": "VECTOR",
+      "vowel": true,
+      "path": "M 40,20 L 40,80 M 65,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "EXTEND",
+        "ORIENT",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.6,
+        0.1,
+        0.3,
+        0.4,
+        0.0,
+        0.3,
+        0.0,
+        0.9,
+        0.7,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE814"
+    },
+    "V": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 25,25 L 50,75 L 75,25",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": 2,
+      "vectors": [
+        0.7,
+        0.8,
+        0.3,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE815"
+    },
+    "W": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 20,25 L 50,75 L 80,25 M 35,50 L 65,50",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "NEST",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": -2,
+      "vectors": [
+        0.5,
+        0.8,
+        0.5,
+        0.5,
+        0.0,
+        0.6,
+        0.0,
+        0.5,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE816"
+    },
+    "X": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 25,25 L 75,75 M 75,25 L 25,75",
+      "ops": [
+        "EXTEND",
+        "INTERSECT"
+      ],
+      "trit_val": -1,
+      "sept_val": 3,
+      "vectors": [
+        0.6,
+        0.9,
+        0.4,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.6,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE817"
+    },
+    "Y": {
+      "family": "BRANCH",
+      "vowel": false,
+      "path": "M 25,25 L 50,50 L 75,25 M 50,50 L 50,80",
+      "ops": [
+        "EXTEND",
+        "BRANCH",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": -3,
+      "vectors": [
+        0.5,
+        0.8,
+        0.4,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.6,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE818"
+    },
+    "Z": {
+      "family": "BRANCH",
+      "vowel": false,
+      "path": "M 50,80 L 50,20 M 30,40 L 50,20 L 70,40",
+      "ops": [
+        "EXTEND",
+        "BRANCH",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": 1,
+      "vectors": [
+        0.5,
+        0.8,
+        0.4,
+        0.5,
+        0.0,
+        0.3,
+        0.0,
+        0.9,
+        0.6,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE819"
+    },
+    "a": {
+      "family": "POINT",
+      "vowel": true,
+      "path": "M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0",
+      "ops": [
+        "POINT",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.1,
+        0.0,
+        0.1,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.9,
+        0.2
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE000"
+    },
+    "b": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 50,20 L 50,80 M 50,50 L 75,50 M 50,32 L 68,32",
+      "ops": [
+        "EXTEND",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 1,
+      "vectors": [
+        0.6,
+        0.1,
+        0.4,
+        0.4,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.6,
+        0.4
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE001"
+    },
+    "c": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 70,25 L 35,50 L 70,75",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": -1,
+      "vectors": [
+        0.5,
+        0.8,
+        0.3,
+        0.4,
+        0.0,
+        0.3,
+        0.0,
+        0.4,
+        0.7,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE002"
+    },
+    "d": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 70,25 L 35,50 L 70,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT",
+        "MARK"
+      ],
+      "trit_val": -1,
+      "sept_val": 2,
+      "vectors": [
+        0.4,
+        0.7,
+        0.4,
+        0.4,
+        0.0,
+        0.3,
+        0.0,
+        0.4,
+        0.6,
+        0.7
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE003"
+    },
+    "e": {
+      "family": "DIAMOND",
+      "vowel": true,
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "ENCLOSE",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": -2,
+      "vectors": [
+        0.8,
+        0.9,
+        0.5,
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.5,
+        0.4,
+        0.8
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE004"
+    },
+    "f": {
+      "family": "DIAMOND",
+      "vowel": false,
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z",
+      "ops": [
+        "ENCLOSE"
+      ],
+      "trit_val": 1,
+      "sept_val": 3,
+      "vectors": [
+        0.9,
+        0.9,
+        0.4,
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.5,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE005"
+    },
+    "g": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 20,50 L 80,50",
+      "ops": [
+        "EXTEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": -3,
+      "vectors": [
+        0.9,
+        0.0,
+        0.2,
+        0.5,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.8,
+        0.3
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE006"
+    },
+    "h": {
+      "family": "FRAME",
+      "vowel": false,
+      "path": "M 30,80 L 30,20 L 80,20",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 1,
+      "vectors": [
+        0.7,
+        0.9,
+        0.3,
+        0.4,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE007"
+    },
+    "i": {
+      "family": "FRAME",
+      "vowel": true,
+      "path": "M 75,25 L 30,25 L 30,75 L 75,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "OPEN",
+        "EXTEND",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.5,
+        0.9,
+        0.4,
+        0.4,
+        0.0,
+        0.4,
+        0.0,
+        0.9,
+        0.6,
+        0.7
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE008"
+    },
+    "j": {
+      "family": "FRAME",
+      "vowel": false,
+      "path": "M 75,25 L 30,25 L 30,75 L 75,75",
+      "ops": [
+        "OPEN",
+        "EXTEND"
+      ],
+      "trit_val": -1,
+      "sept_val": 2,
+      "vectors": [
+        0.6,
+        0.9,
+        0.3,
+        0.4,
+        0.0,
+        0.4,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE009"
+    },
+    "k": {
+      "family": "FRAME",
+      "vowel": false,
+      "path": "M 25,25 L 75,25 L 75,75 L 25,75 Z",
+      "ops": [
+        "ENCLOSE"
+      ],
+      "trit_val": 1,
+      "sept_val": -2,
+      "vectors": [
+        0.9,
+        0.9,
+        0.5,
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.9,
+        0.4,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE00A"
+    },
+    "l": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 70,25 A 30,30 0 0,0 70,75",
+      "ops": [
+        "OPEN",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": 3,
+      "vectors": [
+        0.8,
+        0.2,
+        0.3,
+        0.4,
+        0.0,
+        0.3,
+        0.9,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE00B"
+    },
+    "m": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 25,70 A 30,30 0 0,1 75,70",
+      "ops": [
+        "OPEN",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": -3,
+      "vectors": [
+        0.8,
+        0.2,
+        0.3,
+        0.5,
+        0.0,
+        0.7,
+        0.9,
+        0.0,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE00C"
+    },
+    "n": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75",
+      "ops": [
+        "OPEN",
+        "DUPLICATE",
+        "REFLECT"
+      ],
+      "trit_val": -1,
+      "sept_val": 1,
+      "vectors": [
+        0.5,
+        0.2,
+        0.4,
+        0.5,
+        0.0,
+        0.5,
+        0.9,
+        0.9,
+        0.6,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE00D"
+    },
+    "o": {
+      "family": "ARC",
+      "vowel": true,
+      "path": "M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "DUPLICATE",
+        "REFLECT",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.4,
+        0.2,
+        0.5,
+        0.5,
+        0.0,
+        0.5,
+        0.9,
+        0.9,
+        0.5,
+        0.8
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE00E"
+    },
+    "p": {
+      "family": "ARC",
+      "vowel": false,
+      "path": "M 20,25 A 35,25 0 0,0 20,75 M 80,25 A 35,25 0 0,1 80,75",
+      "ops": [
+        "OPEN",
+        "DUPLICATE",
+        "REFLECT",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 2,
+      "vectors": [
+        0.5,
+        0.2,
+        0.5,
+        0.5,
+        0.0,
+        0.8,
+        0.9,
+        0.9,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE00F"
+    },
+    "q": {
+      "family": "RING",
+      "vowel": false,
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0",
+      "ops": [
+        "ENCLOSE"
+      ],
+      "trit_val": -1,
+      "sept_val": -2,
+      "vectors": [
+        0.9,
+        0.0,
+        0.4,
+        0.5,
+        1.0,
+        0.5,
+        1.0,
+        0.5,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE010"
+    },
+    "r": {
+      "family": "RING",
+      "vowel": false,
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "ENCLOSE",
+        "NEST",
+        "MARK"
+      ],
+      "trit_val": 1,
+      "sept_val": 3,
+      "vectors": [
+        0.8,
+        0.0,
+        0.5,
+        0.5,
+        1.0,
+        0.5,
+        1.0,
+        0.5,
+        0.4,
+        0.8
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE011"
+    },
+    "s": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 50,20 L 50,80",
+      "ops": [
+        "EXTEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": -3,
+      "vectors": [
+        0.9,
+        0.0,
+        0.2,
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.9,
+        0.8,
+        0.3
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE012"
+    },
+    "t": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80",
+      "ops": [
+        "EXTEND",
+        "INTERSECT",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": 1,
+      "vectors": [
+        0.7,
+        0.5,
+        0.3,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE013"
+    },
+    "u": {
+      "family": "VECTOR",
+      "vowel": true,
+      "path": "M 40,20 L 40,80 M 65,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+      "ops": [
+        "EXTEND",
+        "ORIENT",
+        "MARK"
+      ],
+      "trit_val": 0,
+      "sept_val": 0,
+      "vectors": [
+        0.6,
+        0.1,
+        0.3,
+        0.4,
+        0.0,
+        0.3,
+        0.0,
+        0.9,
+        0.7,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE014"
+    },
+    "v": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 25,25 L 50,75 L 75,25",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": 2,
+      "vectors": [
+        0.7,
+        0.8,
+        0.3,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.7,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE015"
+    },
+    "w": {
+      "family": "CHEVRON",
+      "vowel": false,
+      "path": "M 20,25 L 50,75 L 80,25 M 35,50 L 65,50",
+      "ops": [
+        "EXTEND",
+        "BEND",
+        "NEST",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": -2,
+      "vectors": [
+        0.5,
+        0.8,
+        0.5,
+        0.5,
+        0.0,
+        0.6,
+        0.0,
+        0.5,
+        0.5,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE016"
+    },
+    "x": {
+      "family": "VECTOR",
+      "vowel": false,
+      "path": "M 25,25 L 75,75 M 75,25 L 25,75",
+      "ops": [
+        "EXTEND",
+        "INTERSECT"
+      ],
+      "trit_val": -1,
+      "sept_val": 3,
+      "vectors": [
+        0.6,
+        0.9,
+        0.4,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.6,
+        0.5
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE017"
+    },
+    "y": {
+      "family": "BRANCH",
+      "vowel": false,
+      "path": "M 25,25 L 50,50 L 75,25 M 50,50 L 50,80",
+      "ops": [
+        "EXTEND",
+        "BRANCH",
+        "ORIENT"
+      ],
+      "trit_val": 1,
+      "sept_val": -3,
+      "vectors": [
+        0.5,
+        0.8,
+        0.4,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        0.9,
+        0.6,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE018"
+    },
+    "z": {
+      "family": "BRANCH",
+      "vowel": false,
+      "path": "M 50,80 L 50,20 M 30,40 L 50,20 L 70,40",
+      "ops": [
+        "EXTEND",
+        "BRANCH",
+        "ORIENT"
+      ],
+      "trit_val": -1,
+      "sept_val": 1,
+      "vectors": [
+        0.5,
+        0.8,
+        0.4,
+        0.5,
+        0.0,
+        0.3,
+        0.0,
+        0.9,
+        0.6,
+        0.6
+      ],
+      "pua": "",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE019"
+    }
+  },
+  "ligatures": {
+    "ALL": {
+      "pua": "",
+      "meaning": "Totality / Universe",
+      "path": "M 50,50 m -30,0 a 30,30 0 1,0 60,0 a 30,30 0 1,0 -60,0 M 50,20 L 50,80",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE823",
+      "length": 3
+    },
+    "AND": {
+      "pua": "",
+      "meaning": "Conjunction / Tensor Product",
+      "path": "M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0 M 70,25 L 35,50 L 70,75",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE825",
+      "length": 3
+    },
+    "AT": {
+      "pua": "",
+      "meaning": "Locality / Coordinate",
+      "path": "M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0 M 20,20 L 80,20 M 50,20 L 50,80",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE836",
+      "length": 2
+    },
+    "CON": {
+      "pua": "",
+      "meaning": "Convergence / Collective",
+      "path": "M 70,25 L 35,50 L 70,75 M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE828",
+      "length": 3
+    },
+    "EE": {
+      "pua": "",
+      "meaning": "Twin Resonant Eye",
+      "path": "M 35,20 L 65,50 L 35,80 L 05,50 Z M 35,50 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 M 65,20 L 95,50 L 65,80 L 35,50 Z M 65,50 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE833",
+      "length": 2
+    },
+    "ER": {
+      "pua": "",
+      "meaning": "Agent / Operator",
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE834",
+      "length": 2
+    },
+    "FOR": {
+      "pua": "",
+      "meaning": "Iteration / Purpose Loop",
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE827",
+      "length": 3
+    },
+    "IN": {
+      "pua": "",
+      "meaning": "Interior Admission",
+      "path": "M 65,25 A 25,25 0 0,0 65,75 M 85,25 A 25,25 0 0,1 85,75 M 45,35 L 20,35 L 20,65 L 45,65",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE832",
+      "length": 2
+    },
+    "ING": {
+      "pua": "",
+      "meaning": "Continuous Action",
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 20,50 L 80,50",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE822",
+      "length": 3
+    },
+    "MENT": {
+      "pua": "",
+      "meaning": "Artifact / Entity",
+      "path": "M 25,70 A 30,30 0 0,1 75,70 M 50,20 L 80,50 L 50,80 L 20,50 Z",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE841",
+      "length": 4
+    },
+    "NOT": {
+      "pua": "",
+      "meaning": "Negation / Mirror Inversion",
+      "path": "M 20,20 L 80,80 M 80,20 L 20,80 M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE826",
+      "length": 3
+    },
+    "ON": {
+      "pua": "",
+      "meaning": "Ontological Presence",
+      "path": "M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75 M 50,50 m -10,0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE835",
+      "length": 2
+    },
+    "PRO": {
+      "pua": "",
+      "meaning": "Forward Projection",
+      "path": "M 20,25 A 35,25 0 0,0 20,75 M 80,25 A 35,25 0 0,1 80,75 M 50,50 m -10,0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE829",
+      "length": 3
+    },
+    "PSY": {
+      "pua": "",
+      "meaning": "Mind / Intent / Vector",
+      "path": "M 50,20 L 50,80 M 20,40 L 50,60 L 80,40 M 25,25 L 75,25",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE820",
+      "length": 3
+    },
+    "RE": {
+      "pua": "",
+      "meaning": "Recursive Return",
+      "path": "M 50,50 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0 M 50,30 L 70,50 L 50,70 L 30,50 Z",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE839",
+      "length": 2
+    },
+    "RY": {
+      "pua": "",
+      "meaning": "Sovereign Root Sign",
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 25,25 L 50,50 L 75,25 M 50,50 L 50,80",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE837",
+      "length": 2
+    },
+    "RYTT": {
+      "pua": "",
+      "meaning": "Sovereign Inscription Seal",
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 L 65,50",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE842",
+      "length": 4
+    },
+    "ST": {
+      "pua": "",
+      "meaning": "Standing State",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 L 65,50",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE831",
+      "length": 2
+    },
+    "STR": {
+      "pua": "",
+      "meaning": "Structure / Lattice",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 20,80 L 80,80 M 20,20 L 80,80",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE821",
+      "length": 3
+    },
+    "TH": {
+      "pua": "",
+      "meaning": "Aspiration / Horizon",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 50,50 L 80,50 L 80,80",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE830",
+      "length": 2
+    },
+    "THE": {
+      "pua": "",
+      "meaning": "Definite Ground Truth",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 30,80 L 30,40 L 70,40 L 70,80",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE824",
+      "length": 3
+    },
+    "TION": {
+      "pua": "",
+      "meaning": "Process / State",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 A 15,15 0 1,0 65,50 A 15,15 0 1,0 35,50",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE840",
+      "length": 4
+    },
+    "TT": {
+      "pua": "",
+      "meaning": "Dual Pillar Invariant",
+      "path": "M 15,20 L 45,20 M 30,20 L 30,80 M 55,20 L 85,20 M 70,20 L 70,80",
+      "is_upper": true,
+      "case_plane": 1,
+      "elevation_z": 25.0,
+      "pua_codepoint": "0xE838",
+      "length": 2
+    },
+    "all": {
+      "pua": "",
+      "meaning": "Totality / Universe",
+      "path": "M 50,50 m -30,0 a 30,30 0 1,0 60,0 a 30,30 0 1,0 -60,0 M 50,20 L 50,80",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE023",
+      "length": 3
+    },
+    "and": {
+      "pua": "",
+      "meaning": "Conjunction / Tensor Product",
+      "path": "M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0 M 70,25 L 35,50 L 70,75",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE025",
+      "length": 3
+    },
+    "at": {
+      "pua": "",
+      "meaning": "Locality / Coordinate",
+      "path": "M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0 M 20,20 L 80,20 M 50,20 L 50,80",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE036",
+      "length": 2
+    },
+    "con": {
+      "pua": "",
+      "meaning": "Convergence / Collective",
+      "path": "M 70,25 L 35,50 L 70,75 M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE028",
+      "length": 3
+    },
+    "ee": {
+      "pua": "",
+      "meaning": "Twin Resonant Eye",
+      "path": "M 35,20 L 65,50 L 35,80 L 05,50 Z M 35,50 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 M 65,20 L 95,50 L 65,80 L 35,50 Z M 65,50 m -4,0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE033",
+      "length": 2
+    },
+    "er": {
+      "pua": "",
+      "meaning": "Agent / Operator",
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE034",
+      "length": 2
+    },
+    "for": {
+      "pua": "",
+      "meaning": "Iteration / Purpose Loop",
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE027",
+      "length": 3
+    },
+    "in": {
+      "pua": "",
+      "meaning": "Interior Admission",
+      "path": "M 65,25 A 25,25 0 0,0 65,75 M 85,25 A 25,25 0 0,1 85,75 M 45,35 L 20,35 L 20,65 L 45,65",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE032",
+      "length": 2
+    },
+    "ing": {
+      "pua": "",
+      "meaning": "Continuous Action",
+      "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 20,50 L 80,50",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE022",
+      "length": 3
+    },
+    "ment": {
+      "pua": "",
+      "meaning": "Artifact / Entity",
+      "path": "M 25,70 A 30,30 0 0,1 75,70 M 50,20 L 80,50 L 50,80 L 20,50 Z",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE041",
+      "length": 4
+    },
+    "not": {
+      "pua": "",
+      "meaning": "Negation / Mirror Inversion",
+      "path": "M 20,20 L 80,80 M 80,20 L 20,80 M 50,50 m -15,0 a 15,15 0 1,0 30,0 a 15,15 0 1,0 -30,0",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE026",
+      "length": 3
+    },
+    "on": {
+      "pua": "",
+      "meaning": "Ontological Presence",
+      "path": "M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75 M 50,50 m -10,0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE035",
+      "length": 2
+    },
+    "pro": {
+      "pua": "",
+      "meaning": "Forward Projection",
+      "path": "M 20,25 A 35,25 0 0,0 20,75 M 80,25 A 35,25 0 0,1 80,75 M 50,50 m -10,0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE029",
+      "length": 3
+    },
+    "psy": {
+      "pua": "",
+      "meaning": "Mind / Intent / Vector",
+      "path": "M 50,20 L 50,80 M 20,40 L 50,60 L 80,40 M 25,25 L 75,25",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE020",
+      "length": 3
+    },
+    "re": {
+      "pua": "",
+      "meaning": "Recursive Return",
+      "path": "M 50,50 m -20,0 a 20,20 0 1,0 40,0 a 20,20 0 1,0 -40,0 M 50,30 L 70,50 L 50,70 L 30,50 Z",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE039",
+      "length": 2
+    },
+    "ry": {
+      "pua": "",
+      "meaning": "Sovereign Root Sign",
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 25,25 L 50,50 L 75,25 M 50,50 L 50,80",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE037",
+      "length": 2
+    },
+    "rytt": {
+      "pua": "",
+      "meaning": "Sovereign Inscription Seal",
+      "path": "M 50,50 m -25,0 a 25,25 0 1,0 50,0 a 25,25 0 1,0 -50,0 M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 L 65,50",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE042",
+      "length": 4
+    },
+    "st": {
+      "pua": "",
+      "meaning": "Standing State",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 L 65,50",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE031",
+      "length": 2
+    },
+    "str": {
+      "pua": "",
+      "meaning": "Structure / Lattice",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 20,80 L 80,80 M 20,20 L 80,80",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE021",
+      "length": 3
+    },
+    "th": {
+      "pua": "",
+      "meaning": "Aspiration / Horizon",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 50,50 L 80,50 L 80,80",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE030",
+      "length": 2
+    },
+    "the": {
+      "pua": "",
+      "meaning": "Definite Ground Truth",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 30,80 L 30,40 L 70,40 L 70,80",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE024",
+      "length": 3
+    },
+    "tion": {
+      "pua": "",
+      "meaning": "Process / State",
+      "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 A 15,15 0 1,0 65,50 A 15,15 0 1,0 35,50",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE040",
+      "length": 4
+    },
+    "tt": {
+      "pua": "",
+      "meaning": "Dual Pillar Invariant",
+      "path": "M 15,20 L 45,20 M 30,20 L 30,80 M 55,20 L 85,20 M 70,20 L 70,80",
+      "is_upper": false,
+      "case_plane": 0,
+      "elevation_z": 0.0,
+      "pua_codepoint": "0xE038",
+      "length": 2
+    }
+  },
+  "metrics": {
+    "parity_modulus": 24,
+    "holonomic_bases": [
+      3,
+      9,
+      7,
+      21,
+      24
+    ],
+    "vsa_bits": 10240
+  }
+}

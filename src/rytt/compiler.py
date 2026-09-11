@@ -16,6 +16,7 @@ import json
 import math
 import struct
 import numpy as np
+from .spec import validate_against_canonical_spec
 
 # -----------------------------------------------------------------------------
 # 1. CANONICAL RYTT ALPHABET GENOME (BASE 26 UPPER & LOWER DUAL-PLANE)
@@ -297,6 +298,11 @@ for k, v in RYTT_GENOME.items():
     PUA_TO_PLAIN[v['pua']] = k
 for k, v in RYTT_LIGATURES.items():
     PUA_TO_PLAIN[v['pua']] = k
+
+# The versioned JSON artifact is the cross-surface contract. Keep the existing
+# dictionaries as the public API, but fail closed if this executable surface
+# drifts from the canonical grammar.
+RYTT_SPEC = validate_against_canonical_spec(RYTT_GENOME, RYTT_LIGATURES)
 
 # -----------------------------------------------------------------------------
 # 4. RYTT COMPILATION DATA STRUCTURES
