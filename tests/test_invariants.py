@@ -16,7 +16,9 @@ from rytt.compiler import (
     RyttCompiler,
     RyttCompilationResult,
     RyttToken,
+    RYTT_SPEC,
 )
+from rytt.spec import SPEC_PATH, validate_against_canonical_spec
 from rytt import (
     RyttNativeTokenizer,
     RyttBenchmarkEngine,
@@ -180,3 +182,12 @@ def test_compiler_is_deterministic():
 def test_empty_string_roundtrip():
     result = COMPILER.compile("")
     assert COMPILER.decompile(result.encoded_pua) == ""
+
+
+def test_canonical_spec_is_versioned_and_matches_compiler():
+    assert SPEC_PATH.exists()
+    assert RYTT_SPEC["schema"] == "rytt.sovereign-semiotics/1"
+    assert RYTT_SPEC["version"] == "0.1.0"
+    validated = validate_against_canonical_spec(RYTT_GENOME, RYTT_LIGATURES)
+    assert validated["genome"]
+    assert validated["ligatures"]
