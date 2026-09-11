@@ -1,0 +1,52 @@
+name: rytt-core CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "crates/**"
+      - "src/rytt/data/**"
+      - "conformance/vectors.json"
+      - ".github/workflows/rytt-core-ci.yml"
+  pull_request:
+    paths:
+      - "crates/**"
+      - "src/rytt/data/**"
+      - "conformance/vectors.json"
+      - ".github/workflows/rytt-core-ci.yml"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/rytt-core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/rytt-core
+      - name: Run tests
+        run: cargo test
+
+  clippy:
+    name: cargo clippy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/rytt-core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: crates/rytt-core
+      - name: Clippy
+        run: cargo clippy
