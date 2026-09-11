@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rytt-sovereign-semiotics"
-version = "0.1.0"
+version = "0.2.0"
 description = "Formal, lossless, reversible grammar mapping language to radial glyph chords and dual-plane native tokens."
 readme = "README.md"
 license = {text = "MIT"}

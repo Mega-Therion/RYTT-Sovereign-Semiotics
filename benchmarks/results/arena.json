@@ -1,0 +1,114 @@
+{
+  "arena_version": "0.1",
+  "metric_policy": "Each baseline is reported independently; no score combines characters, bytes, and model tokens.",
+  "tokenizer_notes": {
+    "cl100k_base_tokens": "Optional; present only when tiktoken is installed."
+  },
+  "results": [
+    {
+      "corpus": "prose",
+      "source_characters": 113,
+      "source_utf8_bytes": 113,
+      "rytt_tokens": 98,
+      "rytt_encoded_utf8_bytes": 274,
+      "rytt_chord_tokens": 11,
+      "rytt_encode_runtime_us": 1126.08,
+      "round_trip_exact": true,
+      "named_baselines": {
+        "raw_characters": 113,
+        "utf8_bytes": 113,
+        "cl100k_base_tokens": null
+      }
+    },
+    {
+      "corpus": "code",
+      "source_characters": 75,
+      "source_utf8_bytes": 75,
+      "rytt_tokens": 69,
+      "rytt_encoded_utf8_bytes": 174,
+      "rytt_chord_tokens": 4,
+      "rytt_encode_runtime_us": 703.94,
+      "round_trip_exact": true,
+      "named_baselines": {
+        "raw_characters": 75,
+        "utf8_bytes": 75,
+        "cl100k_base_tokens": null
+      }
+    },
+    {
+      "corpus": "mixed_casing",
+      "source_characters": 48,
+      "source_utf8_bytes": 48,
+      "rytt_tokens": 42,
+      "rytt_encoded_utf8_bytes": 117,
+      "rytt_chord_tokens": 3,
+      "rytt_encode_runtime_us": 405.9,
+      "round_trip_exact": true,
+      "named_baselines": {
+        "raw_characters": 48,
+        "utf8_bytes": 48,
+        "cl100k_base_tokens": null
+      }
+    },
+    {
+      "corpus": "punctuation",
+      "source_characters": 50,
+      "source_utf8_bytes": 54,
+      "rytt_tokens": 45,
+      "rytt_encoded_utf8_bytes": 99,
+      "rytt_chord_tokens": 4,
+      "rytt_encode_runtime_us": 346.58,
+      "round_trip_exact": true,
+      "named_baselines": {
+        "raw_characters": 50,
+        "utf8_bytes": 54,
+        "cl100k_base_tokens": null
+      }
+    },
+    {
+      "corpus": "whitespace",
+      "source_characters": 58,
+      "source_utf8_bytes": 58,
+      "rytt_tokens": 49,
+      "rytt_encoded_utf8_bytes": 123,
+      "rytt_chord_tokens": 5,
+      "rytt_encode_runtime_us": 405.56,
+      "round_trip_exact": true,
+      "named_baselines": {
+        "raw_characters": 58,
+        "utf8_bytes": 58,
+        "cl100k_base_tokens": null
+      }
+    },
+    {
+      "corpus": "unicode_passthrough",
+      "source_characters": 26,
+      "source_utf8_bytes": 50,
+      "rytt_tokens": 26,
+      "rytt_encoded_utf8_bytes": 61,
+      "rytt_chord_tokens": 0,
+      "rytt_encode_runtime_us": 161.15,
+      "round_trip_exact": true,
+      "named_baselines": {
+        "raw_characters": 26,
+        "utf8_bytes": 50,
+        "cl100k_base_tokens": null
+      }
+    },
+    {
+      "corpus": "ligature_rich",
+      "source_characters": 65,
+      "source_utf8_bytes": 65,
+      "rytt_tokens": 29,
+      "rytt_encoded_utf8_bytes": 73,
+      "rytt_chord_tokens": 15,
+      "rytt_encode_runtime_us": 361.62,
+      "round_trip_exact": true,
+      "named_baselines": {
+        "raw_characters": 65,
+        "utf8_bytes": 65,
+        "cl100k_base_tokens": null
+      }
+    }
+  ]
+}

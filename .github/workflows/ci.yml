@@ -78,6 +78,13 @@ jobs:
       - name: Generate web data and fixtures
         run: python scripts/generate_web_data.py
 
+      - name: Verify canonical specification and conformance vectors
+        run: |
+          python scripts/generate_canonical_spec.py --check
+          python scripts/generate_conformance_vectors.py --check
+          python scripts/verify_conformance.py
+          python scripts/check_formal_alignment.py
+
       - name: Verify generated data matches compiler
         run: |
           python - <<'PY'
@@ -102,7 +109,14 @@ jobs:
         run: python -m pytest benchmarks/test_rytt_native_lossless.py benchmarks/test_4leibniz_bridge.py -v
 
       - name: Run benchmark suite and save artifact
-        run: python benchmarks/run_benchmarks.py
+        run: |
+          python benchmarks/run_benchmarks.py
+          python benchmarks/arena.py
+
+      - name: Verify artifact export and replay
+        run: |
+          printf 'CI verified artifact — naïve 東京' | rytt artifact-export /tmp/rytt-ci-artifact.zip
+          rytt artifact-verify /tmp/rytt-ci-artifact.zip | grep -q '"valid": true'
 
       - name: Upload benchmark results
         uses: actions/upload-artifact@v4
@@ -116,6 +130,11 @@ jobs:
           echo "Hello RYTT" | rytt encode | rytt decode | grep -q "Hello RYTT"
           echo "CLI round-trip smoke test passed"
 
+      - name: Accessibility and performance smoke checks
+        run: |
+          python scripts/audit_static_site.py
+          python scripts/perf_smoke.py
+
       - name: Validate static deployment surface
         run: |
           test -f index.html
@@ -123,6 +142,8 @@ jobs:
           test -f vercel.json
           test -f robots.txt
           test -f sitemap.xml
+          test -f web/codex.html
+          test -f benchmarks/results/arena.html
           python - <<'PY'
           import json
           from pathlib import Path

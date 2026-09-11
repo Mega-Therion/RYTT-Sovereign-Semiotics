@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rytt-sovereign-semiotics.vercel.app/spec/rytt.schema.json",
+  "title": "RYTT Canonical Vocabulary",
+  "type": "object",
+  "required": ["spec_version", "package_version", "format", "planes", "primitives", "chords", "passthrough"],
+  "properties": {
+    "spec_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "package_version": {"type": "string"},
+    "format": {"type": "object", "required": ["name", "display_serialization", "matching", "passthrough", "round_trip"], "additionalProperties": {"type": "string"}},
+    "planes": {"type": "object", "required": ["ground", "elevated"], "additionalProperties": {"type": "object", "required": ["case", "elevation_z"]}},
+    "primitives": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/token"}},
+    "chords": {"type": "array", "items": {"$ref": "#/$defs/token"}},
+    "passthrough": {"type": "object", "required": ["pua_to_plain_count"]}
+  },
+  "$defs": {
+    "token": {
+      "type": "object",
+      "required": ["source", "codepoint", "codepoint_int", "is_upper", "plane", "elevation_z"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "codepoint": {"type": "string", "pattern": "^U\\+[0-9A-F]{4,6}$"},
+        "codepoint_int": {"type": "integer", "minimum": 57344, "maximum": 983039},
+        "is_upper": {"type": "boolean"},
+        "plane": {"enum": ["ground", "elevated"]},
+        "elevation_z": {"type": "number"}
+      }
+    }
+  }
+}

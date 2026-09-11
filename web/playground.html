@@ -34,6 +34,8 @@
     }
     a{color:inherit;} button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
     :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px;}
+    .skip{position:absolute;left:1rem;top:-4rem;background:var(--cyan);color:#061018;padding:.65rem 1rem;z-index:30;border-radius:3px;font-weight:700}.skip:focus{top:1rem}
+    :target,:focus{scroll-margin-top:80px}
 
     /* layout */
     .bar{display:flex;align-items:center;gap:1rem;padding:.9rem 1.4rem;
@@ -149,6 +151,7 @@
   </style>
 </head>
 <body>
+<a class="skip" href="#playground-main">Skip to compiler workspace</a>
 <header class="bar">
   <span class="bar-brand">RYTT <span>Sovereign Semiotics &mdash; Playground</span></span>
   <nav style="display:flex;gap:1rem;font-size:.78rem;margin-left:auto;">
@@ -158,13 +161,14 @@
   </nav>
 </header>
 
-<main class="app">
+<main class="app" id="playground-main">
   <!-- toolbar -->
   <div class="toolbar">
     <div class="mode-bar" role="group" aria-label="Compiler mode">
       <button class="mode-btn active" id="btn-encode">Encode</button>
       <button class="mode-btn" id="btn-decode">Decode</button>
       <button class="mode-btn" id="btn-roundtrip">Round-trip</button>
+      <button class="mode-btn" id="btn-trace">Trace</button>
     </div>
     <span id="rt-badge" class="rt-badge" aria-live="polite">
       <span class="rt-dot"></span> Ready
@@ -174,6 +178,7 @@
     <button class="tb-btn" id="btn-copy">Copy output</button>
     <button class="tb-btn" id="btn-clear">Clear</button>
     <button class="tb-btn" id="btn-swap">Swap ⇆</button>
+    <button class="tb-btn" id="btn-export">Export artifact</button>
   </div>
 
   <!-- panels -->
@@ -232,6 +237,11 @@
   </div>
 </section>
 
+<section style="max-width:1240px;margin:0 auto;padding:0 1.5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;" id="lab-panels">
+  <div class="panel" style="padding:1rem;min-height:180px;"><div class="panel-head">Explainable trace</div><pre id="trace-output" style="padding:1rem;white-space:pre-wrap;overflow:auto;color:var(--muted);font: .72rem/1.6 var(--font-mono);">Compile text to inspect candidate chords and decisions.</pre></div>
+  <div class="panel" style="padding:1rem;min-height:180px;"><div class="panel-head">Named metrics</div><div id="compare-output" style="padding:1rem;color:var(--muted);font: .78rem/1.8 var(--font-mono);">Characters, UTF-8 bytes, and RYTT tokens are reported independently.</div></div>
+</section>
+
 <script>
 (function(){
   'use strict';
@@ -269,9 +279,12 @@
     let i = 0;
     while(i < text.length){
       let matched = false;
+      const candidates = [];
       for(const [seq,pua] of Object.entries(LIGS)){
         if(text.startsWith(seq,i)){
-          tokens.push({src:seq, pua, type:'chord',
+          candidates.push(seq);
+          tokens.push({src:seq, pua, type:'chord', candidates,
+            decision:'selected longest matching chord',
             plane: /[A-Z]/.test(seq[0]) ? 'Elevated' : 'Ground',
             cp: '0x' + pua.codePointAt(0).toString(16).toUpperCase()});
           i += seq.length; matched = true; break;
@@ -281,7 +294,8 @@
         const c = text[i];
         const pua = GENOME[c] || c;
         const isAlpha = /[a-zA-Z]/.test(c);
-        tokens.push({src:c, pua, type: isAlpha ? 'glyph' : 'passthrough',
+        tokens.push({src:c, pua, type: isAlpha ? 'glyph' : 'passthrough', candidates,
+          decision: isAlpha ? 'no matching chord; primitive glyph' : 'preserved passthrough',
           plane: /[A-Z]/.test(c) ? 'Elevated' : isAlpha ? 'Ground' : '—',
           cp: isAlpha ? '0x'+pua.codePointAt(0).toString(16).toUpperCase() : '—'});
         i++;
@@ -314,6 +328,8 @@
   const mBs  = document.getElementById('m-bsrc');
   const mBe  = document.getElementById('m-benc');
   const tblBody = document.getElementById('tbl-body');
+  const traceOut = document.getElementById('trace-output');
+  const compareOut = document.getElementById('compare-output');
   const inspSec = document.getElementById('inspect-section');
   const inspCnt = document.getElementById('inspect-count');
   const inspHd  = document.getElementById('inspect-heading');
@@ -388,6 +404,8 @@
     mBs.textContent = bs; mBe.textContent = be;
     const delta = be - bs;
     byteD.textContent = (delta >= 0 ? '+' : '') + delta + ' B';
+    compareOut.innerHTML = `raw characters: <strong>${text.length}</strong><br>RYTT tokens: <strong>${r.tokens.length}</strong><br>UTF-8 source bytes: <strong>${bs}</strong><br>RYTT display bytes: <strong>${be}</strong><br>character/token ratio: <strong>${ratio}</strong><br><small>These are separate units, not one compression score.</small>`;
+    traceOut.textContent = JSON.stringify(r.tokens.map((token, index) => ({index: index + 1, source: token.src, decision: token.decision, candidates: token.candidates, type: token.type, plane: token.plane, codepoint: token.cp, exact: (REV[token.pua] || token.pua) === token.src})), null, 2);
     byteD.style.color = delta <= 0 ? '#6be49a' : '#ff9a7a';
 
     // token table
@@ -416,6 +434,7 @@
   document.getElementById('btn-encode').addEventListener('click',()=>setMode('encode'));
   document.getElementById('btn-decode').addEventListener('click',()=>setMode('decode'));
   document.getElementById('btn-roundtrip').addEventListener('click',()=>setMode('roundtrip'));
+  document.getElementById('btn-trace').addEventListener('click',()=>{ document.getElementById('lab-panels').scrollIntoView({behavior:'smooth'}); traceOut.focus?.(); });
 
   document.getElementById('btn-copy').addEventListener('click',()=>{
     const text = outEl.textContent;
@@ -444,6 +463,13 @@
     'TION MENT ING STR THE AND FOR CON PRO — chord-rich.',
   ];
   let sampleIdx = 0;
+  document.getElementById('btn-export').addEventListener('click',()=>{
+    const r = compile(srcEl.value);
+    const artifact = {format:'rytt', format_version:'0.1', spec_version:'0.1', source_text:srcEl.value, encoded_display:r.encoded, tokens:r.tokens, metrics:{source_characters:srcEl.value.length, rytt_tokens:r.tokens.length, source_utf8_bytes:byteLen(srcEl.value), encoded_utf8_bytes:byteLen(r.encoded)}, verification:{round_trip_exact:r.exact, decoded_text:r.recovered}};
+    const blob = new Blob([JSON.stringify(artifact,null,2)], {type:'application/json'});
+    const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'rytt-artifact.json'; link.click(); URL.revokeObjectURL(link.href);
+  });
+
   document.getElementById('btn-sample').addEventListener('click',()=>{
     srcEl.value = SAMPLES[sampleIdx++ % SAMPLES.length];
     setMode('encode');

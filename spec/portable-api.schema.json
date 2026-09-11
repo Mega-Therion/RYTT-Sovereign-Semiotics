@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rytt-sovereign-semiotics.vercel.app/spec/portable-api.schema.json",
+  "title": "RYTT Portable API Envelope",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["operation", "source_text"],
+      "properties": {"operation": {"const": "encode"}, "source_text": {"type": "string"}}
+    },
+    {
+      "type": "object",
+      "required": ["format", "format_version", "spec_version", "encoded_display"],
+      "properties": {
+        "format": {"const": "rytt"},
+        "format_version": {"type": "string"},
+        "spec_version": {"type": "string"},
+        "encoded_display": {"type": "string"},
+        "source_text": {"type": "string"}
+      }
+    }
+  ]
+}

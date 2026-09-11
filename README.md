@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/rytt-sovereign-semiotics)](https://pypi.org/project/rytt-sovereign-semiotics/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0001--1303--7190-brightgreen)](https://orcid.org/0009-0001-1303-7190)
-[![Tests: 24 passed](https://img.shields.io/badge/tests-24%20passed-6be49a)](tests/)
+[![Tests: 45 passed](https://img.shields.io/badge/tests-45%20passed-6be49a)](tests/)
 
 > *A formal, lossless semiotic grammar mapping language into radial glyph primitives,
 > compound chord ligatures, and reversible geometric invariants.*
@@ -23,16 +23,15 @@
 | Elevated Plane PUA range | U+E800 – U+E819 |
 | Non-Latin characters | Pass through unchanged |
 | Round-trip guarantee | D(C(S)) ≡ S for all inputs |
-| Formal verification | Lean 4, in progress — see `proofs/RYTTProofs/TODO.md` for current build status |
+| Formal verification | Lean 4 standalone core, separately gated from executable conformance |
 
 Full details in [`SPECIFICATION.md`](SPECIFICATION.md).
 
 ---
 
-## Interactive playground
+## Interactive research lab
 
-Open **[`web/playground.html`](web/playground.html)** in any browser for client-side
-encode/decode/round-trip with token inspection and exact metrics.
+Open **[`web/codex.html`](web/codex.html)** for the flagship Codex Studio workspace. It embeds the client-side compiler with token inspection, explainable trace output, named metrics, and JSON artifact export. The direct **[`web/playground.html`](web/playground.html)** route remains available for the focused compiler surface. The public deployment is available at [rytt-sovereign-semiotics.vercel.app](https://rytt-sovereign-semiotics.vercel.app/).
 
 ---
 
@@ -62,7 +61,11 @@ echo "Hello RYTT" | rytt encode
 echo "Hello RYTT" | rytt encode | rytt decode
 
 # Inspect compilation result (JSON)
-echo "sovereign" | rytt inspect --json
+echo "sovereign" | rytt inspect
+
+# Export and verify a portable offline artifact
+printf "RYTT — naïve 東京" | rytt artifact-export artifact.zip
+rytt artifact-verify artifact.zip
 ```
 
 ---
@@ -104,24 +107,29 @@ between *semantic* compression (token reduction) and *byte* compression.
 
 ---
 
-## Benchmark
+## Benchmark arena
 
 ```bash
 python benchmarks/run_benchmarks.py
+python benchmarks/arena.py
 ```
 
-Seven corpora (prose, code, mixed casing, punctuation, whitespace, Unicode passthrough, ligature-rich).
-Results written to `benchmarks/results/benchmark_results.json`.
+The first command runs the seven-corpus exact round-trip suite. The second creates the named-baseline report at `benchmarks/results/arena.html` and `benchmarks/results/arena.json`, keeping characters, UTF-8 bytes, RYTT tokens, runtime, and optional `cl100k_base` tokens as separate metrics. Read the [benchmark methodology](benchmarks/README.md).
 
 ---
 
-## Tests
+## Verification
 
 ```bash
-pytest tests/ -v
+pytest -q
+python scripts/generate_canonical_spec.py --check
+python scripts/generate_conformance_vectors.py --check
+python scripts/verify_conformance.py
+python scripts/check_formal_alignment.py
+python scripts/audit_static_site.py
 ```
 
-24 property-style invariant tests covering:
+The suite now covers 45 tests spanning property invariants, shared vectors, package interfaces, interchange integrity, renderer data, and the 4Leibniz bridge. The executable conformance vectors and standalone Lean proof are reported as separate verification layers. Legacy coverage includes:
 
 - Round-trip fidelity (8 inputs)
 - PUA plane disjointness (2 checks)
@@ -138,17 +146,22 @@ pytest tests/ -v
 
 ```
 RYTT-Sovereign-Semiotics/
-├── src/rytt/                 Compiler, tokenizer, CLI
-├── tests/                    24 invariant tests
-├── benchmarks/               7-corpus benchmark runner
-├── web/                      Browser playground + generated vocabulary data
+├── src/rytt/                 Reference compiler, portable API, interchange, CLI
+├── tests/                    Conformance, property, interface, and artifact tests
+├── benchmarks/               Seven-corpus suite and named-baseline arena
+├── web/                      Playground, Codex Studio, and generated data
 ├── fixtures/                 Versioned vocabulary JSON
+├── conformance/              Shared cross-implementation vectors
+├── spec/                     Canonical schema, format, and portable API contracts
 ├── renderers/                Glyph atlas, Blake loop, holonomic stack
-├── proofs/                   Lean 4 formal verification
+├── proofs/                   Lean 4 verified core and conformance boundary
 ├── monograph/                Full treatise PDF
-├── SPECIFICATION.md          Capability map + implementation plan
-├── CHANGELOG.md              Version history
-└── pyproject.toml            Package metadata + CLI entry points
+├── PLATFORM_ARCHITECTURE.md  Capability map and dependency direction
+├── IMPLEMENTATION_PLAN.md    End-to-end roadmap and release gates
+├── RESEARCH_QUESTIONS.md     Falsifiable external research agenda
+├── OPERATIONS.md              Security, accessibility, performance, and release guide
+├── CHANGELOG.md               Version history
+└── pyproject.toml             Package metadata + CLI entry points
 ```
 
 ---
