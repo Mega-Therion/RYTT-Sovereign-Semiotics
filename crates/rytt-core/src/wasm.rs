@@ -31,6 +31,9 @@ mod tests {
     #[test]
     fn json_boundary_round_trips() {
         let encoded = encode_json("RYTT transforms").expect("encode JSON");
-        assert_eq!(decode_json(&encoded).expect("decode JSON"), "RYTT transforms");
+        assert_eq!(
+            decode_json(&encoded).expect("decode JSON"),
+            "RYTT transforms"
+        );
     }
 }

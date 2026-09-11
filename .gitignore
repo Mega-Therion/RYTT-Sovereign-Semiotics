@@ -16,3 +16,6 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+target/
+tmp/
+crates/rytt-core/Cargo.lock

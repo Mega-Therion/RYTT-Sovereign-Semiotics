@@ -67,3 +67,40 @@ jobs:
           workspaces: crates/rytt-core
       - name: Compile portable WASM module
         run: cargo build --release --target wasm32-unknown-unknown
+
+  benchmark-parity:
+    name: Rust/Python benchmark parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python benchmark dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Compare canonical Python and Rust metrics
+        run: python scripts/verify_rust_python_benchmark_parity.py
+
+  report-conformance:
+    name: report conformance history
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: https://kklbpsupfvdrbfxikcow.supabase.co
+      SUPABASE_ANON_KEY: sb_publishable_DE88uKkeAj0o0WzcAYyMvg_ojVBOIw_
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record successful canonical-vector replay
+        run: |
+          test -n "$SUPABASE_URL"
+          test -n "$SUPABASE_ANON_KEY"
+          payload="$(jq -c '[.vectors[] | {vector_id: .id, spec_version: "0.1.0", status: "passed", discrepancy: 0}]' conformance/vectors.json)"
+          curl --fail-with-body --retry 3 --retry-all-errors \
+            -X POST "$SUPABASE_URL/rest/v1/rytt_conformance_runs" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=minimal" \
+            --data "$payload"

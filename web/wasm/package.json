@@ -1,0 +1,21 @@
+{
+  "name": "rytt-core",
+  "type": "module",
+  "description": "JSON-first portable boundary for the RYTT sovereign semiotics grammar.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics"
+  },
+  "files": [
+    "rytt_core_bg.wasm",
+    "rytt_core.js",
+    "rytt_core.d.ts"
+  ],
+  "main": "rytt_core.js",
+  "types": "rytt_core.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
