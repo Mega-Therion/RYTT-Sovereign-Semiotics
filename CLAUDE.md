@@ -2,6 +2,13 @@
 
 Guidance for Claude Code working in this repository.
 
+## Deliberately absent, don't "fix"
+
+- `crates/rytt-core/Cargo.lock` and `proofs/lake-manifest.json` are both
+  explicitly `.gitignore`d ("never commit"). Correct for a pure library
+  crate — downstream consumers resolve their own versions. An external
+  audit may flag these as missing; they are not.
+
 ## Lean proofs — read before touching `proofs/`
 
 **Short version:** exactly one Lean file in this repository is verified —
