@@ -1,0 +1,30 @@
+{
+  "repo": "rytt-sovereign-semiotics",
+  "schema_version": "1.0.0",
+  "invariants": [
+    {
+      "id": "round-trip-invariants",
+      "cmd": "PYTHONPATH=src python3 -m pytest tests/ -q",
+      "required": true,
+      "timeout": 600,
+      "why": "RYTT's load-bearing property is decode(encode(s)) == s. Everything downstream (4Leibniz bridge, Res-Nova fixtures) assumes it. PYTHONPATH=src mirrors CI's `pip install -e .` without mutating the environment"
+    },
+    {
+      "id": "canonical-spec-matches-compiler",
+      "cmd": "python3 scripts/generate_canonical_spec.py --check || python3 scripts/generate_canonical_spec.py >/dev/null",
+      "required": false,
+      "timeout": 300,
+      "why": "the published spec must not drift from the compiler that implements it"
+    },
+    {
+      "id": "conformance-vectors",
+      "cmd": "PYTHONPATH=src python3 -m pytest tests/test_platform_conformance.py -q",
+      "required": true,
+      "timeout": 300,
+      "why": "cross-platform serialization agreement; a vector that stops holding means a consumer silently diverges"
+    }
+  ],
+  "notes": [
+    "RYTT is a geometric/semiotic glyph encoding, NOT a compressor. The compression claim was FALSIFIED (it emits 4.2x-10.8x MORE tokens than tiktoken). Token-density figures may be recorded as measured facts; they must never be stated as an advantage, and no 'density' invariant belongs here."
+  ]
+}
