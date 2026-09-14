@@ -2,12 +2,12 @@
   "geometric_matrix": {
     "dim": 64,
     "n_glyphs": 52,
-    "within_family_mean_cosine_sim": 0.6366944579027032,
-    "across_family_mean_cosine_sim": 0.43354973685845993,
-    "family_diff": 0.20314472104424325,
-    "within_vowel_status_mean_cosine_sim": 0.4760131548769427,
-    "across_vowel_status_mean_cosine_sim": 0.4319141687381835,
-    "vowel_status_diff": 0.04409898613875918
+    "within_family_mean_cosine_sim": 0.6366944721629543,
+    "across_family_mean_cosine_sim": 0.4335497406883198,
+    "family_diff": 0.20314473147463447,
+    "within_vowel_status_mean_cosine_sim": 0.47601316311698877,
+    "across_vowel_status_mean_cosine_sim": 0.43191416767381485,
+    "vowel_status_diff": 0.044098995443173916
   },
   "random_baseline": {
     "label": "Deterministic Random Baseline (Seed=42)",
@@ -19,7 +19,7 @@
     "vowel_status_diff": -0.0018275244237806166
   },
   "comparison": {
-    "within_family_vs_across_family_diff_geom": 0.20314472104424325,
+    "within_family_vs_across_family_diff_geom": 0.20314473147463447,
     "within_family_vs_across_family_diff_baseline": 0.0009694092018974086,
     "measurably_different": true,
     "summary": "Geometric structure produces a within-family mean cosine similarity of 0.6367 vs across-family mean of 0.4335 (diff: +0.2031). In comparison, the random baseline produces within-family mean of 0.0040 vs across-family mean of 0.0030 (diff: +0.0010). Geometric structure is measurably different from the random baseline."

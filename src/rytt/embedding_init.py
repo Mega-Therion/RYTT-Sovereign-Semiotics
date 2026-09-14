@@ -63,28 +63,34 @@ def _get_raw_glyph_features(key: str) -> List[float]:
         g = RYTT_GENOME[key]
         for req_field in ("vectors", "family", "vowel", "trit_val", "sept_val"):
             if req_field not in g or g[req_field] is None:
-                raise ValueError(f"Glyph '{key}' in RYTT_GENOME lacks required field '{req_field}'")
-        
+                raise ValueError(
+                    f"Glyph '{key}' in RYTT_GENOME lacks required field '{req_field}'"
+                )
+
         vecs = list(g["vectors"])
         if len(vecs) != 10:
-            raise ValueError(f"Glyph '{key}' has vectors length {len(vecs)}, expected 10")
-            
+            raise ValueError(
+                f"Glyph '{key}' has vectors length {len(vecs)}, expected 10"
+            )
+
         fam = g["family"]
         if fam not in FAMILIES:
             raise ValueError(f"Glyph '{key}' has unknown family '{fam}'")
         fam_vec = [1.0 if fam == f else 0.0 for f in FAMILIES]
-        
+
         trit = float(g["trit_val"])
         sept = float(g["sept_val"]) / 3.0
         vow = 1.0 if g["vowel"] else 0.0
-        
+
         if "case_plane" in g:
             cp = float(g["case_plane"])
         elif "is_upper" in g:
             cp = 1.0 if g["is_upper"] else 0.0
         else:
-            raise ValueError(f"Glyph '{key}' lacks casing information (case_plane or is_upper)")
-            
+            raise ValueError(
+                f"Glyph '{key}' lacks casing information (case_plane or is_upper)"
+            )
+
         return vecs + fam_vec + [trit, sept, vow, cp]
 
     elif key in RYTT_LIGATURES:
@@ -92,13 +98,13 @@ def _get_raw_glyph_features(key: str) -> List[float]:
         chars = list(key)
         if not chars:
             raise ValueError(f"Ligature chord key '{key}' is empty")
-            
+
         for c in chars:
             if c not in RYTT_GENOME:
                 raise ValueError(
                     f"Constituent character '{c}' of chord '{key}' not found in RYTT_GENOME"
                 )
-                
+
         # Sum 10-d vectors across constituent letters
         vecs = [sum(x) for x in zip(*(RYTT_GENOME[c]["vectors"] for c in chars))]
         # Sum family one-hots across constituent letters
@@ -111,14 +117,16 @@ def _get_raw_glyph_features(key: str) -> List[float]:
         sept = sum(float(RYTT_GENOME[c]["sept_val"]) for c in chars) / 3.0
         # Vowel ratio across constituent letters
         vow = sum(1.0 if RYTT_GENOME[c]["vowel"] else 0.0 for c in chars) / len(chars)
-        
+
         if "case_plane" in lig:
             cp = float(lig["case_plane"])
         elif "is_upper" in lig:
             cp = 1.0 if lig["is_upper"] else 0.0
         else:
-            raise ValueError(f"Chord '{key}' lacks casing information (case_plane or is_upper)")
-            
+            raise ValueError(
+                f"Chord '{key}' lacks casing information (case_plane or is_upper)"
+            )
+
         return vecs + fam_vec + [trit, sept, vow, cp]
     else:
         raise KeyError(f"Key '{key}' not found in RYTT_GENOME or RYTT_LIGATURES")
@@ -170,7 +178,9 @@ def glyph_embedding_init(
         if remaining_dim > 0:
             # Deterministic seed from SHA-512 hash of key + geometry without global RNG state
             seed_material = f"{key}:{raw_feat}".encode("utf-8")
-            seed_int = struct.unpack(">Q", hashlib.sha512(seed_material).digest()[:8])[0]
+            seed_int = struct.unpack(">Q", hashlib.sha512(seed_material).digest()[:8])[
+                0
+            ]
             rng = np.random.default_rng(seed_int)
             noise = rng.standard_normal(remaining_dim, dtype=np.float32) * 0.1
             row = np.concatenate([fk, noise])
@@ -309,11 +319,13 @@ def main() -> None:
 
     assert np.array_equal(m1, m2), "FAILED: glyph_embedding_init is non-deterministic!"
     assert k1 == k2, "FAILED: Key ordering mismatch!"
-    
+
     # Assert no two rows are identical
     unique_rows = np.unique(m1, axis=0)
-    assert len(unique_rows) == len(m1), f"FAILED: Found identical rows! Unique: {len(unique_rows)}, Total: {len(m1)}"
-    
+    assert len(unique_rows) == len(
+        m1
+    ), f"FAILED: Found identical rows! Unique: {len(unique_rows)}, Total: {len(m1)}"
+
     # Assert every row has unit L2 norm
     norms = np.linalg.norm(m1, axis=1)
     assert np.allclose(norms, 1.0, atol=1e-6), "FAILED: Row norms deviate from 1.0!"
@@ -321,10 +333,16 @@ def main() -> None:
     # Chords (98)
     mc1, kc1 = glyph_embedding_init(dim=64, include_chords=True)
     mc2, kc2 = glyph_embedding_init(dim=64, include_chords=True)
-    assert np.array_equal(mc1, mc2), "FAILED: glyph_embedding_init with chords is non-deterministic!"
+    assert np.array_equal(
+        mc1, mc2
+    ), "FAILED: glyph_embedding_init with chords is non-deterministic!"
     assert kc1 == kc2, "FAILED: Key ordering mismatch with chords!"
-    assert len(np.unique(mc1, axis=0)) == len(mc1), "FAILED: Found duplicate rows when chords included!"
-    assert np.allclose(np.linalg.norm(mc1, axis=1), 1.0, atol=1e-6), "FAILED: Chord row norms deviate from 1.0!"
+    assert len(np.unique(mc1, axis=0)) == len(
+        mc1
+    ), "FAILED: Found duplicate rows when chords included!"
+    assert np.allclose(
+        np.linalg.norm(mc1, axis=1), 1.0, atol=1e-6
+    ), "FAILED: Chord row norms deviate from 1.0!"
 
     print(" -> Determinism checks passed successfully.")
     print(" -> No duplicate rows found.")
@@ -339,25 +357,47 @@ def main() -> None:
     comp = report["comparison"]
 
     print("\n--- Geometric Embedding Structure (64-d) ---")
-    print(f"  Within-Family Mean Cosine Similarity : {geom['within_family_mean_cosine_sim']:.4f}")
-    print(f"  Across-Family Mean Cosine Similarity : {geom['across_family_mean_cosine_sim']:.4f}")
+    print(
+        f"  Within-Family Mean Cosine Similarity : {geom['within_family_mean_cosine_sim']:.4f}"
+    )
+    print(
+        f"  Across-Family Mean Cosine Similarity : {geom['across_family_mean_cosine_sim']:.4f}"
+    )
     print(f"  Family Similarity Difference          : +{geom['family_diff']:.4f}")
-    print(f"  Within-Vowel Status Mean Cosine Sim  : {geom['within_vowel_status_mean_cosine_sim']:.4f}")
-    print(f"  Across-Vowel Status Mean Cosine Sim  : {geom['across_vowel_status_mean_cosine_sim']:.4f}")
+    print(
+        f"  Within-Vowel Status Mean Cosine Sim  : {geom['within_vowel_status_mean_cosine_sim']:.4f}"
+    )
+    print(
+        f"  Across-Vowel Status Mean Cosine Sim  : {geom['across_vowel_status_mean_cosine_sim']:.4f}"
+    )
 
     print("\n--- Deterministic Random Baseline (64-d) ---")
-    print(f"  Within-Family Mean Cosine Similarity : {base['within_family_mean_cosine_sim']:.4f}")
-    print(f"  Across-Family Mean Cosine Similarity : {base['across_family_mean_cosine_sim']:.4f}")
+    print(
+        f"  Within-Family Mean Cosine Similarity : {base['within_family_mean_cosine_sim']:.4f}"
+    )
+    print(
+        f"  Across-Family Mean Cosine Similarity : {base['across_family_mean_cosine_sim']:.4f}"
+    )
     print(f"  Family Similarity Difference          : {base['family_diff']:+.4f}")
-    print(f"  Within-Vowel Status Mean Cosine Sim  : {base['within_vowel_status_mean_cosine_sim']:.4f}")
-    print(f"  Across-Vowel Status Mean Cosine Sim  : {base['across_vowel_status_mean_cosine_sim']:.4f}")
+    print(
+        f"  Within-Vowel Status Mean Cosine Sim  : {base['within_vowel_status_mean_cosine_sim']:.4f}"
+    )
+    print(
+        f"  Across-Vowel Status Mean Cosine Sim  : {base['across_vowel_status_mean_cosine_sim']:.4f}"
+    )
 
     print("\n--- Finding ---")
     print(f"  {comp['summary']}")
 
     # 3. Write Artifacts
     print("\n[3/3] Writing Artifacts...")
-    artifacts_dir = _work_dir / "artifacts"
+    # Repo root, resolved from this file: src/rytt/embedding_init.py -> repo/.
+    # A previous import-path patch left `_work_dir` here, a name that exists in
+    # no scope -- so `python3 src/rytt/embedding_init.py` died with NameError
+    # before writing anything. The test suite did not catch it because the tests
+    # import the module's functions and never call main(); see
+    # test_main_writes_artifacts, added with this fix.
+    artifacts_dir = Path(__file__).resolve().parent.parent.parent / "artifacts"
     artifacts_dir.mkdir(parents=True, exist_ok=True)
 
     npy_path = artifacts_dir / "embedding_init_64d.npy"

@@ -218,3 +218,40 @@ class TestBurauBraid:
         qc = BurauBraidCompiler(num_strands=4)
         with pytest.raises(ValueError):
             qc.burau_generator(4)
+
+
+class TestEntrypointsActuallyRun:
+    """Scripts must survive being RUN, not merely imported.
+
+    The suite imports functions and asserts on their return values, which never
+    executes the `main()` bodies. That gap let a real defect ship: a leftover
+    `_work_dir` reference in embedding_init.main() -- a name bound in no scope --
+    so `python3 src/rytt/embedding_init.py` raised NameError before writing a
+    single artifact, while every test stayed green.
+
+    These tests execute the entrypoints in a subprocess, which is the only way
+    to catch a NameError that lives on a path imports never take.
+    """
+
+    def _run(self, rel, tmp_path):
+        import subprocess, sys, os, shutil
+        repo = Path(__file__).resolve().parent.parent
+        env = dict(os.environ, PYTHONPATH=str(repo / "src"))
+        return subprocess.run([sys.executable, str(repo / rel)],
+                              capture_output=True, text=True, timeout=600,
+                              cwd=str(repo), env=env)
+
+    def test_embedding_init_main_runs(self, tmp_path):
+        r = self._run("src/rytt/embedding_init.py", tmp_path)
+        assert r.returncode == 0, f"entrypoint failed:\n{r.stderr[-1500:]}"
+        assert "NameError" not in r.stderr
+
+    def test_embedding_init_writes_artifacts(self, tmp_path):
+        import json
+        repo = Path(__file__).resolve().parent.parent
+        self._run("src/rytt/embedding_init.py", tmp_path)
+        report = repo / "artifacts" / "embedding_init_report.json"
+        assert report.is_file(), "main() must write its report artifact"
+        d = json.loads(report.read_text())["geometric_matrix"]
+        # The headline claim: family structure is real, not noise.
+        assert d["family_diff"] > 0.15, f"family separation collapsed: {d['family_diff']}"
