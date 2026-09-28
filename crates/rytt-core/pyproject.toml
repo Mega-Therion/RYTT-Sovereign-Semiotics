@@ -1,0 +1,27 @@
+[build-system]
+requires = ["maturin>=1.5,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "rytt"
+version = "0.1.0"
+description = "Python bindings for the RYTT Sovereign Semiotics engine (Rust-backed)"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+]
+keywords = ["semiotics", "glyph", "tokenization", "dual-plane", "lossless"]
+
+[tool.maturin]
+python-source = "python"
+module-name = "rytt._rytt"
+features = ["pyo3/extension-module"]

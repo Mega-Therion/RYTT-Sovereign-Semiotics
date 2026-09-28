@@ -638,7 +638,10 @@ class RyttCompiler:
         Generates the 10,240-bit Binary Spatter Code Hypervector.
         Dimensionality: 10,240 bits = 20 × 512-bit ZMM SIMD AVX-512 registers.
         """
-        seed_material = f"{self.author_seal}:{pua_stream}:{parity}".encode('utf-8')
+        # Use surrogatepass (WTF-8) to handle unpaired surrogates from UTF-16
+        # host environments without crashing — see conformance/vectors.json
+        # surrogate test vectors and docs/PUA_ALLOCATION.md.
+        seed_material = f"{self.author_seal}:{pua_stream}:{parity}".encode('utf-8', 'surrogatepass')
         h_master = hashlib.sha256(seed_material).hexdigest()
         
         # Expand to 10,240 bits (1280 bytes = 20 blocks of 64 bytes)

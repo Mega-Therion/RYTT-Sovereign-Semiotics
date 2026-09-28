@@ -1,0 +1,26 @@
+[package]
+name = "rytt-core-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+rytt-core = { path = ".." }
+
+# Fuzz target: round-trip reversibility and idempotency
+[[bin]]
+name = "roundtrip"
+path = "fuzz_targets/roundtrip.rs"
+test = false
+doc = false
+
+# Fuzz target: envelope integrity under malformed input
+[[bin]]
+name = "envelope_integrity"
+path = "fuzz_targets/envelope_integrity.rs"
+test = false
+doc = false

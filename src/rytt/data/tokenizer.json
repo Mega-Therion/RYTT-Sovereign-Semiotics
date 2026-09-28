@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "truncation": null,
+  "padding": null,
+  "added_tokens": [
+    { "id": 0, "content": "<|rytt_pad|>", "single_word": false, "special": true },
+    { "id": 1, "content": "<|rytt_bos|>", "single_word": false, "special": true },
+    { "id": 2, "content": "<|rytt_eos|>", "single_word": false, "special": true },
+    { "id": 3, "content": "<|rytt_unk|>", "single_word": false, "special": true }
+  ],
+  "normalizer": { "type": "Sequence", "normalizers": [] },
+  "pre_tokenizer": { "type": "Whitespace" },
+  "post_processor": {
+    "type": "TemplateProcessing",
+    "single": "<|rytt_bos|> $A <|rytt_eos|>",
+    "pair": "<|rytt_bos|> $A <|rytt_eos|> $B:1 <|rytt_eos|>:1",
+    "special_tokens": [
+      ["<|rytt_bos|>", 1],
+      ["<|rytt_eos|>", 2]
+    ]
+  },
+  "decoder": { "type": "ByteLevel" },
+  "model": {
+    "type": "BPE",
+    "dropout": null,
+    "unk_token": "<|rytt_unk|>",
+    "continuing_subword_prefix": null,
+    "end_of_word_suffix": null,
+    "fuse_unk": false,
+    "vocab": {
+      "<|rytt_pad|>": 0,
+      "<|rytt_bos|>": 1,
+      "<|rytt_eos|>": 2,
+      "<|rytt_unk|>": 3
+    },
+    "merges": []
+  }
+}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RYTT Chord Renderer — real-time radial glyph chord visualization using WebGPU SDF shaders with Canvas 2D fallback.">
+  <title>RYTT Chord Renderer — WebGPU</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/web/rytt-fonts.css">
+  <style>
+    .renderer-shell { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .renderer-bar { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    .renderer-bar input[type=text] { flex: 1; min-width: 300px; padding: .6rem .8rem; border: 1px solid var(--border, #26364d); border-radius: 6px; background: var(--surface, #0d1526); color: var(--text, #edf0f5); font: 14px system-ui, sans-serif; }
+    .renderer-bar button { padding: .6rem 1rem; border: 1px solid var(--border, #26364d); border-radius: 6px; background: var(--surface, #0d1526); color: var(--text, #edf0f5); cursor: pointer; font: 14px system-ui, sans-serif; }
+    .renderer-bar button:hover { border-color: #5fecff; color: #5fecff; }
+    .renderer-bar button.active { border-color: #5fecff; color: #5fecff; }
+    .canvas-wrap { position: relative; border: 1px solid var(--border, #26364d); border-radius: 8px; overflow: hidden; background: #060a12; }
+    #chord-canvas { display: block; width: 100%; height: 600px; }
+    .renderer-info { display: flex; gap: 2rem; margin-top: 1rem; flex-wrap: wrap; }
+    .info-card { border: 1px solid var(--border, #26364d); background: var(--surface, #0d1526); padding: 1rem; border-radius: 6px; min-width: 200px; }
+    .info-card h3 { margin: 0 0 .5rem; font-size: .85rem; color: #5fecff; text-transform: uppercase; letter-spacing: .08em; }
+    .info-card .value { font: 1.4rem/1.4 Georgia, serif; color: var(--text, #edf0f5); }
+    .info-card .label { font-size: .72rem; color: var(--muted, #a9b4c7); }
+    .engine-badge { display: inline-block; padding: .25rem .6rem; border-radius: 4px; font-size: .72rem; font-weight: 700; letter-spacing: .05em; }
+    .engine-badge.webgpu { background: #1a3a2a; color: #6be49a; }
+    .engine-badge.canvas2d { background: #3a2a1a; color: #e8c87c; }
+    .plane-toggle { display: flex; gap: .5rem; }
+    .plane-toggle button { font-size: .8rem; padding: .4rem .8rem; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#renderer-main">Skip to renderer</a>
+  <header>
+    <a href="/"><strong>RYTT</strong></a>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/web/playground.html">Playground</a> ·
+      <a href="/web/chord-renderer.html">Chord Renderer</a> ·
+      <a href="/web/codex.html">Codex</a>
+    </nav>
+  </header>
+
+  <main class="renderer-shell" id="renderer-main">
+    <section>
+      <p class="eyebrow">WebGPU SDF Pipeline</p>
+      <h1>Radial Glyph Chord Renderer</h1>
+      <p>Real-time visualization of RYTT dual-plane token chords using Signed Distance Field shaders in WebGPU, with an immediate-mode Canvas 2D fallback for browsers without WebGPU support.</p>
+    </section>
+
+    <section class="renderer-bar">
+      <input type="text" id="text-input" value="RYTT transforms language through radial chords" placeholder="Type text to render as radial glyph chords…">
+      <button id="btn-render">Render</button>
+      <div class="plane-toggle">
+        <button id="btn-ground" class="active">Ground (z=0)</button>
+        <button id="btn-elevated">Elevated (z=25)</button>
+        <button id="btn-both">Both Planes</button>
+      </div>
+      <span class="engine-badge" id="engine-badge">Detecting…</span>
+    </section>
+
+    <div class="canvas-wrap">
+      <canvas id="chord-canvas"></canvas>
+    </div>
+
+    <div class="renderer-info">
+      <div class="info-card">
+        <h3>Tokens</h3>
+        <div class="value" id="info-tokens">0</div>
+        <div class="label">Total chord segments</div>
+      </div>
+      <div class="info-card">
+        <h3>Ground Plane</h3>
+        <div class="value" id="info-ground">0</div>
+        <div class="label">z=0 tokens</div>
+      </div>
+      <div class="info-card">
+        <h3>Elevated Plane</h3>
+        <div class="value" id="info-elevated">0</div>
+        <div class="label">z=25 tokens</div>
+      </div>
+      <div class="info-card">
+        <h3>FPS</h3>
+        <div class="value" id="info-fps">—</div>
+        <div class="label">Render rate</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/web/rytt-chord-renderer.js"></script>
+</body>
+</html>

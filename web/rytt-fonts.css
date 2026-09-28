@@ -1,0 +1,22 @@
+/* RYTT font isolation — restrict custom fonts to precise PUA codepoint ranges */
+@font-face {
+  font-family: 'RYTT-Sovereign-Base';
+  src: url('/fonts/rytt-ground.woff2') format('woff2');
+  unicode-range: U+E000-E033;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'RYTT-Sovereign-Elevated';
+  src: url('/fonts/rytt-elevated.woff2') format('woff2');
+  unicode-range: U+E800-E82D;
+  font-display: block;
+}
+
+/* Apply RYTT fonts only to elements with the rytt-glyph class */
+.rytt-glyph-ground {
+  font-family: 'RYTT-Sovereign-Base', monospace;
+}
+.rytt-glyph-elevated {
+  font-family: 'RYTT-Sovereign-Elevated', monospace;
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RYTTConformanceVector",
+  "description": "Machine-readable schema for RYTT conformance vectors. Each vector validates one Unicode edge-case category against the round-trip invariant decode(encode(s)) == s.",
+  "type": "object",
+  "required": ["id", "category", "raw_input", "expected_planes", "expected_tokens", "roundtrip_assert"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique vector identifier"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["baseline", "normalization", "bidi", "surrogates", "zwj_sequences", "combining_marks", "boundary_conditions"],
+      "description": "Unicode edge-case category"
+    },
+    "raw_input": {
+      "type": "string",
+      "description": "The input text to encode"
+    },
+    "normalization_preservation": {
+      "type": "string",
+      "enum": ["NFC", "NFD", "NFKC", "NFKD", "exact_binary"],
+      "description": "Which Unicode normalization form must be preserved (exact_binary = no normalization applied)"
+    },
+    "expected_planes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["ground", "elevated", "passthrough"]
+      },
+      "description": "Expected plane assignment per token"
+    },
+    "expected_tokens": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "description": "Expected PUA token values (code points)"
+    },
+    "roundtrip_assert": {
+      "type": "boolean",
+      "const": true,
+      "description": "Must always be true — asserts decode(encode(raw_input)) == raw_input"
+    }
+  }
+}

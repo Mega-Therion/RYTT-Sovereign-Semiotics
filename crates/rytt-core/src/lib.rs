@@ -5,6 +5,9 @@
 
 pub mod chord;
 pub mod codec;
+pub mod ffi;
+#[cfg(feature = "python")]
+pub mod python;
 pub mod spec;
 pub mod wasm;
 
