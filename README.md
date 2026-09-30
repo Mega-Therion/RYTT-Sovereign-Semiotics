@@ -1,6 +1,9 @@
 # RYTT — Sovereign Semiotics
 
 <p align="left">
+  <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/actions/workflows/ci.yml"><img src="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/actions/workflows/ci.yml/badge.svg" alt="RYTT CI"></a>
+  <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/actions/workflows/rytt-core-ci.yml"><img src="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/actions/workflows/rytt-core-ci.yml/badge.svg" alt="Rust Core CI"></a>
+  <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/Lean%204-standalone%20verified-6f42c1?style=flat-square&logo=lean&logoColor=white" alt="Lean 4 Standalone Verified"></a>
   <a href="https://huggingface.co/datasets/ChyRho/rytt-sovereign-semiotics-benchmarks"><img src="https://img.shields.io/badge/Hugging%20Face-ChyRho%2Frytt-FFD21E?style=flat-square&logo=huggingface&logoColor=black" alt="Hugging Face Dataset"></a>
   <a href="https://orcid.org/0009-0001-1303-7190"><img src="https://img.shields.io/badge/ORCID-0009--0001--1303--7190-A6CE39?style=flat-square&logo=orcid&logoColor=white" alt="ORCID"></a>
   <a href="https://resnova-hub-f4ucvy3e.manus.space"><img src="https://img.shields.io/badge/Research%20Atlas-resnova--hub-0070f3?style=flat-square&logo=safari&logoColor=white" alt="Research Atlas"></a>
@@ -10,7 +13,16 @@
 
 A formal, lossless, reversible grammar mapping language to radial glyph chords and dual-plane native tokens.
 
-![RYTT Lossless Round-Trip Contract](assets/rytt-roundtrip-contract.svg)
+## AI Safety & LLM Representation Research Utility
+
+RYTT's core invariant — `decode(encode(text)) == text` with **zero discrepancy**, verified in Lean 4 and enforced by a Rust engine — makes it a direct research instrument for LLM safety and mechanistic interpretability:
+
+- **Token representation auditing**: RYTT's dual-plane allocation (`U+E000` ground / `U+E800` elevated) provides a formal, human-readable semiotic layer over LLM token vocabularies, enabling systematic comparison between model-internal and human-legible representations
+- **Lossless round-trip as a safety primitive**: The machine-verified reversibility guarantee ensures no information is silently dropped or corrupted during encoding — a property provably absent from standard BPE tokenizers
+- **Sycophancy & drift detection benchmark**: The 7-vector conformance suite (`conformance/vectors.json`) provides a minimal, deterministic test harness for detecting when a model's token-processing behavior departs from the declared grammar — the same pattern used to catch evaluator-gaming in alignment evaluations
+- **Formal Lean 4 standalone proof** (`proofs/RYTT_standalone.lean`): No Mathlib dependency; compiles in seconds on any CI runner and constitutes a machine-checkable certificate of the reversibility claim
+
+
 
 ## System Role & Authority
 
