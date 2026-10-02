@@ -7,7 +7,9 @@ Architecture: Polyglot 7-Layer AEON / Holonomery v3/v5 / Sovereign Semiotics
 This engine performs end-to-end tokenization, geometric feature extraction,
 Holonomic multi-base encoding (Base 3, Base 9, Base 7, Base 21, Base 24),
 10,240-bit Binary Spatter Code (VSA) hypervector embedding, and
-100% lossless dual-plane (Ground Plane vs. Elevated Axiomatic Plane) casing.
+lossless dual-plane (Ground Plane vs. Elevated Axiomatic Plane) casing. Round-trip holds for every text that contains
+neither U+00B7 (the display serialization's literal-space marker) nor an allocated RYTT PUA codepoint; the spec
+(spec/vocabulary.json) defines no escape for those two reserved classes.
 """
 
 from typing import Dict, List, Tuple, Optional, Any, Union
@@ -390,7 +392,8 @@ class RyttCompiler:
     """
     Sovereign End-to-End RYTT Compiler and Holonomic Multi-Base Synthesizer.
     Features:
-    - 100% strictly lossless round-tripping for any mixed-case text with symbols & spaces.
+    - Lossless round-tripping for any mixed-case text with symbols & spaces, outside the two reserved classes
+      (U+00B7 and allocated RYTT PUA codepoints, which have no escape in the spec).
     - Dual-plane case polarity: Ground Plane ($Z=0$, lower) vs. Elevated Plane ($Z=25$, upper).
     - Multi-base polytopic tier evaluation (Base 3, 9, 7, 21, 24).
     - 10,240-bit Binary Spatter Code Hypervector generation.
@@ -564,7 +567,9 @@ class RyttCompiler:
     def decompile(self, encoded_pua: str) -> str:
         """
         Decompile a RYTT PUA stream back to standard text.
-        Guaranteed 100% strictly lossless across all casing, symbols, and whitespace.
+        Lossless across all casing, symbols, and whitespace for text that contains no U+00B7 and no allocated RYTT
+        PUA codepoint. Those decode to a space or to their mapped letter, because the display serialization reserves
+        them and defines no escape (tests/test_reserved_codepoints.py).
         """
         result = []
         for ch in encoded_pua:

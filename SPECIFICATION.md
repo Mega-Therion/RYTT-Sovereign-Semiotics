@@ -16,7 +16,7 @@ RYTT (pronounced "write") is a semiotic encoding system designed to represent na
 |---|---|---|
 | 52-glyph Dual-Plane Genome (A–Z upper + a–z lower) | ✅ v0.1.0 | PUA `U+E000`–`U+E019` (lower) · `U+E800`–`U+E819` (upper) |
 | Multi-length Chord Ligatures (2-, 3-, 4-letter) | ✅ v0.1.0 | Greedy longest-match |
-| Lossless Round-Trip for ASCII + Unicode passthrough | ✅ v0.1.0 | Non-PUA chars pass through unchanged |
+| Lossless Round-Trip for ASCII + Unicode passthrough | ✅ v0.1.0 | Non-PUA chars pass through unchanged, except U+00B7 (the literal-space marker). U+00B7 and allocated RYTT PUA codepoints in the source do not round-trip: no escape is defined |
 | Holonomic Multi-Base Tiers (Base 3 / 9 / 7 / 21) | ✅ v0.1.0 | Balanced ternary → septenary → bridge |
 | 10 240-bit VSA Hypervector (BSC, SHA-512 expanded) | ✅ v0.1.0 | 20 × 512-bit ZMM SIMD layout |
 | Installable Python Package + CLI | ✅ v0.1.0 | `rytt encode / decode / inspect` |

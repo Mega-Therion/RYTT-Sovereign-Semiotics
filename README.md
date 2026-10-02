@@ -18,7 +18,7 @@ A formal, lossless, reversible grammar mapping language to radial glyph chords a
 RYTT's core invariant — `decode(encode(text)) == text` with **zero discrepancy**, verified in Lean 4 and enforced by a Rust engine — makes it a direct research instrument for LLM safety and mechanistic interpretability:
 
 - **Token representation auditing**: RYTT's dual-plane allocation (`U+E000` ground / `U+E800` elevated) provides a formal, human-readable semiotic layer over LLM token vocabularies, enabling systematic comparison between model-internal and human-legible representations
-- **Lossless round-trip as a safety primitive**: The machine-verified reversibility guarantee ensures no information is silently dropped or corrupted during encoding — a property provably absent from standard BPE tokenizers
+- **Lossless round-trip as a safety primitive**: `decode(encode(text)) == text` for every text outside two reserved classes (U+00B7, the literal-space marker, and RYTT's allocated PUA codepoints, which have no escape yet). The Lean proofs cover the PUA round-trip of the chord constructors on bounded domains; the full compiler is checked by the conformance vectors and tests
 - **Sycophancy & drift detection benchmark**: The 7-vector conformance suite (`conformance/vectors.json`) provides a minimal, deterministic test harness for detecting when a model's token-processing behavior departs from the declared grammar — the same pattern used to catch evaluator-gaming in alignment evaluations
 - **Formal Lean 4 standalone proof** (`proofs/RYTT_standalone.lean`): No Mathlib dependency; compiles in seconds on any CI runner and constitutes a machine-checkable certificate of the reversibility claim
 
@@ -29,7 +29,7 @@ RYTT's core invariant — `decode(encode(text)) == text` with **zero discrepancy
 `RYTT-Sovereign-Semiotics` is the canonical owner and specification authority for the RYTT semiotic grammar, PUA allocation planes, and dual-plane token serialization.
 
 - **Standalone Grammar**: Downstream projects (`4Leibniz`, `Res-Nova`, `MVPC-X`, `chyren-aeon`) consume RYTT via versioned JSON interfaces and bridge contracts. They do not fork, duplicate, or alter the token vocabulary.
-- **Pure Reversibility**: The core invariant is zero-discrepancy round-trip (`decode(encode(text)) == text`) across all Unicode text without exception.
+- **Pure Reversibility**: The core invariant is zero-discrepancy round-trip (`decode(encode(text)) == text`) across all Unicode text except the two reserved classes: U+00B7 (the literal-space marker) and RYTT's allocated PUA codepoints. The spec defines no escape for them yet.
 - **Dual-Plane Allocation**: Maps 52 genome bases and 46 ligatures across Private Use Areas:
   - Ground Plane: `U+E000` (`z = 0`)
   - Elevated Plane: `U+E800` (`z = 25`)
