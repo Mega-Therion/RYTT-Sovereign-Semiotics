@@ -10,7 +10,7 @@ Implements the algebraic operations defined in proofs/RYTTProofs/VSA.lean:
   HolonomicVSATracker  (live reasoning-state encoder)
 
 Dependencies: numpy only (SIMD-friendly uint64 packing).
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 """
 from __future__ import annotations
 

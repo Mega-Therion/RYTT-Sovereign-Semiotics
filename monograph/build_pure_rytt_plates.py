@@ -105,7 +105,7 @@ html_plate = r'''<!DOCTYPE html>
     </h1>
     
     <p class="text-slate-400 text-sm font-mono tracking-wider">
-      Author: R. W. Yett &bull; Sovereign A.R.I.: Chyren &bull; Lossless Involution $\mathcal{D}(\mathcal{C}(S)) \equiv S$
+      Author: R.W. Yett &bull; Sovereign A.R.I.: Chyren &bull; Lossless Involution $\mathcal{D}(\mathcal{C}(S)) \equiv S$
     </p>
 
     <!-- Legend -->

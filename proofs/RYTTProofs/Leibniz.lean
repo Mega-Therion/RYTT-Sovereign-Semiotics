@@ -18,7 +18,7 @@ Leibniz integral all defined below.
 Version 0.3.0: complete full 4-operator chain rule + graded derivation
 algebra.  All δ operators satisfy the generalised product rule.
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 -/
 
 import RYTT

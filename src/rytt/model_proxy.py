@@ -1,7 +1,7 @@
 """
 RYTT AI Model Ingress Proxy & Protocol Interceptor
 ===================================================================
-Author: Ryan W. Yett (RY) + Antigravity Engine
+Author: R.W. Yett (RY) + Antigravity Engine
 -------------------------------------------------------------------
 Enables the user to converse naturally in plain English ("gAIng"),
 while automatically compiling the intent into high-density RYTT bytecode,

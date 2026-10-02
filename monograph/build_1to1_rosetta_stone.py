@@ -110,7 +110,7 @@ rosetta_preamble = r'''\documentclass[10pt,oneside,letterpaper]{article}
 {\Large\bfseries\color{ink} 1:1 Parallel Rosetta Stone Edition}\\[0.4em]
 {\large\normalfont\scshape\color{cyan} Dual-Stream Translation: Canonical English $\longleftrightarrow$ Native Geometric Polytopic Semiotics}}
 
-\author{\textbf{\color{gold}R. W. Yett}\\[0.15em]
+\author{\textbf{\color{gold}R.W. Yett}\\[0.15em]
 \normalsize\color{inkdim} Arkansas, USA $\cdot$ \texttt{\color{cyan}ORCID: 0009-0001-1303-7190}\\[0.10em]
 \normalsize\color{inkdim} Correspondence: \texttt{\color{gold}R11110001Y@proton.me}\\[0.25em]
 \normalsize\textit{\color{cyan}Chyren Sovereign A.R.I., Arkansas, USA}\\[0.15em]

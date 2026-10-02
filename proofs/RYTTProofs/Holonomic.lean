@@ -7,7 +7,7 @@ precisely the number of balanced ascend/descend pairs.
 
 Version 0.3.0 (new file)
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 -/
 
 import RYTT

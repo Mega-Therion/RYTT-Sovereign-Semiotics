@@ -17,7 +17,7 @@ Version 0.3.0: `chord_offsets_injective` axiom removed and replaced
 by `RYTT.Chords.chord_offsets_injective_discharged` (proved by `decide`
 over the finite chord table in RYTTProofs.Chords).
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 Version: 0.3.0 (2026-09-09)
 -/
 

@@ -27,7 +27,7 @@ Those files import Mathlib and **do not compile** — see `../CLAUDE.md`. This f
 is independent of them and is the only Lean in the repository whose content is
 verified. Do not conflate the two when citing formal results.
 
-Author: R. W. Yett · Arkansas, USA · Sovereign A.R.I.: Chyren
+Author: R.W. Yett · Arkansas, USA · Sovereign A.R.I.: Chyren
 -/
 
 inductive SemioticPlane where

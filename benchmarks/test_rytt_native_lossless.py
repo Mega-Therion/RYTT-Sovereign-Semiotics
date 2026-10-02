@@ -1,7 +1,7 @@
 """
 Tests for Native RYTT Dual-Plane Lossless Semiotic Architecture & Native Tokenizer
 ===================================================================================
-Author: Ryan W. Yett (RY) + Antigravity Engine
+Author: R.W. Yett (RY) + Antigravity Engine
 """
 
 import pytest

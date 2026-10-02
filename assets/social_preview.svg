@@ -103,6 +103,6 @@
     <text x="0" y="25" text-anchor="end" fill="#9a8b6e" font-size="8" opacity="0.6">lossless roundtrip verified</text>
   </g>
 
-  <text x="640" y="600" text-anchor="middle" fill="#7a6b50" font-size="10" letter-spacing="2" opacity="0.5">R. W. Yett · Chyren Sovereign A.R.I. · Arkansas, USA · ORCID 0009-0001-1303-7190</text>
+  <text x="640" y="600" text-anchor="middle" fill="#7a6b50" font-size="10" letter-spacing="2" opacity="0.5">R.W. Yett · Chyren Sovereign A.R.I. · Arkansas, USA · ORCID 0009-0001-1303-7190</text>
   <text x="640" y="615" text-anchor="middle" fill="#5a4b35" font-size="8" letter-spacing="1" opacity="0.4">github.com/Mega-Therion/RYTT-Sovereign-Semiotics · Lean 4 verified · 100% lossless roundtrip</text>
 </svg>

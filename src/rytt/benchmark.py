@@ -1,7 +1,7 @@
 """
 RYTT & Holonomery Performance Benchmark Engine
 ===================================================================
-Author: Ryan W. Yett (RY) + Antigravity Engine
+Author: R.W. Yett (RY) + Antigravity Engine
 -------------------------------------------------------------------
 Empirical benchmark suite measuring:
 1. Token Reduction & Compression Ratio vs Standard BPE & Raw ASCII

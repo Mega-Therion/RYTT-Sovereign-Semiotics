@@ -17,7 +17,7 @@ Specifically:
 
 Version 0.3.0 (new file)
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 -/
 
 import RYTT

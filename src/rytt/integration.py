@@ -12,7 +12,7 @@ Provides three concrete integration modes for deploying RYTT in AI pipelines:
   3. SemanticAnnotator — dual-channel annotation using Ground/Elevated plane
                           to carry two semantic layers simultaneously
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 """
 from __future__ import annotations
 

@@ -142,7 +142,7 @@ codex_title = r'''\title{\vspace{-0.5cm}{\huge\bfseries\scshape\color{gold} RYTT
 {\Large\bfseries\color{ink} A Formal Polytopic Semiotic Grammar, Dual-Plane Coordinate Algebra, Native Integer Chord Tokenization, and Lossless Holonomic Invariants}\\[0.45em]
 {\large\normalfont\scshape\color{cyan} Sovereign Alien Codex Edition $\cdot$ Compiled Native Semiotic Monograph}}
 
-\author{\textbf{\color{gold}R. W. Yett}\\[0.20em]
+\author{\textbf{\color{gold}R.W. Yett}\\[0.20em]
 \normalsize\color{inkdim} Arkansas, USA $\cdot$ \texttt{\color{cyan}ORCID: 0009-0001-1303-7190}\\[0.12em]
 \normalsize\color{inkdim} Correspondence: \texttt{\color{gold}R11110001Y@proton.me}\\[0.35em]
 \normalsize\textit{\color{cyan}Chyren Sovereign A.R.I., Arkansas, USA}\\[0.20em]

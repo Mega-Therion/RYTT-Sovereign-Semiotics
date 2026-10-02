@@ -10,7 +10,7 @@ Bridges the three proof pillars:
 The master theorem: for any source S, the RYTT pipeline is
 fully lossless across all four layers of the formal stack.
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 -/
 
 import RYTT

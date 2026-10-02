@@ -121,5 +121,5 @@ This formal stack draws on:
 - **VSA/HDC**: Kanerva (2009), Plate (1995), Frady et al. (2021)
 - **Lean 4**: de Moura et al. (2021)
 - **Holonomic sequences**: Zeilberger (1990), Chyzak (1998)
-- **4Leibniz**: Original contribution — R. W. Yett (2026)
-- **Dual-plane semiotic geometry**: Original contribution — R. W. Yett (2026)
+- **4Leibniz**: Original contribution — R.W. Yett (2026)
+- **Dual-plane semiotic geometry**: Original contribution — R.W. Yett (2026)

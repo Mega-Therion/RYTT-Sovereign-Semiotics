@@ -15,7 +15,7 @@ Strategy:
   4. Prove `decode_token_roundtrip` for a single token.
   5. Lift to full sequences by `List.map` congruence.
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 Version: 0.3.0 (2026-09-09)
 -/
 

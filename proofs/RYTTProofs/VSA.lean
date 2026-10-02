@@ -7,7 +7,7 @@ Version 0.3.0 additions:
   - § V8.  Noise-tolerant retrieval: cosine-like similarity bound
   - § V9.  VSA codec correctness for N-token sequences
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 -/
 
 import Mathlib.Data.Finset.Basic

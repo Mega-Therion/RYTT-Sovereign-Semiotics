@@ -1,7 +1,7 @@
 """
 RYTT Semiotic & Holonomic Multi-Base Compiler (Lossless Dual-Plane Edition)
 ===================================================================
-Author: Ryan W. Yett (RY) + Antigravity Engine
+Author: R.W. Yett (RY) + Antigravity Engine
 Architecture: Polyglot 7-Layer AEON / Holonomery v3/v5 / Sovereign Semiotics
 -------------------------------------------------------------------
 This engine performs end-to-end tokenization, geometric feature extraction,

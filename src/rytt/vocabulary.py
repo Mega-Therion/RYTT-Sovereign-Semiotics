@@ -1,7 +1,7 @@
 """
 RYTT Native Vocabulary Matrix & Tokenizer
 =========================================
-Author: Ryan W. Yett (RY) + Antigravity Engine
+Author: R.W. Yett (RY) + Antigravity Engine
 Architecture: Polyglot 7-Layer AEON / Sovereign Semiotics / Native Vocabulary
 -------------------------------------------------------------------------
 Implements the atomic integer vocabulary matrix for the RYTT semiotic system.

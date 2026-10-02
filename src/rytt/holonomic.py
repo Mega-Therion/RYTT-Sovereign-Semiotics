@@ -10,7 +10,7 @@ Tracks an AI agent's reasoning position in the dual-plane semiotic space:
   - return_count  : total verified holonomic returns
   - path          : full sequence of plane transitions for audit
 
-Author: R. W. Yett — Chyren Sovereign Intelligence
+Author: R.W. Yett — Chyren Sovereign Intelligence
 """
 from __future__ import annotations
 
