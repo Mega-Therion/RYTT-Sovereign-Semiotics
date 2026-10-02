@@ -12,7 +12,8 @@ The canonical grammar remains `src/rytt/data/rytt-spec-v0.1.0.json`. This crate 
 - Configured space display token: `·`
 - Non-letter Unicode: unchanged passthrough
 - Envelope integrity: canonical raw-artifact BLAKE3 vocabulary hash plus spec-version validation
-- Unknown PUA codepoints: rejected during decode
+- Display escape: source `·` and U+E000–U+F8FF are written as U+0020 plus the character and decode to themselves (`DISPLAY_ESCAPE`, `RESERVED_PUA`); a stream ending in a bare U+0020 is rejected
+- Unescaped PUA codepoints outside the vocabulary: rejected during decode
 
 ## Verification
 
