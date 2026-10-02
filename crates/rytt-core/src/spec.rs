@@ -127,6 +127,6 @@ mod tests {
     }
     #[test]
     fn pua_bounds_are_distinct_and_ordered() {
-        assert!(PUA_LOWER_BOUND < PUA_UPPER_BOUND);
+        const { assert!(PUA_LOWER_BOUND < PUA_UPPER_BOUND) };
     }
 }

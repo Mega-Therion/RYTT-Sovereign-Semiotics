@@ -2,7 +2,7 @@
 
 ## Layers
 
-A RYTT artifact has three layers. The source layer is the original Unicode text. The token layer is an ordered sequence of primitive, chord, or passthrough records. The display layer is a human-readable PUA stream derived from the token layer.
+A RYTT artifact has three layers. The source layer is the original Unicode text. The token layer is an ordered sequence of primitive, chord, or passthrough records. The display layer is a human-readable PUA stream derived from the token layer. A source character that the display reserves (U+00B7 and U+E000–U+F8FF) is written as U+0020 followed by that character, and a decoder reads U+0020 plus a character as that literal character (SPECIFICATION.md §3.4).
 
 ## JSON interchange envelope
 
@@ -27,7 +27,7 @@ The canonical JSON envelope has this shape:
 
 ## Token records
 
-Each token record includes `index`, `source`, `kind`, `plane`, `codepoint`, `codepoint_int`, `is_chord`, and `passthrough`. Chord records additionally include `meaning` where available. Passthrough records retain their literal source and have no RYTT codepoint.
+Each token record includes `index`, `source`, `kind`, `plane`, `codepoint`, `codepoint_int`, `is_chord`, and `passthrough`. Chord records additionally include `meaning` where available. Passthrough records retain their literal source and have no RYTT codepoint. An escaped reserved character is a passthrough record whose display form is two codepoints.
 
 ## Integrity
 

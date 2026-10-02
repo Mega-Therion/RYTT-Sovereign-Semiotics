@@ -3,6 +3,23 @@
 use crate::RyttSpec;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::ops::RangeInclusive;
+
+/// Display escape. No encoder writes a bare U+0020 (source spaces become the space token and every ASCII letter
+/// becomes a PUA glyph), so U+0020 marks the next codepoint as a literal source character.
+pub const DISPLAY_ESCAPE: char = ' ';
+/// The PUA range the spec declares for RYTT glyphs (`encoding.pua`). Source codepoints in it are escaped, so an
+/// unescaped codepoint in this range is always a RYTT glyph.
+pub const RESERVED_PUA: RangeInclusive<u32> = 0xE000..=0xF8FF;
+
+/// The space token as a single codepoint, if it is one; that codepoint is reserved in source text.
+fn single_char(token: &str) -> Option<char> {
+    let mut characters = token.chars();
+    match (characters.next(), characters.next()) {
+        (Some(character), None) => Some(character),
+        _ => None,
+    }
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Envelope {
@@ -60,6 +77,7 @@ pub fn encode(spec: &RyttSpec, input: &str) -> Result<Envelope, CodecError> {
     let space_token = spec
         .space_token()
         .map_err(|error| CodecError::Spec(error.to_string()))?;
+    let space_char = single_char(space_token);
     let mut byte_index = 0;
     let mut source_offset = 0;
     let mut encoded_display = String::new();
@@ -87,6 +105,13 @@ pub fn encode(spec: &RyttSpec, input: &str) -> Result<Envelope, CodecError> {
                     "SPACE".to_owned(),
                     -1,
                 )
+            } else if Some(character) == space_char || RESERVED_PUA.contains(&(character as u32)) {
+                (
+                    character.to_string(),
+                    format!("{DISPLAY_ESCAPE}{character}"),
+                    "ESCAPE".to_owned(),
+                    -1,
+                )
             } else {
                 (
                     character.to_string(),
@@ -96,9 +121,10 @@ pub fn encode(spec: &RyttSpec, input: &str) -> Result<Envelope, CodecError> {
                 )
             }
         };
+        // The last codepoint is the token itself, and for an escape it is the literal after DISPLAY_ESCAPE.
         let token = pua
             .chars()
-            .next()
+            .last()
             .map(|character| character as u32)
             .unwrap_or(0);
         encoded_display.push_str(&pua);
@@ -155,7 +181,15 @@ pub fn decode(spec: &RyttSpec, envelope: &Envelope) -> Result<String, CodecError
         .map(|mapping| (mapping.pua, mapping.raw))
         .collect();
     let mut decoded = String::new();
-    for character in envelope.encoded_display.chars() {
+    let mut characters = envelope.encoded_display.chars();
+    while let Some(character) = characters.next() {
+        if character == DISPLAY_ESCAPE {
+            let literal = characters.next().ok_or_else(|| {
+                CodecError::EnvelopeIntegrity("display ends in a dangling escape".to_owned())
+            })?;
+            decoded.push(literal);
+            continue;
+        }
         let encoded = character.to_string();
         if encoded == space_token {
             decoded.push(' ');
@@ -206,9 +240,20 @@ fn validate_envelope_integrity(envelope: &Envelope) -> Result<(), CodecError> {
             ));
         }
         let mut pua_characters = trace.pua.chars();
-        let pua = pua_characters.next().ok_or_else(|| {
+        let mut pua = pua_characters.next().ok_or_else(|| {
             CodecError::EnvelopeIntegrity("token trace contains an empty PUA token".to_owned())
         })?;
+        if pua == DISPLAY_ESCAPE {
+            // An escape token is DISPLAY_ESCAPE plus exactly the one source codepoint it carries.
+            pua = pua_characters.next().ok_or_else(|| {
+                CodecError::EnvelopeIntegrity("escape token has no literal".to_owned())
+            })?;
+            if single_char(&trace.raw) != Some(pua) {
+                return Err(CodecError::EnvelopeIntegrity(
+                    "escape token literal differs from its source".to_owned(),
+                ));
+            }
+        }
         if pua_characters.next().is_some() || trace.token != pua as u32 {
             return Err(CodecError::EnvelopeIntegrity(
                 "token trace codepoint metadata is invalid".to_owned(),

@@ -20,6 +20,10 @@ CASES = {
     "symbols": "42% — [RYTT] {returns}!",
     "unicode_passthrough": "naïve café — 東京 — Δ",
     "all_ascii": "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    # Reserved display codepoints in the source, written behind the U+0020 escape. Append new cases below; the
+    # earlier vectors are a fixed contract and must stay byte-identical.
+    "escape_space_marker": "a\u00b7b \u00b7 end\u00b7",
+    "escape_pua": "\ue000\ue800\ue840 \ue7ff\uf8ff tion",
 }
 
 

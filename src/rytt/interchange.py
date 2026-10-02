@@ -69,8 +69,12 @@ def verify_envelope(envelope: dict[str, Any], compiler: RyttCompiler | None = No
     encoded = envelope.get("encoded_display")
     if not isinstance(source, str) or not isinstance(encoded, str): errors.append("source_text and encoded_display are required")
     else:
-        decoded = compiler.decompile(encoded)
-        if decoded != source: errors.append("decoded text does not match source_text")
+        try:
+            decoded = compiler.decompile(encoded)
+        except ValueError as error:
+            errors.append(f"encoded_display does not decode: {error}")
+        else:
+            if decoded != source: errors.append("decoded text does not match source_text")
         if envelope.get("verification", {}).get("round_trip_exact") is not True: errors.append("verification flag is not exact")
     return {"valid": not errors, "errors": errors, "vocabulary_sha256": vocabulary_hash()}
 

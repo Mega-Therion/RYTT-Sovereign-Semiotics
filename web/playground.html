@@ -299,6 +299,10 @@
   for(const [k,v] of Object.entries(GENOME)) REV[v] = k;
   for(const [k,v] of Object.entries(LIGS)) REV[v] = k;
   REV['·'] = ' ';
+  // Display escape (SPECIFICATION.md): a bare space never occurs in a display stream, so it marks the next
+  // codepoint as literal. Source U+00B7 and the RYTT PUA range U+E000..U+F8FF are written behind it.
+  const ESC = ' ';
+  const isReserved = c => c === '·' || (c.charCodeAt(0) >= 0xE000 && c.charCodeAt(0) <= 0xF8FF);
 
   function compile(text){
     const tokens = [];
@@ -318,6 +322,13 @@
       }
       if(!matched){
         const c = text[i];
+        if(isReserved(c)){
+          tokens.push({src:c, pua: ESC + c, type:'escape', candidates,
+            decision:'reserved display codepoint; written behind the escape',
+            plane:'—', cp:'0x'+c.charCodeAt(0).toString(16).toUpperCase()});
+          i++;
+          continue;
+        }
         const pua = c===' ' ? '·' : (GENOME[c] || c);
         const isAlpha = /[a-zA-Z]/.test(c);
         tokens.push({src:c, pua, type: isAlpha ? 'glyph' : (c===' ' ? 'space' : 'passthrough'), candidates,
@@ -328,13 +339,21 @@
       }
     }
     const encoded = tokens.map(t=>t.pua).join('');
-    const recovered = tokens.map(t=>REV[t.pua]||t.pua).join('');
+    const recovered = decompile(encoded);
     return { tokens, encoded, recovered, exact: recovered === text };
   }
 
   function decompile(pua){
     let out = '';
-    for(const ch of pua) out += REV[ch] || ch;
+    const chars = Array.from(pua);
+    for(let i = 0; i < chars.length; i++){
+      if(chars[i] === ESC){
+        if(i + 1 === chars.length) throw new Error('display stream ends in a dangling escape (a space with nothing after it)');
+        out += chars[++i];
+        continue;
+      }
+      out += REV[chars[i]] || chars[i];
+    }
     return out;
   }
 
@@ -439,7 +458,8 @@
     const startedAt = performance.now();
 
     if(mode==='decode'){
-      const plain = decompile(text);
+      let plain;
+      try { plain = decompile(text); } catch(error) { plain = '\u2717 ' + error.message; }
       outEl.textContent = plain;
       badge.innerHTML = '<span class="rt-dot"></span> Decoded';
       badge.className = 'rt-badge';

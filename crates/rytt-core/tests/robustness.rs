@@ -9,6 +9,9 @@ fn representative_unicode() -> impl Strategy<Value = String> {
             'a', 'e', 'i', 'o', 't', 'r', 'n', 'z', 'A', 'E', 'I', 'O', 'T', 'R', 'Y', 'Z', ' ',
             '\n', '\t', '!', '?', '%', '[', ']', '{', '}', '0', '9', '—', 'é', 'ï', 'α', 'Δ', '東',
             '京', '😀', '🧪', '🧬',
+            // Reserved display codepoints, which encode behind the escape: the space token, a ground
+            // glyph, an elevated glyph, a chord, unallocated PUA, and both ends of the PUA range.
+            '·', '\u{E000}', '\u{E800}', '\u{E840}', '\u{E7FF}', '\u{F8FF}',
         ]),
         0..160,
     )
@@ -71,4 +74,43 @@ fn empty_input_retains_a_valid_empty_envelope() {
         decode(&spec, &envelope).expect("empty envelope must decode"),
         ""
     );
+}
+
+#[test]
+fn reserved_codepoints_round_trip_behind_the_escape() {
+    let spec = RyttSpec::embedded().expect("embedded spec must parse");
+    let input = "a\u{B7}b \u{E000}\u{E840}\u{F8FF}";
+    let envelope = encode(&spec, input).expect("input must encode");
+    assert_eq!(
+        envelope.encoded_display,
+        "\u{E000} \u{B7}\u{E001}\u{B7} \u{E000} \u{E840} \u{F8FF}"
+    );
+    assert_eq!(
+        decode(&spec, &envelope).expect("envelope must decode"),
+        input
+    );
+}
+
+#[test]
+fn rejects_dangling_escape() {
+    let spec = RyttSpec::embedded().expect("embedded spec must parse");
+    let mut envelope = encode(&spec, "\u{B7}").expect("input must encode");
+    envelope.encoded_display = " ".to_owned();
+    envelope.token_trace[0].pua = " ".to_owned();
+    envelope.metrics.output_codepoints = 1;
+
+    let error = decode(&spec, &envelope).expect_err("dangling escape must be rejected");
+    assert!(error.to_string().contains("envelope integrity"));
+}
+
+#[test]
+fn rejects_escape_token_whose_literal_differs_from_its_source() {
+    let spec = RyttSpec::embedded().expect("embedded spec must parse");
+    let mut envelope = encode(&spec, "\u{B7}").expect("input must encode");
+    envelope.encoded_display = " \u{E000}".to_owned();
+    envelope.token_trace[0].pua = " \u{E000}".to_owned();
+    envelope.token_trace[0].token = 0xE000;
+
+    let error = decode(&spec, &envelope).expect_err("mismatched escape literal must be rejected");
+    assert!(error.to_string().contains("escape token literal"));
 }

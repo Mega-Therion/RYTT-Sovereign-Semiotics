@@ -16,7 +16,7 @@ RYTT (pronounced "write") is a semiotic encoding system designed to represent na
 |---|---|---|
 | 52-glyph Dual-Plane Genome (A–Z upper + a–z lower) | ✅ v0.1.0 | PUA `U+E000`–`U+E019` (lower) · `U+E800`–`U+E819` (upper) |
 | Multi-length Chord Ligatures (2-, 3-, 4-letter) | ✅ v0.1.0 | Greedy longest-match |
-| Lossless Round-Trip for ASCII + Unicode passthrough | ✅ v0.1.0 | Non-PUA chars pass through unchanged, except U+00B7 (the literal-space marker). U+00B7 and allocated RYTT PUA codepoints in the source do not round-trip: no escape is defined |
+| Lossless Round-Trip for all Unicode text | ✅ v0.1.0, escape unreleased | Characters outside the genome pass through unchanged. Source U+00B7 and the RYTT PUA range U+E000–U+F8FF are written behind the display escape (§3.4) |
 | Holonomic Multi-Base Tiers (Base 3 / 9 / 7 / 21) | ✅ v0.1.0 | Balanced ternary → septenary → bridge |
 | 10 240-bit VSA Hypervector (BSC, SHA-512 expanded) | ✅ v0.1.0 | 20 × 512-bit ZMM SIMD layout |
 | Installable Python Package + CLI | ✅ v0.1.0 | `rytt encode / decode / inspect` |
@@ -46,7 +46,19 @@ High-frequency letter sequences are packed into single PUA codepoints via a **gr
 
 ### 3.3 Passthrough Rule
 
-Any character that is neither a Latin letter nor a space (digits, punctuation, symbols, non-Latin alphabets, newlines) is passed through to the encoded stream unchanged and decompiles to itself exactly.
+Any character that is neither a Latin letter nor a space (digits, punctuation, symbols, non-Latin alphabets, newlines) is passed through to the encoded stream unchanged and decompiles to itself exactly. The exception is the reserved display codepoints in §3.4.
+
+### 3.4 Display Escape
+
+The display stream writes every source space as U+00B7 and every Latin letter as a PUA codepoint, so a bare U+0020 never appears in it. U+0020 is therefore the escape: it marks the next codepoint as a literal source character.
+
+- **Reserved source characters.** U+00B7 and every codepoint in the RYTT PUA range U+E000–U+F8FF (`encoding.pua` in the canonical spec). The whole range is reserved, not only the 98 allocated codepoints. An unescaped PUA codepoint in a display stream is therefore always a RYTT glyph, and future allocations need no change to the escape.
+- **Encoding.** A reserved source character `c` becomes one token whose display form is U+0020 followed by `c`.
+- **Decoding.** U+0020 followed by `c` decodes to `c`. A stream that ends in a bare U+0020 is truncated or corrupt and is rejected.
+- **Compatibility.** The escape is a pure extension. A source with no reserved character encodes exactly as before, and the seven original conformance vectors are byte-identical. A display stream written before the escape existed contains no U+0020, so it decodes exactly as before. The canonical spec files, their hashes, and `spec_version` are unchanged, so existing envelopes still verify.
+- **The one output change.** Before the escape, the Python reference passed unallocated PUA codepoints through unescaped while the Rust decoder rejected them. Both now write them behind the escape, so the two implementations agree on every input.
+
+`conformance/vectors.json` carries two escape vectors, `escape_space_marker` and `escape_pua`, that every implementation must reproduce.
 
 ---
 

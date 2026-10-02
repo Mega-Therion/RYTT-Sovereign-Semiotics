@@ -6,6 +6,17 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Display escape. U+0020, which no encoder otherwise emits, marks the next codepoint as literal. Source U+00B7 and the RYTT PUA range U+E000–U+F8FF are written behind it, so `decode(encode(text)) == text` now holds for every Unicode text in the Python reference, the Rust crate, and the web playground. Two new conformance vectors cover it: `escape_space_marker` and `escape_pua`.
+
+### Changed
+
+- Sources containing an unallocated PUA codepoint (in U+E000–U+F8FF but outside the 98 allocated ones) now encode with the escape. Before, Python passed them through unescaped and the Rust decoder rejected them; both now agree.
+- No other output changed. The seven original conformance vectors are byte-identical, and the canonical spec files, their hashes, and `spec_version` are unchanged, so existing envelopes still verify.
+
 ## [0.2.0] — 2026-09-11
 
 ### Added

@@ -9,7 +9,9 @@ pub mod spec;
 pub mod wasm;
 
 pub use chord::{Chord, Plane};
-pub use codec::{decode, encode, CodecError, Envelope, Metrics, TokenTrace};
+pub use codec::{
+    decode, encode, CodecError, Envelope, Metrics, TokenTrace, DISPLAY_ESCAPE, RESERVED_PUA,
+};
 pub use spec::{RyttSpec, SpecError, TokenMapping};
 
 /// Lower PUA compound boundary: U+E020.

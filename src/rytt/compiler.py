@@ -7,9 +7,9 @@ Architecture: Polyglot 7-Layer AEON / Holonomery v3/v5 / Sovereign Semiotics
 This engine performs end-to-end tokenization, geometric feature extraction,
 Holonomic multi-base encoding (Base 3, Base 9, Base 7, Base 21, Base 24),
 10,240-bit Binary Spatter Code (VSA) hypervector embedding, and
-lossless dual-plane (Ground Plane vs. Elevated Axiomatic Plane) casing. Round-trip holds for every text that contains
-neither U+00B7 (the display serialization's literal-space marker) nor an allocated RYTT PUA codepoint; the spec
-(spec/vocabulary.json) defines no escape for those two reserved classes.
+lossless dual-plane (Ground Plane vs. Elevated Axiomatic Plane) casing. Round-trip holds for every Unicode text:
+source characters the display stream reserves (U+00B7 and the RYTT PUA range U+E000..U+F8FF) are written behind the
+display escape, U+0020 (see DISPLAY_ESCAPE below and SPECIFICATION.md).
 """
 
 from typing import Dict, List, Tuple, Optional, Any, Union
@@ -301,6 +301,26 @@ for k, v in RYTT_GENOME.items():
 for k, v in RYTT_LIGATURES.items():
     PUA_TO_PLAIN[v['pua']] = k
 
+# -----------------------------------------------------------------------------
+# 3b. DISPLAY ESCAPE
+# -----------------------------------------------------------------------------
+# The display stream writes every source space as U+00B7 and every ASCII letter as a PUA glyph, so a bare U+0020 never
+# occurs in it. U+0020 therefore marks the next codepoint as a literal source character. The encoder escapes exactly the
+# codepoints that would otherwise decode to something else: U+00B7 (the space marker) and the RYTT PUA range
+# U+E000..U+F8FF that the spec declares in encoding.pua. Escaping the whole range, not only the 98 allocated codepoints,
+# keeps every unescaped PUA codepoint a RYTT glyph and leaves room for future allocations.
+# This is a pure extension: a source with no reserved character encodes exactly as before, and a display stream written
+# before the escape existed contains no U+0020, so it decodes exactly as before.
+SPACE_MARK = '\u00b7'
+DISPLAY_ESCAPE = ' '
+RESERVED_PUA_MIN, RESERVED_PUA_MAX = 0xE000, 0xF8FF
+
+
+def is_reserved_display_char(char: str) -> bool:
+    """True for a source character that the display stream writes behind DISPLAY_ESCAPE."""
+    return char == SPACE_MARK or RESERVED_PUA_MIN <= ord(char) <= RESERVED_PUA_MAX
+
+
 # The versioned JSON artifact is the cross-surface contract. Keep the existing
 # dictionaries as the public API, but fail closed if this executable surface
 # drifts from the canonical grammar.
@@ -392,8 +412,8 @@ class RyttCompiler:
     """
     Sovereign End-to-End RYTT Compiler and Holonomic Multi-Base Synthesizer.
     Features:
-    - Lossless round-tripping for any mixed-case text with symbols & spaces, outside the two reserved classes
-      (U+00B7 and allocated RYTT PUA codepoints, which have no escape in the spec).
+    - Lossless round-tripping for any Unicode text. U+00B7 and the RYTT PUA range are written behind the display
+      escape (U+0020), so they decode to themselves.
     - Dual-plane case polarity: Ground Plane ($Z=0$, lower) vs. Elevated Plane ($Z=25$, upper).
     - Multi-base polytopic tier evaluation (Base 3, 9, 7, 21, 24).
     - 10,240-bit Binary Spatter Code Hypervector generation.
@@ -423,9 +443,9 @@ class RyttCompiler:
             
             # Handle spaces
             if char == ' ':
-                pua_chars.append('·')
+                pua_chars.append(SPACE_MARK)
                 tokens.append(RyttToken(
-                    raw=' ', pua='·', is_chord=False, chord_len=1,
+                    raw=' ', pua=SPACE_MARK, is_chord=False, chord_len=1,
                     family='SPACE', path='', is_upper=False, case_plane=-1, elevation_z=0.0
                 ))
                 trit_stream.append(0)
@@ -433,7 +453,21 @@ class RyttCompiler:
                 parity_sum += 7
                 i += 1
                 continue
-                
+
+            # Reserved display characters go behind the escape. This must precede the non-alpha branch, because
+            # U+00B7 and PUA codepoints are both non-alphabetic and would otherwise pass through unescaped.
+            if is_reserved_display_char(char):
+                pua_chars.append(DISPLAY_ESCAPE + char)
+                tokens.append(RyttToken(
+                    raw=char, pua=DISPLAY_ESCAPE + char, is_chord=False, chord_len=1,
+                    family='ESCAPE', path='', is_upper=False, case_plane=-1, elevation_z=0.0
+                ))
+                trit_stream.append(0)
+                sept_stream.append(0)
+                parity_sum += ord(char)
+                i += 1
+                continue
+
             # Handle non-alpha characters (numbers, punctuation, symbols, newlines)
             if not char.isalpha():
                 pua_chars.append(char)
@@ -566,19 +600,28 @@ class RyttCompiler:
 
     def decompile(self, encoded_pua: str) -> str:
         """
-        Decompile a RYTT PUA stream back to standard text.
-        Lossless across all casing, symbols, and whitespace for text that contains no U+00B7 and no allocated RYTT
-        PUA codepoint. Those decode to a space or to their mapped letter, because the display serialization reserves
-        them and defines no escape (tests/test_reserved_codepoints.py).
+        Decompile a RYTT PUA stream back to standard text. Exact for every stream the compiler writes.
+        DISPLAY_ESCAPE followed by a codepoint decodes to that codepoint; a stream that ends in a bare
+        DISPLAY_ESCAPE is truncated or corrupt and raises ValueError. An unallocated PUA codepoint without the
+        escape passes through, so streams written before the escape existed still decode as they did.
         """
         result = []
-        for ch in encoded_pua:
-            if ch == '·':
+        i, n = 0, len(encoded_pua)
+        while i < n:
+            ch = encoded_pua[i]
+            if ch == DISPLAY_ESCAPE:
+                if i + 1 == n:
+                    raise ValueError("RYTT display stream ends in a dangling escape (U+0020 with nothing after it)")
+                result.append(encoded_pua[i + 1])
+                i += 2
+                continue
+            if ch == SPACE_MARK:
                 result.append(' ')
             elif ch in PUA_TO_PLAIN:
                 result.append(PUA_TO_PLAIN[ch])
             else:
                 result.append(ch)
+            i += 1
         return "".join(result)
 
     def _compute_holonomic_bases(self, trits: List[int], septs: List[int]) -> Dict[str, Any]:

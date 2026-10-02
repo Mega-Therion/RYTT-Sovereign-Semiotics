@@ -1841,6 +1841,224 @@
           "elevation_z": 25.0
         }
       ]
+    },
+    {
+      "id": "escape_space_marker",
+      "spec_version": "0.1",
+      "source": "a·b · end·",
+      "encoded_display": " ·· ·· ·",
+      "decoded": "a·b · end·",
+      "token_count": 10,
+      "tokens": [
+        {
+          "raw": "a",
+          "pua": "",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "POINT",
+          "path": "M 50,50 m -6,0 a 6,6 0 1,0 12,0 a 6,6 0 1,0 -12,0",
+          "is_upper": false,
+          "case_plane": 0,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "·",
+          "pua": " ·",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "b",
+          "pua": "",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "VECTOR",
+          "path": "M 50,20 L 50,80 M 50,50 L 75,50 M 50,32 L 68,32",
+          "is_upper": false,
+          "case_plane": 0,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": " ",
+          "pua": "·",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "SPACE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "·",
+          "pua": " ·",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": " ",
+          "pua": "·",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "SPACE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "e",
+          "pua": "",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "DIAMOND",
+          "path": "M 50,20 L 80,50 L 50,80 L 20,50 Z M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+          "is_upper": false,
+          "case_plane": 0,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "n",
+          "pua": "",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ARC",
+          "path": "M 35,25 A 25,25 0 0,0 35,75 M 65,25 A 25,25 0 0,1 65,75",
+          "is_upper": false,
+          "case_plane": 0,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "d",
+          "pua": "",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "CHEVRON",
+          "path": "M 70,25 L 35,50 L 70,75 M 50,50 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0",
+          "is_upper": false,
+          "case_plane": 0,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "·",
+          "pua": " ·",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        }
+      ]
+    },
+    {
+      "id": "escape_pua",
+      "spec_version": "0.1",
+      "source": "  tion",
+      "encoded_display": "   ·  ·",
+      "decoded": "  tion",
+      "token_count": 8,
+      "tokens": [
+        {
+          "raw": "",
+          "pua": " ",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "",
+          "pua": " ",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "",
+          "pua": " ",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": " ",
+          "pua": "·",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "SPACE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "",
+          "pua": " ",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "",
+          "pua": " ",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "ESCAPE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": " ",
+          "pua": "·",
+          "is_chord": false,
+          "chord_len": 1,
+          "family": "SPACE",
+          "path": "",
+          "is_upper": false,
+          "case_plane": -1,
+          "elevation_z": 0.0
+        },
+        {
+          "raw": "tion",
+          "pua": "",
+          "is_chord": true,
+          "chord_len": 4,
+          "family": "CHORD",
+          "path": "M 20,20 L 80,20 M 50,20 L 50,80 M 35,50 A 15,15 0 1,0 65,50 A 15,15 0 1,0 35,50",
+          "is_upper": false,
+          "case_plane": 0,
+          "elevation_z": 0.0
+        }
+      ]
     }
   ]
 }
