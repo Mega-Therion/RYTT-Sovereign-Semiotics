@@ -9,7 +9,7 @@ description = "Formal, lossless, reversible grammar mapping language to radial g
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-  {name = "R.W. Yett", email = "R11110001Y@proton.me"}
+  {name = "R.W. Yett"}
 ]
 keywords = ["semiotics", "glyph", "tokenization", "dual-plane", "lossless", "formal-methods"]
 classifiers = [
