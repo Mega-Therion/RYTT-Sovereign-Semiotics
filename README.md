@@ -1,4 +1,4 @@
-# RYTT — Sovereign Semiotics
+# RYTT
 
 <p align="left">
   <a href="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/actions/workflows/ci.yml"><img src="https://github.com/Mega-Therion/RYTT-Sovereign-Semiotics/actions/workflows/ci.yml/badge.svg" alt="RYTT CI"></a>
@@ -62,3 +62,7 @@ pytest tests/
 # Validate conformance vectors
 python -m rytt.cli verify conformance/vectors.json
 ```
+
+## How this was built
+
+R.W. Yett directs the work. Much of the code and prose was written with AI coding assistants; those commits carry `Co-Authored-By` trailers. The round-trip claim rests on the Lean file, the conformance vectors, and the tests.
