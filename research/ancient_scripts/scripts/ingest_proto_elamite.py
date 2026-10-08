@@ -66,7 +66,7 @@ def parse_payload(payload: bytes) -> list[dict]:
     raise IngestionError("search response is neither NDJSON nor JSON objects")
 
 
-def next_url(headers, base: str) -> str | None:
+def next_url(headers, base: str, current_page: int, page_size: int, current_count: int) -> str | None:
     links = headers.get_all("Link") or []
     if not links:
         raw_link = headers.get("Link")
@@ -75,6 +75,19 @@ def next_url(headers, base: str) -> str | None:
     for link in links:
         for match in NEXT_LINK_RE.finditer(link):
             return urllib.parse.urljoin(base.rstrip("/") + "/", match.group(1))
+
+    # Current CDLI responses have been observed to emit a "first&page=1" link
+    # while omitting "next" when a page is exactly full. The explicit page cursor
+    # supplied by CDLI is the only fallback we use; no result-offset is invented.
+    if current_count == page_size and any("rel="first"" in link for link in links):
+        first_match = re.search(r"<([^>]+)>\\s*;\\s*rel=["']?first["']?", links[0], re.I)
+        if first_match:
+            parsed = urllib.parse.urlsplit(urllib.parse.urljoin(base.rstrip("/") + "/", first_match.group(1)))
+            params = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
+            if "page" in params:
+                params["page"] = [str(current_page + 1)]
+                query = urllib.parse.urlencode(params, doseq=True)
+                return urllib.parse.urlunsplit((parsed.scheme, parsed.netloc, parsed.path, query, parsed.fragment))
     return None
 
 
@@ -165,7 +178,7 @@ def ingest(
             seen_ids.add(aid)
             records.append(record)
 
-        url = next_url(headers, base)
+        url = next_url(headers, base, page, PAGE_SIZE, len(page_records))
         if url is None and len(page_records) == PAGE_SIZE:
             diagnostics = {
                 key: headers.get(key)
