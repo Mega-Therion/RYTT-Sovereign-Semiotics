@@ -37,6 +37,12 @@ class CdliMetadataAdapterTests(unittest.TestCase):
         self.assertEqual(record["observations"], [])
         self.assertEqual(record["claims"], [])
 
+    def test_unrecognized_interpretive_fields_do_not_become_claims(self):
+        raw = {"artifact_id": "008001", "period": "Proto-Elamite", "collections": "Louvre", "reading": "invented"}
+        record = normalize_cdli_artifact(raw, retrieved_on="2026-10-08")
+        self.assertEqual(record["claims"], [])
+        self.assertNotIn("reading", record["artifact"])
+
 
 if __name__ == "__main__":
     unittest.main()
