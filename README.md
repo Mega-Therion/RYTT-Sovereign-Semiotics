@@ -28,8 +28,8 @@ A possible use, not a result in this repository:
 
 - **Token representation auditing**: RYTT's dual-plane allocation (`U+E000` ground / `U+E800` elevated) provides a formal, human-readable semiotic layer over LLM token vocabularies, enabling systematic comparison between model-internal and human-legible representations
 - **Lossless round-trip as a safety primitive**: `decode(encode(text)) == text` for every Unicode text. The two character classes the display stream reserves (U+00B7, the literal-space marker, and the RYTT PUA range U+E000–U+F8FF) are written behind a one-character escape, so they decode to themselves. The Lean proofs cover the PUA round-trip of the chord constructors on bounded domains; the full compiler is checked by the conformance vectors and tests
-- **Conformance, not a sycophancy study**: the 7 vectors in `conformance/vectors.json` check the grammar. The deductive sycophancy pilot is a different repository.
-- **Formal Lean 4 standalone proof** (`proofs/RYTT_standalone.lean`): No Mathlib dependency; compiles in seconds on any CI runner and constitutes a machine-checkable certificate of the reversibility claim
+- **Conformance, not a sycophancy study**: the 9 vectors in `conformance/vectors.json` check the grammar. The deductive sycophancy pilot is a different repository.
+- **Formal Lean 4 standalone proof** (`proofs/RYTT_standalone.lean`): No Mathlib dependency. It checks the PUA round-trip of the chord constructors on bounded domains. The full compiler is checked by the conformance vectors and the tests.
 
 
 
@@ -52,7 +52,7 @@ A possible use, not a result in this repository:
 ## Specification & Conformance
 
 - **Specification**: `src/rytt/data/rytt-spec-v0.1.0.json`
-- **Conformance Suite**: 7 standard test vectors in `conformance/vectors.json` verifying:
+- **Conformance Suite**: 9 test vectors in `conformance/vectors.json` verifying:
   - Empty string
   - Mixed-case ASCII
   - Chord-rich English
@@ -69,7 +69,11 @@ A possible use, not a result in this repository:
 pytest tests/
 
 # Validate conformance vectors
-python -m rytt.cli verify conformance/vectors.json
+python scripts/verify_conformance.py
+
+# CLI (installed entry point `rytt`, module `rytt._cli`)
+rytt encode "text"
+rytt artifact-verify bundle.zip
 ```
 
 ## How this was built
