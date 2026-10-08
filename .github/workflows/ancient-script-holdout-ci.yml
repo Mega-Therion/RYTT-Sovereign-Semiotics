@@ -1,0 +1,96 @@
+name: Proto-Elamite held-out split CI
+
+on:
+  push:
+    branches:
+      - research/ancient-script-holdout-v0.3.0
+    paths:
+      - "research/ancient_scripts/evaluation/**"
+      - ".github/workflows/ancient-script-holdout-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "research/ancient_scripts/evaluation/**"
+      - ".github/workflows/ancient-script-holdout-ci.yml"
+      - "research/ancient_scripts/schema/**"
+      - "scripts/validate_ancient_script_records.py"
+      - "scripts/validate_ancient_script_snapshot.py"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+jobs:
+  holdout:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install project dependencies
+        run: python -m pip install --disable-pip-version-check -e ".[dev]"
+
+      - name: Download exact verified corpus artifact
+        run: gh run download 37813589285 --repo Mega-Therion/RYTT-Sovereign-Semiotics --name proto-elamite-metadata-snapshot-v0.2.0 --dir /tmp/proto-elamite-snapshot
+
+      - name: Verify source snapshot identity
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("/tmp/proto-elamite-snapshot")
+          corpus = json.loads((root / "cdli-proto-elamite-corpus.json").read_text())
+          manifest = json.loads((root / "cdli-proto-elamite-manifest.json").read_text())
+
+          expected_sha = "f28eb7bd92241a072b5da47bc8ed96121f86f156ee108ab8afcf1ee8f42c29ee"
+          expected_artifact_id = 11566336511
+          if corpus["snapshot_sha256"] != expected_sha:
+              raise SystemExit("source corpus hash does not match frozen research hash")
+          if manifest["snapshot_sha256"] != expected_sha:
+              raise SystemExit("source manifest hash does not match frozen research hash")
+          if len(corpus["records"]) != 1755:
+              raise SystemExit("source corpus is not the 1,755-record snapshot")
+          print(f"PASS: source artifact {expected_artifact_id} matches frozen snapshot {expected_sha}")
+          PY
+
+      - name: Generate deterministic holdout manifest
+        run: |
+          python research/ancient_scripts/evaluation/generate_holdout_split.py             /tmp/proto-elamite-snapshot/cdli-proto-elamite-corpus.json             --manifest /tmp/generated-holdout-manifest.json             --assignments /tmp/generated-holdout-assignments.json
+
+      - name: Compare generated manifest with committed manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          committed = json.loads(Path("research/ancient_scripts/evaluation/manifests/proto-elamite-full-split-v0.1.0.json").read_text())
+          generated = json.loads(Path("/tmp/generated-holdout-manifest.json").read_text())
+          if committed != generated:
+              raise SystemExit("committed holdout manifest differs from deterministic regeneration")
+          print("PASS: committed holdout manifest exactly matches deterministic regeneration")
+          PY
+
+      - name: Validate holdout manifest schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema = json.loads(Path("research/ancient_scripts/evaluation/split-manifest-v0.1.0.schema.json").read_text())
+          manifest = json.loads(Path("/tmp/generated-holdout-manifest.json").read_text())
+          Draft202012Validator.check_schema(schema)
+          errors = sorted(Draft202012Validator(schema).iter_errors(manifest), key=lambda e: list(e.path))
+          if errors:
+              for error in errors:
+                  print("/".join(str(p) for p in error.path), error.message)
+              raise SystemExit(1)
+          print("PASS: held-out split manifest conforms to schema v0.1.0")
+          PY
+
+      - name: Run holdout tests
+        run: python -m unittest tests/test_holdout_split.py -v
