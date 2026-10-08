@@ -13,6 +13,9 @@
         "collection": "Louvre Museum, Paris, France",
         "provenience": "Susa (mod. Shush)",
         "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
         "object_type": "tablet or envelope > tablet",
         "material": "clay",
         "source_url": "https://cdli.earth/search?id=P008001&layout=compact"
