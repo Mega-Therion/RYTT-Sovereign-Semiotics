@@ -67,9 +67,13 @@ def parse_payload(payload: bytes) -> list[dict]:
 
 
 def next_url(headers, base: str) -> str | None:
-    for link in headers.get_all("Link") or []:
-        match = NEXT_LINK_RE.search(link)
-        if match:
+    links = headers.get_all("Link") or []
+    if not links:
+        raw_link = headers.get("Link")
+        if raw_link:
+            links = [raw_link]
+    for link in links:
+        for match in NEXT_LINK_RE.finditer(link):
             return urllib.parse.urljoin(base.rstrip("/") + "/", match.group(1))
     return None
 
@@ -163,7 +167,12 @@ def ingest(
 
         url = next_url(headers, base)
         if url is None and len(page_records) == PAGE_SIZE:
-            raise IngestionError("page ended at the request limit without a next-page link")
+            diagnostics = {
+                key: headers.get(key)
+                for key in ("Link", "Content-Range", "Content-Location", "X-Total-Count", "X-Total", "X-Page", "X-Next-Page")
+                if headers.get(key)
+            }
+            raise IngestionError(f"page ended at the request limit without a next-page link; headers={diagnostics}")
 
     if len(records) < min_count:
         raise IngestionError(f"only {len(records)} records ingested; minimum expected is {min_count}")
