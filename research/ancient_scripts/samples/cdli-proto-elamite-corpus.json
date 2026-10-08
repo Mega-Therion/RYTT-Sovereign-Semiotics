@@ -1,6 +1,7 @@
 {
   "dataset_version": "0.1.0",
-  "dataset_status": "metadata_only_sample",
+  "dataset_status": "pilot_metadata_only",
+  "pilot_scope_note": "Legacy 10-artifact pilot fixture. It is not the frozen full corpus and must not be used as an evaluation dataset.",
   "source_note": "Catalog metadata transcribed from CDLI search results on 2026-10-08. No images, image-derived data, sign observations, or interpretive claims are bundled.",
   "records": [
     {
