@@ -13,5 +13,23 @@
     "status": "not_run",
     "description": "Evaluate RYTT-derived structural features only after the corpus, labels, preprocessing, split, and baseline are frozen."
   },
-  "interpretation_rule": "A gain over the baseline would be evidence about the evaluated computational task, not evidence of decipherment."
+  "interpretation_rule": "A gain over the baseline would be evidence about the evaluated computational task, not evidence of decipherment.",
+  "corpus_snapshot": {
+    "dataset_version": "0.2.0",
+    "artifact_count": 1755,
+    "snapshot_sha256": "f28eb7bd92241a072b5da47bc8ed96121f86f156ee108ab8afcf1ee8f42c29ee"
+  },
+  "split_manifest": {
+    "path": "research/ancient_scripts/evaluation/manifests/proto-elamite-full-split-v0.1.0.json",
+    "status": "frozen_unlabeled_holdout",
+    "train": 1386,
+    "validation": 200,
+    "test": 169
+  },
+  "evaluation_guardrails": {
+    "labels_status": "not_frozen",
+    "preprocessing_status": "not_frozen",
+    "rytt_condition": "not_run",
+    "negative_results_required": true
+  }
 }
