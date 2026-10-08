@@ -124,6 +124,12 @@ class ProtoElamiteIngestionTests(unittest.TestCase):
                         retries=0,
                     )
 
+    def test_cdli_first_link_can_advance_a_full_page_when_next_is_missing(self):
+        headers = FakeHeaders(['<https://cdli.earth/search?limit=1000&simple-field%5B0%5D=period&simple-value%5B0%5D=Proto-Elamite&simple-op%5B0%5D=AND&page=1>; rel="first"'])
+        next_page = ingest.next_url(headers, "https://cdli.earth", 1, 1000, 1000)
+        self.assertIn("page=2", next_page)
+        self.assertIn("simple-field%5B0%5D=period", next_page)
+
     def test_hash_is_order_independent_after_sorting(self):
         records_a = [
             {"artifact": {"artifact_id": "CDLI:P008002"}},
