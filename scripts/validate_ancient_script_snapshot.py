@@ -1,13 +1,27 @@
 #!/usr/bin/env python3
-"""Verify a frozen ancient-script corpus against its manifest and hashes."""
+"""Verify a frozen ancient-script corpus against its schemas, manifest, and hashes."""
 from __future__ import annotations
 
-import hashlib
 import json
 import sys
 from pathlib import Path
 
+from jsonschema import Draft202012Validator
+
 from research.ancient_scripts.scripts.ingest_proto_elamite import artifact_ids_hash, canonical_records_hash
+
+ROOT = Path(__file__).resolve().parents[1]
+RECORD_SCHEMA = ROOT / "research/ancient_scripts/schema/claim-record-v0.1.0.schema.json"
+MANIFEST_SCHEMA = ROOT / "research/ancient_scripts/schema/snapshot-manifest-v0.2.0.schema.json"
+
+
+def _validate_schema(document: dict, schema_path: Path, label: str) -> None:
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(schema)
+    errors = sorted(Draft202012Validator(schema).iter_errors(document), key=lambda error: list(error.path))
+    if errors:
+        messages = "; ".join("/".join(str(part) for part in error.path) + ": " + error.message for error in errors)
+        raise ValueError(f"{label} schema validation failed: {messages}")
 
 
 def validate_snapshot(corpus_path: Path, manifest_path: Path) -> None:
@@ -27,6 +41,11 @@ def validate_snapshot(corpus_path: Path, manifest_path: Path) -> None:
     if not isinstance(records, list) or not records:
         raise ValueError("frozen corpus records must be a non-empty array")
 
+    for index, record in enumerate(records):
+        _validate_schema(record, RECORD_SCHEMA, f"record[{index}]")
+
+    _validate_schema(manifest, MANIFEST_SCHEMA, "manifest")
+
     ids = [record["artifact"]["artifact_id"] for record in records]
     if ids != sorted(ids):
         raise ValueError("artifact records are not sorted by artifact_id")
@@ -43,19 +62,22 @@ def validate_snapshot(corpus_path: Path, manifest_path: Path) -> None:
     if manifest.get("artifact_ids_sha256") != ids_digest:
         raise ValueError("manifest artifact_ids_sha256 does not match corpus")
 
-    expected_count = corpus.get("corpus", {}).get("artifact_count")
-    if expected_count != len(records) or manifest.get("corpus", {}).get("artifact_count") != len(records):
-        raise ValueError("artifact_count does not match record count")
+    count = len(records)
+    if corpus.get("corpus", {}).get("artifact_count") != count:
+        raise ValueError("corpus artifact_count does not match record count")
+    if manifest.get("corpus", {}).get("artifact_count") != count:
+        raise ValueError("manifest artifact_count does not match record count")
 
     if any(
-        record.get("observations") or record.get("claims")
-        or record.get("provenance", {}).get("image_rights_status") != "not_included"
-        or record.get("record_status") != "catalog_metadata_only"
+        record["observations"]
+        or record["claims"]
+        or record["record_status"] != "catalog_metadata_only"
+        or record["provenance"]["image_rights_status"] != "not_included"
         for record in records
     ):
         raise ValueError("frozen snapshot contains non-metadata-only or image-bearing records")
 
-    print(f"PASS: verified frozen snapshot with {len(records)} records; sha256={digest}")
+    print(f"PASS: verified frozen snapshot with {count} records; sha256={digest}")
 
 
 def main() -> int:
