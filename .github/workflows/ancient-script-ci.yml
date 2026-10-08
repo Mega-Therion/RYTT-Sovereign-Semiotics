@@ -19,8 +19,14 @@ on:
     paths:
       - "research/ancient_scripts/**"
       - "scripts/validate_ancient_script_records.py"
+      - "scripts/validate_ancient_script_schema.py"
+      - "scripts/validate_ancient_script_snapshot.py"
       - "tests/test_ancient_script_records.py"
       - "tests/test_cdli_metadata_adapter.py"
+      - "tests/test_ancient_script_evaluation.py"
+      - "tests/test_ancient_script_schema.py"
+      - "tests/test_ancient_script_snapshot.py"
+      - "tests/test_proto_elamite_ingestion.py"
       - ".github/workflows/ancient-script-ci.yml"
 
 jobs:
