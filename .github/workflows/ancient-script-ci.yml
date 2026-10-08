@@ -39,14 +39,22 @@ jobs:
 
           root = Path(".")
           schema = json.loads((root / "research/ancient_scripts/schema/claim-record-v0.1.0.schema.json").read_text())
-          document = json.loads((root / "research/ancient_scripts/samples/cdli-proto-elamite-sample.json").read_text())
+          samples = [
+              root / "research/ancient_scripts/samples/cdli-proto-elamite-sample.json",
+              root / "research/ancient_scripts/samples/cdli-observation-sample.json",
+          ]
           Draft202012Validator.check_schema(schema)
           validator = Draft202012Validator(schema)
-          for i, record in enumerate(document["records"]):
-              errors = sorted(validator.iter_errors(record), key=lambda e: list(e.path))
-              if errors:
-                  for error in errors:
-                      print(f"records[{i}] {'/'.join(map(str, error.path))}: {error.message}")
-                  raise SystemExit(1)
-          print(f"PASS: JSON Schema v0.1.0 validates {len(document['records'])} sample records")
+          checked = 0
+          for sample in samples:
+              payload = json.loads(sample.read_text())
+              records = payload.get("records", [payload])
+              for i, record in enumerate(records):
+                  errors = sorted(validator.iter_errors(record), key=lambda e: list(e.path))
+                  if errors:
+                      for error in errors:
+                          print(f"{sample}: {'/'.join(map(str, error.path))}: {error.message}")
+                      raise SystemExit(1)
+                  checked += 1
+          print(f"PASS: JSON Schema v0.1.0 validates {checked} sample records")
           PY
