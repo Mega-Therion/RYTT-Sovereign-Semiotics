@@ -27,7 +27,7 @@ def assign(snapshot_sha256: str, artifact_id: str) -> str:
     return "test"
 
 
-def build_manifest(corpus: dict) -> tuple[dict, dict[str, list[str]]]:
+def build_manifest(corpus: dict, *, snapshot_artifact_run_id: int, snapshot_artifact_id: int) -> tuple[dict, dict[str, list[str]]]:
     records = corpus.get("records")
     if not isinstance(records, list) or not records:
         raise ValueError("snapshot records must be a non-empty array")
@@ -70,6 +70,11 @@ def build_manifest(corpus: dict) -> tuple[dict, dict[str, list[str]]]:
             "artifact_count": len(ids)
         },
         "snapshot_sha256": declared,
+        "snapshot_artifact": {
+            "workflow_run_id": snapshot_artifact_run_id,
+            "artifact_name": "proto-elamite-metadata-snapshot-v0.2.0",
+            "artifact_id": snapshot_artifact_id
+        },
         "split_method": {
             "name": "snapshot-bound-sha256-bucket",
             "hash": "sha256",
@@ -104,10 +109,12 @@ def main() -> int:
     parser.add_argument("snapshot", type=Path)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--assignments", type=Path)
+    parser.add_argument("--snapshot-artifact-run-id", type=int, required=True)
+    parser.add_argument("--snapshot-artifact-id", type=int, required=True)
     args = parser.parse_args()
     try:
         corpus = json.loads(args.snapshot.read_text(encoding="utf-8"))
-        manifest, assignments = build_manifest(corpus)
+        manifest, assignments = build_manifest(corpus, snapshot_artifact_run_id=args.snapshot_artifact_run_id, snapshot_artifact_id=args.snapshot_artifact_id)
         args.manifest.parent.mkdir(parents=True, exist_ok=True)
         args.manifest.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
         if args.assignments:
