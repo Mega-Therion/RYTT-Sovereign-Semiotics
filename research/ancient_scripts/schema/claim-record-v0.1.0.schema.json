@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"RYTT Ancient-Script Research Record",
+  "description":"Separates artifact metadata, observations, and interpretive hypotheses; does not establish decipherment.",
+  "type":"object","additionalProperties":false,
+  "required":["schema_version","record_status","artifact","observations","claims","provenance"],
+  "properties":{
+    "schema_version":{"const":"0.1.0"},
+    "record_status":{"enum":["catalog_metadata_only","observations_added","hypotheses_added","reviewed"]},
+    "artifact":{"type":"object","additionalProperties":false,"required":["artifact_id","collection","period","source_url"],"properties":{
+      "artifact_id":{"type":"string","minLength":1},"designation":{"type":["string","null"]},"museum_number":{"type":["string","null"]},"collection":{"type":"string","minLength":1},"provenience":{"type":["string","null"]},"period":{"type":"string","minLength":1},"object_type":{"type":["string","null"]},"material":{"type":["string","null"]},"source_url":{"type":"string","format":"uri"}}},
+    "observations":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["observation_id","observation_type","description","evidence_status"],"properties":{
+      "observation_id":{"type":"string","minLength":1},"location":{"type":["string","null"]},"observation_type":{"enum":["visible_form","sign_occurrence","layout","damage","catalog_transliteration","other"]},"description":{"type":"string","minLength":1},"image_url":{"type":["string","null"],"format":"uri"},"image_rights_status":{"enum":["not_applicable","explicitly_permitted","public_domain_verified","review_required","not_reusable"]},"evidence_status":{"enum":["directly_observed","catalog_reported","uncertain"]},"source_locator":{"type":["string","null"]}}}},
+    "claims":{"type":"array","items":{"type":"object","additionalProperties":false,"required":["claim_id","claim_type","description","status","evidence_refs","method"],"properties":{
+      "claim_id":{"type":"string","minLength":1},"claim_type":{"enum":["segmentation","sign_identity","sign_function","reading","compositionality","cross_script_relation","other"]},"description":{"type":"string","minLength":1},"status":{"enum":["proposed","under_review","supported","rejected","superseded"]},"confidence":{"type":["number","null"],"minimum":0,"maximum":1},"evidence_refs":{"type":"array","items":{"type":"string"},"uniqueItems":true},"method":{"type":"object","additionalProperties":false,"required":["name","version"],"properties":{"name":{"type":"string","minLength":1},"version":{"type":["string","null"]},"input_hash":{"type":["string","null"]}}},"evaluation":{"type":["object","null"],"properties":{"dataset_split":{"type":["string","null"]},"baseline":{"type":["string","null"]},"result":{},"uncertainty":{"type":["string","null"]},"run_url":{"type":["string","null"],"format":"uri"}}}}}},
+    "provenance":{"type":"object","additionalProperties":false,"required":["catalog_source","metadata_rights_status","image_rights_status","notes"],"properties":{"catalog_source":{"type":"string","minLength":1},"retrieved_on":{"type":["string","null"],"format":"date"},"metadata_rights_status":{"enum":["review_required","permission_verified","license_verified","public_domain_verified"]},"image_rights_status":{"enum":["not_included","review_required","explicitly_permitted","public_domain_verified","not_reusable"]},"notes":{"type":"string"}}}
+  }
+}
