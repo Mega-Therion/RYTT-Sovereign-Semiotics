@@ -127,7 +127,7 @@ def ingest(
     retries: int,
 ) -> tuple[int, str]:
     base = host.rstrip("/")
-    query = urllib.parse.urlencode([("limit", str(PAGE_SIZE)), ("f[period][]", PERIOD)])
+    query = urllib.parse.urlencode([("limit", str(PAGE_SIZE)), ("simple-field[]", "period"), ("simple-value[]", PERIOD), ("simple-op[]", "AND")])
     url = f"{base}/search?{query}"
     retrieval_day = datetime.now(timezone.utc).date().isoformat()
     seen_urls: set[str] = set()
