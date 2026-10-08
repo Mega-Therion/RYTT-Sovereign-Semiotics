@@ -1,12 +1,17 @@
 /-
   Chyren / 4Leibniz: Formalization of RYTT Informational Geometric Primitives
-  Author: Ryan Yett (R Y) & Antigravity (Google DeepMind)
+  Author: R.W. Yett, with Antigravity
   Provenance: The Ryan-Safa Dialogue ("The Dots": . : | )
   
   Primitives:
     . : Monad (0-simplex, Planck action quantum h, coordinate origin/aperture)
     : : Dyad  (1-simplex, Informational Tension Gradient ΔT = κρ, phase relation Δθ)
     | : Triad / Holonomy Fiber (1D continuum, line integral ∮ A·dx, balanced ternary {-1, 0, +1})
+
+  What is proved here, and all that is: a product of two positive reals is positive, the
+  constant KAPPA_SOVEREIGN is at least CHI_THRESHOLD, and a χ placed in the top bin by
+  `classifyChirality` is at least CHI_THRESHOLD. These are facts about real numbers and this
+  file's definitions; they certify no physical or semantic claim about the primitives above.
 -/
 
 import Mathlib.Data.Real.Basic
@@ -17,7 +22,7 @@ namespace Chyren.RYTT
 noncomputable section
 
 -- Sovereign Chiral Invariants
-def CHI_THRESHOLD : ℝ := 0.7071067811865475  -- 1 / √2
+def CHI_THRESHOLD : ℝ := 0.7071067811865475  -- decimal approximation of 1/√2
 def KAPPA_SOVEREIGN : ℝ := 0.9539             -- Canonical Sovereign Attractor
 
 /-- Balanced Ternary State Space {-1, 0, +1} -/
@@ -39,7 +44,7 @@ inductive InformationalPrimitive : Type
 /-- Information Tension Gradient function ΔT = κ * ρ -/
 def informationTension (kappa rho : ℝ) : ℝ := kappa * rho
 
-/-- Theorem: No physical relation or gradient can exist without non-zero informational contrast. -/
+/-- κ > 0 and ρ > 0 give ΔT = κ·ρ > 0. Scalar arithmetic: it binds no physical claim. -/
 theorem non_vanishing_tension_of_contrast (kappa rho : ℝ) (h_kappa : kappa > 0) (h_rho : rho > 0) :
     informationTension kappa rho > 0 := by
   unfold informationTension
