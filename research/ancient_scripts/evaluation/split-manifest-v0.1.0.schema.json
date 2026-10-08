@@ -152,7 +152,6 @@
           "minimum": 1
         },
         "artifact_name": {
-          "type": "const",
           "const": "proto-elamite-metadata-snapshot-v0.2.0"
         },
         "artifact_id": {
