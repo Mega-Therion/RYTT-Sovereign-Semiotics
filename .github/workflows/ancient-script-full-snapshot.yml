@@ -1,0 +1,64 @@
+name: Proto-Elamite full metadata snapshot
+
+on:
+  push:
+    branches:
+      - research/ancient-script-ingestion-hardening-v0.2.0
+    paths:
+      - "research/ancient_scripts/scripts/ingest_proto_elamite.py"
+      - "research/ancient_scripts/adapters/cdli_metadata.py"
+      - "research/ancient_scripts/schema/**"
+      - "scripts/validate_ancient_script_records.py"
+      - "scripts/validate_ancient_script_snapshot.py"
+      - "pyproject.toml"
+      - ".github/workflows/ancient-script-full-snapshot.yml"
+  workflow_dispatch:
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install research validation dependencies
+        run: python -m pip install --disable-pip-version-check -e ".[dev]"
+
+      - name: Ingest complete Proto-Elamite metadata corpus
+        run: |
+          python research/ancient_scripts/scripts/ingest_proto_elamite.py             --output /tmp/cdli-proto-elamite-corpus.json             --manifest /tmp/cdli-proto-elamite-manifest.json             --min-count 1700
+
+      - name: Validate every record and frozen snapshot
+        run: |
+          python scripts/validate_ancient_script_records.py /tmp/cdli-proto-elamite-corpus.json
+          python scripts/validate_ancient_script_snapshot.py             /tmp/cdli-proto-elamite-corpus.json             /tmp/cdli-proto-elamite-manifest.json
+
+      - name: Validate manifest schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          schema = json.loads(Path("research/ancient_scripts/schema/snapshot-manifest-v0.2.0.schema.json").read_text())
+          manifest = json.loads(Path("/tmp/cdli-proto-elamite-manifest.json").read_text())
+          Draft202012Validator.check_schema(schema)
+          errors = sorted(Draft202012Validator(schema).iter_errors(manifest), key=lambda e: list(e.path))
+          if errors:
+              for error in errors:
+                  print("/".join(str(p) for p in error.path), error.message)
+              raise SystemExit(1)
+          print("PASS: frozen snapshot manifest conforms to v0.2.0 schema")
+          PY
+
+      - name: Upload immutable verification artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: proto-elamite-metadata-snapshot-v0.2.0
+          path: |
+            /tmp/cdli-proto-elamite-corpus.json
+            /tmp/cdli-proto-elamite-manifest.json
+          if-no-files-found: error
+          retention-days: 90
