@@ -38,5 +38,10 @@
     "task_status": "not_ready",
     "labels_status": "not_frozen",
     "preprocessing_status": "not_frozen"
+  },
+  "snapshot_artifact": {
+    "workflow_run_id": 37813589285,
+    "artifact_name": "proto-elamite-metadata-snapshot-v0.2.0",
+    "artifact_id": 11566336511
   }
 }
