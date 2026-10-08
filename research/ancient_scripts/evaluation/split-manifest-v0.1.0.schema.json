@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RYTT Ancient-Script Held-Out Split Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_version",
+    "status",
+    "corpus",
+    "snapshot_sha256",
+    "split_method",
+    "splits",
+    "assignment_policy",
+    "evaluation"
+  ],
+  "properties": {
+    "manifest_version": { "const": "0.1.0" },
+    "status": { "const": "frozen_unlabeled_holdout" },
+    "corpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "script", "artifact_count"],
+      "properties": {
+        "name": { "const": "CDLI Proto-Elamite" },
+        "script": { "const": "Proto-Elamite" },
+        "artifact_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "snapshot_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "split_method": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "hash",
+        "input",
+        "modulus",
+        "train_cutoff",
+        "validation_cutoff"
+      ],
+      "properties": {
+        "name": { "const": "snapshot-bound-sha256-bucket" },
+        "hash": { "const": "sha256" },
+        "input": { "const": "snapshot_sha256 + newline + canonical_artifact_id" },
+        "modulus": { "const": 1000 },
+        "train_cutoff": { "const": 800 },
+        "validation_cutoff": { "const": 900 }
+      }
+    },
+    "splits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["train", "validation", "test"],
+      "properties": {
+        "train": { "$ref": "#/$defs/split" },
+        "validation": { "$ref": "#/$defs/split" },
+        "test": { "$ref": "#/$defs/split" }
+      }
+    },
+    "assignment_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_unit", "duplicates_allowed", "cross_split_overlap_allowed"],
+      "properties": {
+        "artifact_unit": { "const": "artifact_id" },
+        "duplicates_allowed": { "const": false },
+        "cross_split_overlap_allowed": { "const": false }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_status", "labels_status", "preprocessing_status"],
+      "properties": {
+        "task_status": { "const": "not_ready" },
+        "labels_status": { "const": "not_frozen" },
+        "preprocessing_status": { "const": "not_frozen" }
+      }
+    }
+  },
+  "$defs": {
+    "split": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "assignment_sha256"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "assignment_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}
