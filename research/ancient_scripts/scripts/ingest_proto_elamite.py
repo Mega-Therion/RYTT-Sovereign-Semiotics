@@ -26,7 +26,7 @@ PERIOD = "Proto-Elamite"
 PAGE_SIZE = 1000
 MIN_EXPECTED_COUNT = 1700
 USER_AGENT = "RYTT-AncientScript-Ingest/0.2.0"
-NEXT_LINK_RE = re.compile(r'<([^>]+)>\\s*;\\s*rel=["\']?next["\']?', re.I)
+NEXT_LINK_RE = re.compile(r'<([^>]+)>\s*;\s*rel=["\']?next["\']?', re.I)
 ACCEPTED_TYPES = {"application/x-ndjson", "application/json"}
 RETRY_STATUS = {408, 429, 500, 502, 503, 504}
 
@@ -79,8 +79,9 @@ def next_url(headers, base: str, current_page: int, page_size: int, current_coun
     # Current CDLI responses have been observed to emit a "first&page=1" link
     # while omitting "next" when a page is exactly full. The explicit page cursor
     # supplied by CDLI is the only fallback we use; no result-offset is invented.
-    if current_count == page_size and any('rel="first"' in link for link in links):
-        first_match = re.search(r'<([^>]+)>\\s*;\\s*rel="first"', links[0], re.I)
+    if current_count == page_size:
+        first_link = next((link for link in links if 'rel="first"' in link), None)
+        first_match = re.search(r'<([^>]+)>\s*;\s*rel="first"', first_link, re.I) if first_link else None
         if first_match:
             parsed = urllib.parse.urlsplit(urllib.parse.urljoin(base.rstrip("/") + "/", first_match.group(1)))
             params = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
