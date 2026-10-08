@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "build", "twine"]
+dev = ["pytest>=7", "build", "twine", "jsonschema==4.25.1"]
 
 [project.scripts]
 rytt = "rytt._cli:main"
