@@ -7,12 +7,14 @@ on:
       - "research/ancient_scripts/**"
       - "scripts/validate_ancient_script_records.py"
       - "tests/test_ancient_script_records.py"
+      - "tests/test_cdli_metadata_adapter.py"
       - ".github/workflows/ancient-script-ci.yml"
   pull_request:
     paths:
       - "research/ancient_scripts/**"
       - "scripts/validate_ancient_script_records.py"
       - "tests/test_ancient_script_records.py"
+      - "tests/test_cdli_metadata_adapter.py"
       - ".github/workflows/ancient-script-ci.yml"
 
 jobs:
@@ -25,8 +27,8 @@ jobs:
           python-version: "3.12"
       - name: Validate research sample invariants
         run: python scripts/validate_ancient_script_records.py
-      - name: Run research contract tests
-        run: python -m unittest tests/test_ancient_script_records.py -v
+      - name: Run research contract and adapter tests
+        run: python -m unittest discover -s tests -p 'test_ancient_script*.py' -v
       - name: Validate JSON Schema against sample
         run: |
           python -m pip install --disable-pip-version-check "jsonschema==4.25.1"
@@ -38,6 +40,7 @@ jobs:
           root = Path(".")
           schema = json.loads((root / "research/ancient_scripts/schema/claim-record-v0.1.0.schema.json").read_text())
           document = json.loads((root / "research/ancient_scripts/samples/cdli-proto-elamite-sample.json").read_text())
+          Draft202012Validator.check_schema(schema)
           validator = Draft202012Validator(schema)
           for i, record in enumerate(document["records"]):
               errors = sorted(validator.iter_errors(record), key=lambda e: list(e.path))
