@@ -79,7 +79,7 @@ def next_url(headers, base: str, current_page: int, page_size: int, current_coun
     # Current CDLI responses have been observed to emit a "first&page=1" link
     # while omitting "next" when a page is exactly full. The explicit page cursor
     # supplied by CDLI is the only fallback we use; no result-offset is invented.
-    if current_count == page_size and any("rel="first"" in link for link in links):
+    if current_count == page_size and any('rel="first"' in link for link in links):
         first_match = re.search(r'<([^>]+)>\\s*;\\s*rel="first"', links[0], re.I)
         if first_match:
             parsed = urllib.parse.urlsplit(urllib.parse.urljoin(base.rstrip("/") + "/", first_match.group(1)))
