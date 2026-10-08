@@ -1,0 +1,40 @@
+name: Ancient-script contract CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "research/ancient_scripts/**"
+      - "scripts/validate_ancient_script_records.py"
+      - "tests/test_ancient_script_records.py"
+      - "tests/test_cdli_metadata_adapter.py"
+      - "tests/test_ancient_script_evaluation.py"
+      - "tests/test_ancient_script_schema.py"
+      - "scripts/validate_ancient_script_schema.py"
+      - ".github/workflows/ancient-script-ci.yml"
+  pull_request:
+    paths:
+      - "research/ancient_scripts/**"
+      - "scripts/validate_ancient_script_records.py"
+      - "tests/test_ancient_script_records.py"
+      - "tests/test_cdli_metadata_adapter.py"
+      - ".github/workflows/ancient-script-ci.yml"
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project development dependencies
+        run: python -m pip install --disable-pip-version-check -e ".[dev]"
+      - name: Validate research sample invariants
+        run: python scripts/validate_ancient_script_records.py
+      - name: Run research contract and adapter tests
+        run: python -m unittest tests/test_ancient_script_records.py tests/test_cdli_metadata_adapter.py tests/test_ancient_script_evaluation.py -v
+      - name: Check artifact-level evaluation split
+        run: python research/ancient_scripts/evaluation/check_split.py
+      - name: Validate JSON Schema against all bundled samples
+        run: python scripts/validate_ancient_script_schema.py

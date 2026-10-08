@@ -1,0 +1,33 @@
+{
+  "manifest_version": "0.1.0",
+  "status": "pilot_metadata_only",
+  "corpus": {
+    "name": "CDLI Proto-Elamite pilot",
+    "script": "Proto-Elamite",
+    "language_status": "undetermined",
+    "artifact_count": 2,
+    "artifact_ids": ["CDLI:P008001", "CDLI:P008002"],
+    "retrieved_on": "2026-10-08",
+    "source": "https://cdli.earth/search?layout=full&period=Proto-Elamite"
+  },
+  "data_policy": {
+    "images_included": false,
+    "image_rights": "not_applicable_to_this_manifest",
+    "metadata_rights": "review_required"
+  },
+  "evaluation": {
+    "status": "not_ready",
+    "reason": "The pilot contains catalog metadata only; no sign-level labels or ground-truth task have been frozen.",
+    "required_before_evaluation": [
+      "freeze a task definition and label source",
+      "freeze preprocessing and dataset hashes",
+      "partition by artifact without duplicate leakage",
+      "declare a baseline before measuring any RYTT-derived feature",
+      "retain negative results"
+    ]
+  },
+  "script_separation": {
+    "proto_elamite": true,
+    "linear_elamite": "separate_corpus_required"
+  }
+}

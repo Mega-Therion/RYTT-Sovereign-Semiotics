@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "status": "baseline_plan",
+  "primary_task": "Proto-Elamite complex-grapheme compositionality",
+  "baseline": {
+    "name": "Born et al. 2021 compositionality models",
+    "source": "https://aclanthology.org/2021.findings-acl.362/",
+    "repository": "https://github.com/sfu-natlang/pe-compositionality",
+    "metric_family": "PCS/compositionality analysis",
+    "status": "replication_target"
+  },
+  "rytt_condition": {
+    "status": "not_run",
+    "description": "Evaluate RYTT-derived structural features only after the corpus, labels, preprocessing, split, and baseline are frozen."
+  },
+  "interpretation_rule": "A gain over the baseline would be evidence about the evaluated computational task, not evidence of decipherment."
+}

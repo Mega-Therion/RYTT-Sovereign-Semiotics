@@ -1,0 +1,61 @@
+{
+  "dataset_version": "0.1.0",
+  "dataset_status": "metadata_only_sample",
+  "source_note": "Catalog metadata transcribed from CDLI search results on 2026-10-08. No images, image-derived data, sign observations, or interpretive claims are bundled.",
+  "records": [
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008001",
+        "designation": "MDP 06, 201",
+        "museum_number": "Sb 15075",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "Susa (mod. Shush)",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet or envelope > tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008001&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Metadata only. Image rights were not verified for this record; no image assets are included."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008002",
+        "designation": "MDP 06, 202",
+        "museum_number": "Sb 15076",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "Susa (mod. Shush)",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet or envelope > tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008002&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Metadata only. Image rights were not verified for this record; no image assets are included."
+      }
+    }
+  ]
+}

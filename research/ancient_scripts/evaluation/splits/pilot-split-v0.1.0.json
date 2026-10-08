@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "status": "smoke_fixture_not_a_scientific_benchmark",
+  "rationale": "The two-record fixture exercises leakage checks only; it is too small to support a meaningful model comparison.",
+  "assignments": [
+    {"artifact_id": "CDLI:P008001", "split": "train"},
+    {"artifact_id": "CDLI:P008002", "split": "test"}
+  ]
+}
