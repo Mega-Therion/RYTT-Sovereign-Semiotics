@@ -4,6 +4,7 @@
   "corpus": {
     "name": "CDLI Proto-Elamite pilot",
     "script": "Proto-Elamite",
+    "language_status": "undetermined",
     "artifact_count": 2,
     "artifact_ids": ["CDLI:P008001", "CDLI:P008002"],
     "retrieved_on": "2026-10-08",
