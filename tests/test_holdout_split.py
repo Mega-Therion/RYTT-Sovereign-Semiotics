@@ -46,7 +46,7 @@ class HoldoutSplitTests(unittest.TestCase):
             "snapshot_sha256": canonical_snapshot_hash(records),
             "records": records
         }
-        manifest, assignments = build_manifest(snapshot)
+        manifest, assignments = build_manifest(snapshot, snapshot_artifact_run_id=37813589285, snapshot_artifact_id=11566336511)
         all_ids = sum(assignments.values(), [])
         self.assertEqual(manifest["corpus"]["artifact_count"], 50)
         self.assertEqual(len(all_ids), 50)
@@ -59,7 +59,7 @@ class HoldoutSplitTests(unittest.TestCase):
         records = [record("CDLI:P008001")]
         snapshot = {"dataset_status": "frozen_metadata_snapshot", "snapshot_sha256": "0" * 64, "records": copy.deepcopy(records)}
         with self.assertRaisesRegex(ValueError, "snapshot_sha256"):
-            build_manifest(snapshot)
+            build_manifest(snapshot, snapshot_artifact_run_id=37813589285, snapshot_artifact_id=11566336511)
 
     def test_noncanonical_artifact_id_is_rejected(self):
         records = [record("CDLI:P8001")]
@@ -69,7 +69,7 @@ class HoldoutSplitTests(unittest.TestCase):
             "records": records
         }
         with self.assertRaisesRegex(ValueError, "canonical CDLI"):
-            build_manifest(snapshot)
+            build_manifest(snapshot, snapshot_artifact_run_id=37813589285, snapshot_artifact_id=11566336511)
 
 
 if __name__ == "__main__":
