@@ -14,3 +14,8 @@ No artifact images are included. Public visibility is not permission to mirror i
 Catalog entries checked 2026-10-08: [P008001](https://cdli.earth/search?id=P008001&layout=compact), [P008002](https://cdli.earth/search?id=P008002&layout=compact). Recheck live records before reuse.
 
 Run from repository root: `python scripts/validate_ancient_script_records.py` and `pytest tests/test_ancient_script_records.py`.
+
+
+## Current implementation
+
+The current pilot also includes a CDLI metadata normalizer, a source-linked observation fixture, an artifact-level leakage-check fixture, and an external baseline replication plan. None of those artifacts asserts a decipherment result.
