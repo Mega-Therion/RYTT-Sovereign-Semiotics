@@ -19,3 +19,25 @@ Run from repository root: `python scripts/validate_ancient_script_records.py` an
 ## Current implementation
 
 The current pilot also includes a CDLI metadata normalizer, a source-linked observation fixture, an artifact-level leakage-check fixture, and an external baseline replication plan. None of those artifacts asserts a decipherment result.
+
+
+## Full-corpus snapshot gate
+
+Do not scale the original pilot ingestion script as-is. The hardened v0.2 runner uses the documented CDLI search API, requests NDJSON, follows pagination, rejects duplicate or unverified records, never fills missing metadata with assumptions, and writes the corpus and manifest only after the complete run passes integrity checks.
+
+Run the full snapshot locally with:
+
+```bash
+python research/ancient_scripts/scripts/ingest_proto_elamite.py \
+  --output research/ancient_scripts/snapshots/cdli-proto-elamite-corpus.json \
+  --manifest research/ancient_scripts/snapshots/cdli-proto-elamite-manifest.json \
+  --min-count 1700
+
+python scripts/validate_ancient_script_records.py   research/ancient_scripts/snapshots/cdli-proto-elamite-corpus.json
+
+python scripts/validate_ancient_script_snapshot.py   research/ancient_scripts/snapshots/cdli-proto-elamite-corpus.json   research/ancient_scripts/snapshots/cdli-proto-elamite-manifest.json
+```
+
+The minimum of 1,700 is a guard against accidentally ingesting a substantially narrower subset such as the current administrative Proto-Elamite subset. It is an integrity tripwire, not a scholarly claim that the corpus has exactly 1,700 records.
+
+The full-snapshot workflow runs the real CDLI fetch on the hardening branch and uploads the resulting corpus plus manifest as a verification artifact. The public repository does not automatically commit the full metadata snapshot; metadata licensing remains marked `review_required`.

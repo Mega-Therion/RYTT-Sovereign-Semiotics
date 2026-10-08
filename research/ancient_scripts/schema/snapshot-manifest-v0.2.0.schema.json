@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RYTT Ancient-Script Frozen Snapshot Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_version", "status", "corpus", "snapshot_sha256", "artifact_ids_sha256", "rights", "evaluation", "source_policy"],
+  "properties": {
+    "manifest_version": { "const": "0.2.0" },
+    "status": { "const": "frozen_metadata_snapshot" },
+    "corpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "script", "period_filter", "artifact_count", "source", "source_query", "retrieved_on_utc", "canonicalization"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "script": { "const": "Proto-Elamite" },
+        "period_filter": { "const": "Proto-Elamite" },
+        "artifact_count": { "type": "integer", "minimum": 1 },
+        "source": { "type": "string", "format": "uri" },
+        "source_query": { "type": "string", "minLength": 1 },
+        "retrieved_on_utc": { "type": "string", "format": "date-time" },
+        "canonicalization": { "type": "string", "minLength": 1 }
+      }
+    },
+    "snapshot_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "artifact_ids_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metadata_rights_status", "images_included", "image_rights_status"],
+      "properties": {
+        "metadata_rights_status": { "const": "review_required" },
+        "images_included": { "const": false },
+        "image_rights_status": { "const": "not_included" }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason"],
+      "properties": {
+        "status": { "const": "not_ready" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api_documented", "image_assets_included", "metadata_license_status"],
+      "properties": {
+        "api_documented": { "const": true },
+        "image_assets_included": { "const": false },
+        "metadata_license_status": { "const": "review_required" }
+      }
+    }
+  }
+}

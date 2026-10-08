@@ -1,77 +1,104 @@
 #!/usr/bin/env python3
-"""Validate the metadata-only ancient-script sample with Python's standard library."""
+"""Validate RYTT ancient-script research records and catalog snapshots."""
+from __future__ import annotations
+
 import json
+import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
-SAMPLE = ROOT / "research/ancient_scripts/samples/cdli-proto-elamite-sample.json"
+DEFAULT_SAMPLE = ROOT / "research/ancient_scripts/samples/cdli-proto-elamite-sample.json"
+# Backward-compatible public name used by the existing test suite.
+SAMPLE = DEFAULT_SAMPLE
 STATUSES = {"catalog_metadata_only", "observations_added", "hypotheses_added", "reviewed"}
 RIGHTS = {"review_required", "permission_verified", "license_verified", "public_domain_verified"}
+IMAGE_RIGHTS = {"not_included", "review_required", "explicitly_permitted", "public_domain_verified", "not_reusable"}
+LANGUAGE_STATUS = {"known", "undetermined", "disputed"}
 
 
-def validate_document(document):
-    if not isinstance(document, dict) or document.get("dataset_version") != "0.1.0":
-        raise ValueError("dataset_version must be 0.1.0")
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def validate_document(document: dict) -> list[str]:
+    _require(isinstance(document, dict), "document must be an object")
+    _require(document.get("dataset_version") in {"0.1.0", "0.2.0"}, "unsupported dataset_version")
     records = document.get("records")
-    if not isinstance(records, list) or not records:
-        raise ValueError("records must be a non-empty array")
-    ids = set()
-    for i, record in enumerate(records):
-        p = f"records[{i}]"
-        if record.get("schema_version") != "0.1.0":
-            raise ValueError(f"{p}: unsupported schema_version")
-        if record.get("record_status") not in STATUSES:
-            raise ValueError(f"{p}: invalid record_status")
+    _require(isinstance(records, list) and records, "records must be a non-empty array")
+
+    ids: set[str] = set()
+    for index, record in enumerate(records):
+        prefix = f"records[{index}]"
+        _require(isinstance(record, dict), f"{prefix} must be an object")
+        _require(record.get("schema_version") == "0.1.0", f"{prefix}.schema_version must be 0.1.0")
+        _require(record.get("record_status") in STATUSES, f"{prefix}.record_status is invalid")
+
         artifact = record.get("artifact")
-        if not isinstance(artifact, dict):
-            raise ValueError(f"{p}: artifact must be an object")
-        for key in ("artifact_id", "collection", "period", "source_url"):
-            if not isinstance(artifact.get(key), str) or not artifact[key].strip():
-                raise ValueError(f"{p}: artifact.{key} is required")
+        _require(isinstance(artifact, dict), f"{prefix}.artifact must be an object")
+        for key in ("artifact_id", "collection", "period", "script", "language_status", "source_url"):
+            _require(key in artifact, f"{prefix}.artifact.{key} is required")
+        for key in ("artifact_id", "period", "script"):
+            _require(isinstance(artifact[key], str) and artifact[key].strip(), f"{prefix}.artifact.{key} is required")
+        _require(artifact["language_status"] in LANGUAGE_STATUS, f"{prefix}.artifact.language_status is invalid")
+        _require(artifact["collection"] is None or isinstance(artifact["collection"], str), f"{prefix}.artifact.collection must be string or null")
+
         aid = artifact["artifact_id"]
-        if aid in ids:
-            raise ValueError(f"duplicate artifact_id: {aid}")
+        _require(bool(re.fullmatch(r"CDLI:P\d{6}", aid)), f"{prefix}.artifact.artifact_id must use canonical CDLI:P###### form")
+        _require(aid not in ids, f"duplicate artifact_id: {aid}")
         ids.add(aid)
-        url = urlparse(artifact["source_url"])
-        if url.scheme != "https" or url.netloc != "cdli.earth":
-            raise ValueError(f"{p}: source_url must be an HTTPS CDLI URL")
-        observations, claims = record.get("observations"), record.get("claims")
-        if not isinstance(observations, list) or not isinstance(claims, list):
-            raise ValueError(f"{p}: observations and claims must be arrays")
-        prov = record.get("provenance")
-        if not isinstance(prov, dict) or prov.get("metadata_rights_status") not in RIGHTS:
-            raise ValueError(f"{p}: invalid provenance or metadata rights status")
-        if prov.get("image_rights_status") not in {"not_included", "review_required", "explicitly_permitted", "public_domain_verified", "not_reusable"}:
-            raise ValueError(f"{p}: invalid image rights status")
+
+        parsed = urlparse(artifact["source_url"])
+        _require(parsed.scheme == "https" and parsed.netloc == "cdli.earth", f"{prefix}.artifact.source_url must be an HTTPS CDLI URL")
+
+        observations = record.get("observations")
+        claims = record.get("claims")
+        _require(isinstance(observations, list), f"{prefix}.observations must be an array")
+        _require(isinstance(claims, list), f"{prefix}.claims must be an array")
+
+        provenance = record.get("provenance")
+        _require(isinstance(provenance, dict), f"{prefix}.provenance must be an object")
+        _require(provenance.get("metadata_rights_status") in RIGHTS, f"{prefix}.provenance.metadata_rights_status is invalid")
+        _require(provenance.get("image_rights_status") in IMAGE_RIGHTS, f"{prefix}.provenance.image_rights_status is invalid")
+
         if record["record_status"] == "catalog_metadata_only":
-            if observations or claims or prov["image_rights_status"] != "not_included":
-                raise ValueError(f"{p}: metadata-only record must have no observations, claims, or image assets")
-        obs_ids = {o.get("observation_id") for o in observations if isinstance(o, dict)}
-        if len(obs_ids) != len(observations) or None in obs_ids:
-            raise ValueError(f"{p}: every observation needs a unique observation_id")
-        claim_ids = [c.get("claim_id") for c in claims if isinstance(c, dict)]
-        if len(claim_ids) != len(claims) or None in claim_ids or len(set(claim_ids)) != len(claim_ids):
-            raise ValueError(f"{p}: every claim needs a unique claim_id")
-        for claim in claims:
+            _require(not observations and not claims, f"{prefix}: metadata-only record cannot contain observations or claims")
+            _require(provenance["image_rights_status"] == "not_included", f"{prefix}: metadata-only record cannot include image assets")
+
+        observation_ids: set[str] = set()
+        for obs_index, observation in enumerate(observations):
+            _require(isinstance(observation, dict), f"{prefix}.observations[{obs_index}] must be an object")
+            obs_id = observation.get("observation_id")
+            _require(isinstance(obs_id, str) and obs_id.strip(), f"{prefix}.observations[{obs_index}].observation_id is required")
+            _require(obs_id not in observation_ids, f"{prefix}: duplicate observation_id {obs_id}")
+            observation_ids.add(obs_id)
+
+        claim_ids: set[str] = set()
+        for claim_index, claim in enumerate(claims):
+            _require(isinstance(claim, dict), f"{prefix}.claims[{claim_index}] must be an object")
+            claim_id = claim.get("claim_id")
+            _require(isinstance(claim_id, str) and claim_id.strip(), f"{prefix}.claims[{claim_index}].claim_id is required")
+            _require(claim_id not in claim_ids, f"{prefix}: duplicate claim_id {claim_id}")
+            claim_ids.add(claim_id)
             refs = claim.get("evidence_refs")
-            if not isinstance(refs, list) or len(refs) != len(set(refs)) or not set(refs) <= obs_ids:
-                raise ValueError(f"{p}: claim evidence_refs must refer to known observations")
+            _require(isinstance(refs, list) and len(refs) == len(set(refs)), f"{prefix}.claims[{claim_index}].evidence_refs must be a unique array")
+            _require(set(refs) <= observation_ids, f"{prefix}.claims[{claim_index}] references an unknown observation")
             confidence = claim.get("confidence")
-            if confidence is not None and (isinstance(confidence, bool) or not isinstance(confidence, (int, float)) or not 0 <= confidence <= 1):
-                raise ValueError(f"{p}: confidence must be null or between 0 and 1")
+            _require(confidence is None or (isinstance(confidence, (int, float)) and not isinstance(confidence, bool) and 0 <= confidence <= 1), f"{prefix}.claims[{claim_index}].confidence must be null or between 0 and 1")
     return sorted(ids)
 
 
-def main():
+def main() -> int:
+    path = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_SAMPLE
     try:
-        file_to_check = Path(sys.argv[1]) if len(sys.argv) > 1 else SAMPLE
-        ids = validate_document(json.loads(file_to_check.read_text(encoding="utf-8")))
+        document = json.loads(path.read_text(encoding="utf-8"))
+        ids = validate_document(document)
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
-    print(f"PASS: validated {len(ids)} catalog metadata records: {', '.join(ids)}")
+    print(f"PASS: validated {len(ids)} catalog metadata records: {', '.join(ids[:10])}" + (" ..." if len(ids) > 10 else ""))
     return 0
 
 
