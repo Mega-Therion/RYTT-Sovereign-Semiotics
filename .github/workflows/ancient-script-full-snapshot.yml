@@ -13,9 +13,20 @@ on:
       - "pyproject.toml"
       - ".github/workflows/ancient-script-full-snapshot.yml"
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "research/ancient_scripts/scripts/ingest_proto_elamite.py"
+      - "research/ancient_scripts/adapters/cdli_metadata.py"
+      - "research/ancient_scripts/schema/**"
+      - "scripts/validate_ancient_script_records.py"
+      - "scripts/validate_ancient_script_snapshot.py"
+      - "pyproject.toml"
+      - ".github/workflows/ancient-script-full-snapshot.yml"
 
 jobs:
   snapshot:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'research/ancient-script-ingestion-hardening-v0.2.0'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
