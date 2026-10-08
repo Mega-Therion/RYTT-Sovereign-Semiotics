@@ -31,10 +31,12 @@ def _artifact_id(raw: dict[str, Any]) -> str:
     return value if value.startswith("P") else f"P{value}"
 
 
-def normalize_cdli_artifact(raw: dict[str, Any], *, retrieved_on: str) -> dict[str, Any]:
+def normalize_cdli_artifact(raw: dict[str, Any], *, script_name: str, retrieved_on: str) -> dict[str, Any]:
     """Return a schema-compatible RYTT record from flat CDLI metadata fields."""
     if not isinstance(raw, dict):
         raise TypeError("raw CDLI metadata must be an object")
+    if not script_name.strip():
+        raise ValueError("script_name is required and must be explicit")
     aid = _artifact_id(raw)
     source_url = f"https://cdli.earth/search?id={quote(aid)}&layout=compact"
     period = _text(raw.get("period"))
@@ -51,6 +53,9 @@ def normalize_cdli_artifact(raw: dict[str, Any], *, retrieved_on: str) -> dict[s
             "collection": collection,
             "provenience": _text(raw.get("provenience")),
             "period": period,
+            "script": script_name.strip(),
+            "language": _text(raw.get("languages") or raw.get("language")),
+            "language_status": "undetermined" if not _text(raw.get("languages") or raw.get("language")) else "known",
             "object_type": _text(raw.get("artifact_type") or raw.get("object_type")),
             "material": _text(raw.get("materials") or raw.get("material")),
             "source_url": source_url,
