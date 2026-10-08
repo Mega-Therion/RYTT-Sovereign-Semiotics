@@ -9,6 +9,8 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SAMPLE = ROOT / "research/ancient_scripts/samples/cdli-proto-elamite-sample.json"
+# Backward-compatible public name used by the existing test suite.
+SAMPLE = DEFAULT_SAMPLE
 STATUSES = {"catalog_metadata_only", "observations_added", "hypotheses_added", "reviewed"}
 RIGHTS = {"review_required", "permission_verified", "license_verified", "public_domain_verified"}
 IMAGE_RIGHTS = {"not_included", "review_required", "explicitly_permitted", "public_domain_verified", "not_reusable"}
