@@ -75,13 +75,10 @@ class ProtoElamiteIngestionTests(unittest.TestCase):
                 self.assertEqual(document["dataset_status"], "frozen_metadata_snapshot")
 
     def test_duplicate_artifacts_fail_closed(self):
-        pages = [
-            (b'{"id_text":"P008001","period":{"period":"Proto-Elamite"}}\n', FakeHeaders()),
-        ]
-        duplicate = pages[0]
+        payload = b'{"id_text":"P008001","period":{"period":"Proto-Elamite"}}\n{"id_text":"P008001","period":{"period":"Proto-Elamite"}}\n'
 
         def fake_fetch(url, **kwargs):
-            return duplicate
+            return payload, FakeHeaders()
 
         def fake_normalize(raw, **kwargs):
             return {"artifact": {"artifact_id": "CDLI:P008001", "period": "Proto-Elamite"}}
