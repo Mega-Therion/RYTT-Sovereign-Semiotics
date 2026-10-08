@@ -59,7 +59,12 @@ jobs:
 
       - name: Generate deterministic holdout manifest
         run: |
-          python research/ancient_scripts/evaluation/generate_holdout_split.py             /tmp/proto-elamite-snapshot/cdli-proto-elamite-corpus.json             --manifest /tmp/generated-holdout-manifest.json             --assignments /tmp/generated-holdout-assignments.json
+          python research/ancient_scripts/evaluation/generate_holdout_split.py \
+            /tmp/proto-elamite-snapshot/cdli-proto-elamite-corpus.json \
+            --manifest /tmp/generated-holdout-manifest.json \
+            --assignments /tmp/generated-holdout-assignments.json \
+            --snapshot-artifact-run-id 37813589285 \
+            --snapshot-artifact-id 11566336511
 
       - name: Compare generated manifest with committed manifest
         run: |
