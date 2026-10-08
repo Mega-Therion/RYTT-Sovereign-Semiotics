@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 from urllib.parse import urlparse
@@ -45,6 +46,7 @@ def validate_document(document: dict) -> list[str]:
         _require(artifact["collection"] is None or isinstance(artifact["collection"], str), f"{prefix}.artifact.collection must be string or null")
 
         aid = artifact["artifact_id"]
+        _require(bool(re.fullmatch(r"CDLI:P\\d{6}", aid)), f"{prefix}.artifact.artifact_id must use canonical CDLI:P###### form")
         _require(aid not in ids, f"duplicate artifact_id: {aid}")
         ids.add(aid)
 
