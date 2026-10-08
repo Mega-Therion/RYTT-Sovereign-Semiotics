@@ -69,7 +69,7 @@ def parse_payload(payload: bytes) -> list[dict]:
 def next_url(headers, base: str, current_page: int, page_size: int, current_count: int) -> str | None:
     links = headers.get_all("Link") or []
     if not links:
-        raw_link = headers.get("Link")
+        raw_link = headers.get("Link") if hasattr(headers, "get") else None
         if raw_link:
             links = [raw_link]
     for link in links:
