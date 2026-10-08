@@ -73,3 +73,13 @@ class CdliMetadataAdapterTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+    def test_zero_pads_short_cdli_p_numbers(self):
+        record = normalize_cdli_artifact(
+            {"id_text": "P8001", "period": "Proto-Elamite", "collections": "Louvre"},
+            script_name="Proto-Elamite",
+            retrieved_on="2026-10-08",
+        )
+        self.assertEqual(record["artifact"]["artifact_id"], "CDLI:P008001")
+        self.assertEqual(record["artifact"]["source_url"], "https://cdli.earth/search?id=P008001&layout=compact")
