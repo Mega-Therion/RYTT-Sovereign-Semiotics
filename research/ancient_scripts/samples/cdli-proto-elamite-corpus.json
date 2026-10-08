@@ -1,0 +1,277 @@
+{
+  "dataset_version": "0.1.0",
+  "dataset_status": "metadata_only_sample",
+  "source_note": "Catalog metadata transcribed from CDLI search results on 2026-10-08. No images, image-derived data, sign observations, or interpretive claims are bundled.",
+  "records": [
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008001",
+        "designation": "MDP 06, 201",
+        "museum_number": "Sb 15075",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008001&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008002",
+        "designation": "MDP 06, 202",
+        "museum_number": "Sb 15076",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008002&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008003",
+        "designation": "MDP 06, 203",
+        "museum_number": "Sb 15077",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008003&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008004",
+        "designation": "MDP 06, 204",
+        "museum_number": "Sb 15078",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008004&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008005",
+        "designation": "MDP 06, 205",
+        "museum_number": "Sb 15079",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008005&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008006",
+        "designation": "MDP 06, 206",
+        "museum_number": "Sb 06395",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008006&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008007",
+        "designation": "MDP 06, 207",
+        "museum_number": "Sb 06405",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008007&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008008",
+        "designation": "MDP 06, 208",
+        "museum_number": "Sb 15080",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008008&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008009",
+        "designation": "MDP 06, 209",
+        "museum_number": "Sb 15458",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008009&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    },
+    {
+      "schema_version": "0.1.0",
+      "record_status": "catalog_metadata_only",
+      "artifact": {
+        "artifact_id": "CDLI:P008010",
+        "designation": "MDP 06, 210",
+        "museum_number": "Sb 15081",
+        "collection": "Louvre Museum, Paris, France",
+        "provenience": "{'id': 12, 'provenience': 'Susa (mod. Shush)', 'location_id': 482, 'place_id': 128, 'region_id': 9}",
+        "period": "Proto-Elamite (ca. 3100-2900 BC)",
+        "script": "Proto-Elamite",
+        "language": null,
+        "language_status": "undetermined",
+        "object_type": "tablet",
+        "material": "clay",
+        "source_url": "https://cdli.earth/search?id=P008010&layout=compact"
+      },
+      "observations": [],
+      "claims": [],
+      "provenance": {
+        "catalog_source": "Cuneiform Digital Library Initiative (CDLI)",
+        "retrieved_on": "2026-10-08",
+        "metadata_rights_status": "review_required",
+        "image_rights_status": "not_included",
+        "notes": "Normalized catalog metadata only. Image assets are intentionally excluded; rights require separate review before reuse."
+      }
+    }
+  ]
+}

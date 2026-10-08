@@ -66,7 +66,8 @@ def validate_document(document):
 
 def main():
     try:
-        ids = validate_document(json.loads(SAMPLE.read_text(encoding="utf-8")))
+        file_to_check = Path(sys.argv[1]) if len(sys.argv) > 1 else SAMPLE
+        ids = validate_document(json.loads(file_to_check.read_text(encoding="utf-8")))
     except (OSError, json.JSONDecodeError, ValueError) as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
