@@ -181,10 +181,11 @@ def ingest(
 
         url = next_url(headers, base, page, PAGE_SIZE, len(page_records))
         if url is None and len(page_records) == PAGE_SIZE:
+            get_header = headers.get if hasattr(headers, "get") else lambda _key: None
             diagnostics = {
-                key: headers.get(key)
+                key: get_header(key)
                 for key in ("Link", "Content-Range", "Content-Location", "X-Total-Count", "X-Total", "X-Page", "X-Next-Page")
-                if headers.get(key)
+                if get_header(key)
             }
             raise IngestionError(f"page ended at the request limit without a next-page link; headers={diagnostics}")
 
