@@ -25,38 +25,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install project development dependencies
+        run: python -m pip install --disable-pip-version-check -e ".[dev]"
       - name: Validate research sample invariants
         run: python scripts/validate_ancient_script_records.py
       - name: Run research contract and adapter tests
         run: python -m unittest tests/test_ancient_script_records.py tests/test_cdli_metadata_adapter.py tests/test_ancient_script_evaluation.py -v
       - name: Check artifact-level evaluation split
         run: python research/ancient_scripts/evaluation/check_split.py
-      - name: Validate JSON Schema against sample
-        run: |
-          python -m pip install --disable-pip-version-check "jsonschema==4.25.1"
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from jsonschema import Draft202012Validator
-
-          root = Path(".")
-          schema = json.loads((root / "research/ancient_scripts/schema/claim-record-v0.1.0.schema.json").read_text())
-          samples = [
-              root / "research/ancient_scripts/samples/cdli-proto-elamite-sample.json",
-              root / "research/ancient_scripts/samples/cdli-observation-sample.json",
-          ]
-          Draft202012Validator.check_schema(schema)
-          validator = Draft202012Validator(schema)
-          checked = 0
-          for sample in samples:
-              payload = json.loads(sample.read_text())
-              records = payload.get("records", [payload])
-              for i, record in enumerate(records):
-                  errors = sorted(validator.iter_errors(record), key=lambda e: list(e.path))
-                  if errors:
-                      for error in errors:
-                          print(f"{sample}: {'/'.join(map(str, error.path))}: {error.message}")
-                      raise SystemExit(1)
-                  checked += 1
-          print(f"PASS: JSON Schema v0.1.0 validates {checked} sample records")
-          PY
+      - name: Validate JSON Schema against all bundled samples
+        run: python scripts/validate_ancient_script_schema.py
