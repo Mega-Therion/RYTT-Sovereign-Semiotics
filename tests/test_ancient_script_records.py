@@ -17,6 +17,12 @@ class AncientScriptRecordTests(unittest.TestCase):
             self.assertEqual(record["observations"], [])
             self.assertEqual(record["claims"], [])
 
+    def test_canonical_artifact_ids_are_required(self):
+        doc = copy.deepcopy(self.document)
+        doc["records"][0]["artifact"]["artifact_id"] = "CDLI:P8001"
+        with self.assertRaisesRegex(ValueError, "canonical CDLI:P######"):
+            validate_document(doc)
+
     def test_duplicate_artifact_id_is_rejected(self):
         doc = copy.deepcopy(self.document)
         doc["records"][1]["artifact"]["artifact_id"] = doc["records"][0]["artifact"]["artifact_id"]
