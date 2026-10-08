@@ -1,0 +1,42 @@
+{
+  "manifest_version": "0.1.0",
+  "status": "frozen_unlabeled_holdout",
+  "corpus": {
+    "name": "CDLI Proto-Elamite",
+    "script": "Proto-Elamite",
+    "artifact_count": 1755
+  },
+  "snapshot_sha256": "f28eb7bd92241a072b5da47bc8ed96121f86f156ee108ab8afcf1ee8f42c29ee",
+  "split_method": {
+    "name": "snapshot-bound-sha256-bucket",
+    "hash": "sha256",
+    "input": "snapshot_sha256 + newline + canonical_artifact_id",
+    "modulus": 1000,
+    "train_cutoff": 800,
+    "validation_cutoff": 900
+  },
+  "splits": {
+    "train": {
+      "count": 1386,
+      "assignment_sha256": "c5f599ddf2ff2950598f9bf5737b3476b41e8701b5d01d0a291f7b4324e27332"
+    },
+    "validation": {
+      "count": 200,
+      "assignment_sha256": "f7e7a63e6c4c07a15134e157c3cb82a739c20eb7aa702c5a61baf7af86b41081"
+    },
+    "test": {
+      "count": 169,
+      "assignment_sha256": "72f457d2c768a962f9410f53f150bbf9dffa11a3daa449bf9f98b0709e4d6230"
+    }
+  },
+  "assignment_policy": {
+    "artifact_unit": "artifact_id",
+    "duplicates_allowed": false,
+    "cross_split_overlap_allowed": false
+  },
+  "evaluation": {
+    "task_status": "not_ready",
+    "labels_status": "not_frozen",
+    "preprocessing_status": "not_frozen"
+  }
+}
