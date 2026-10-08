@@ -50,9 +50,15 @@ def _artifact_id(raw: dict[str, Any]) -> str:
     value = _text(raw.get("artifact_id") or raw.get("id_text") or raw.get("cdli_number") or raw.get("id"))
     if not value:
         raise ValueError("CDLI metadata requires artifact_id")
-    if not value.startswith("P"):
-        value = f"P{value}"
-    return value
+    if value.startswith("P"):
+        numeric = value[1:]
+    else:
+        numeric = value
+    if not numeric.isdigit():
+        raise ValueError(f"CDLI artifact identifier must be numeric: {value!r}")
+    if not 1 <= int(numeric) <= 999999:
+        raise ValueError(f"CDLI artifact identifier is outside six-digit P range: {value!r}")
+    return f"P{int(numeric):06d}"
 
 
 def normalize_cdli_artifact(
