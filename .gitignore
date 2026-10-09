@@ -28,3 +28,8 @@ crates/rytt-core/Cargo.lock
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Downloaded CI snapshot artifacts (e.g. `gh run download 37813589285`). The CDLI metadata's rights
+# are still under review (manifest: metadata_rights_status "review_required"), so never commit them
+# to this public repository. Identity is pinned by snapshot_sha256 in the evaluation manifests.
+research/ancient_scripts/artifacts/
