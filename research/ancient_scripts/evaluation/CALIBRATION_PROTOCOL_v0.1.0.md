@@ -1,5 +1,7 @@
 # Known-key calibration protocol v0.1.0
 
+> **Superseded 2026-10-08 by `CALIBRATION_PROTOCOL_v0.1.1.md`**, before any run. A pre-run red team showed this version would certify a 2-of-2 method and could be gamed by key padding and late threshold choice. Kept unchanged below as the frozen record.
+
 **Frozen 2026-10-08, before any claim-generating method has been run on any corpus.** No method exists in this repository yet. Changing anything below needs a new protocol version, committed before the run it governs.
 
 ## Why
