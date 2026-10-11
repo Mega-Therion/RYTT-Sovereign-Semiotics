@@ -2,6 +2,13 @@
 
 Guidance for Claude Code working in this repository.
 
+## Commands
+
+```bash
+python -m pytest tests/ -v                 # main suite (CI also runs benchmarks/test_*.py)
+cd proofs && lean RYTT_standalone.lean     # the only Lean file that compiles; must print no `sorry`
+```
+
 ## Deliberately absent, don't "fix"
 
 - `crates/rytt-core/Cargo.lock` and `proofs/lake-manifest.json` are both
