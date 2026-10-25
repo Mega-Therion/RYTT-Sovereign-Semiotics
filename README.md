@@ -14,6 +14,9 @@
 
 A formal, lossless, reversible grammar mapping language to radial glyph chords and dual-plane native tokens.
 
+
+The grammar stays here. 4Leibniz does not fork it. The open bridge is [4Leibniz issue 10](https://github.com/Mega-Therion/4Leibniz/issues/10): consume RYTT through `4leibniz_bridge.json`.
+
 The picture below is the contract. Text goes in. Glyph chords and a dual-plane token stream come out. Decode is required to return the same text. The Lean file checks the PUA round-trip of the chord constructors on bounded domains. The conformance vectors and the Rust tests check the compiler.
 
 ![RYTT round-trip: text, glyph chords, dual plane, exact recovery](assets/rytt-roundtrip-contract.svg)
