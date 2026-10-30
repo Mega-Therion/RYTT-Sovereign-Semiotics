@@ -36,7 +36,8 @@
       <span class="brand-mark" aria-hidden="true">RY</span>
       <span>RYTT <small>Sovereign Semiotics</small></span>
     </a>
-    <nav class="site-nav" aria-label="Primary">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary">
       <a href="#system" class="hide-sm">System</a>
       <a href="#playground" class="hide-sm">Playground</a>
       <a href="/web/codex.html" class="hide-sm">Codex Studio</a>
@@ -488,6 +489,14 @@
   btnClear.addEventListener('click', ()=>{ inp.value=''; update(); inp.focus(); });
   update();
 })();
+</script>
+<script>
+document.querySelector('.nav-toggle').addEventListener('click', function () {
+  var nav = document.getElementById('site-nav');
+  var open = nav.classList.toggle('is-open');
+  this.setAttribute('aria-expanded', open ? 'true' : 'false');
+  this.textContent = open ? 'Close' : 'Menu';
+});
 </script>
 </body>
 </html>
