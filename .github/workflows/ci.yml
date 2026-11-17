@@ -15,7 +15,7 @@ jobs:
   # noticed it breaking.
   #
   # This deliberately does NOT build proofs/RYTT.lean or proofs/RYTTProofs/*.
-  # Those import Mathlib and do not compile; see CLAUDE.md. Adding them here
+  # Those import Mathlib and do not compile. Adding them here
   # would only make CI permanently red without proving anything new.
   lean-standalone:
     runs-on: ubuntu-latest
