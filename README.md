@@ -64,6 +64,7 @@ A possible use, not a result in this repository:
   - Unicode passthrough
   - Comprehensive character sets
 - **Rust Engine**: High-performance WASM and native core in `crates/rytt-core`.
+- **L.O.G.O.S. Virtual-Memory Orchestrator**: 3-layer Tensor-Glyph paging, 10,240-bit Bloom MMU, Dual-Plane logarithmic rollup (`1r → 2ry → 3ryt → 1R`), portable `.logos` cartridges, CLI (`logos`), and MCP server (`logos-mcp`) — documented in [`docs/LOGOS.md`](docs/LOGOS.md).
 
 ## Verification
 

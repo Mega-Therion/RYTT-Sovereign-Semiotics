@@ -17,7 +17,7 @@ from __future__ import annotations
 import hashlib
 import secrets
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 import numpy as np
 
@@ -143,6 +143,78 @@ def superpose(hvs: List[HV]) -> HV:
     return HV(arr)
 
 
+class VSAAccumulator:
+    """
+    Exact integer-count VSA accumulator (prevents 2^{-t} exponential forgetting).
+
+    Maintains int32 counts across all D=10_240 bit positions so every bound item
+    contributes equal unit weight regardless of stream order or insertion count.
+    """
+
+    __slots__ = ("_counts", "_n")
+
+    def __init__(
+        self,
+        counts: Optional[np.ndarray] = None,
+        n: int = 0,
+    ) -> None:
+        if counts is None:
+            self._counts = np.zeros(D, dtype=np.int32)
+            self._n = 0
+        else:
+            arr = np.asarray(counts, dtype=np.int32)
+            if arr.shape != (D,):
+                raise ValueError(f"Expected counts shape ({D},), got {arr.shape}")
+            if n < 0:
+                raise ValueError(f"Item count n must be non-negative, got {n}")
+            self._counts = arr.copy()
+            self._n = int(n)
+
+    def add(self, hv: HV) -> None:
+        """Add one HV with unit weight to the accumulator."""
+        bits = np.unpackbits(hv._data.view(np.uint8)).astype(np.int32, copy=False)
+        self._counts += bits
+        self._n += 1
+
+    def add_many(self, hvs: Sequence[HV]) -> None:
+        """Add multiple HVs with unit weight."""
+        for hv in hvs:
+            self.add(hv)
+
+    def merge(self, other: "VSAAccumulator") -> "VSAAccumulator":
+        """Return a new accumulator containing the exact sum of both accumulators."""
+        return VSAAccumulator(self._counts + other._counts, self._n + other._n)
+
+    def to_hv(self) -> HV:
+        """Collapse accumulated counts via strict majority vote (> n / 2)."""
+        if self._n == 0:
+            return HV.zero()
+        threshold = self._n / 2.0
+        result_bits = (self._counts > threshold).astype(np.uint8)
+        packed = np.packbits(result_bits)
+        arr = packed.view(np.uint64)
+        assert arr.shape == (_WORDS,)
+        return HV(arr)
+
+    def to_bytes(self) -> bytes:
+        """Serialize item count (uint64 LE) + int32[D] counts."""
+        header = int(self._n).to_bytes(8, "little", signed=False)
+        return header + self._counts.astype("<i4", copy=False).tobytes()
+
+    @classmethod
+    def from_bytes(cls, raw: bytes) -> "VSAAccumulator":
+        """Deserialize accumulator produced by to_bytes()."""
+        expected = 8 + D * 4
+        if len(raw) != expected:
+            raise ValueError(f"Expected {expected} bytes for VSAAccumulator, got {len(raw)}")
+        n = int.from_bytes(raw[:8], "little", signed=False)
+        counts = np.frombuffer(raw[8:], dtype="<i4").astype(np.int32, copy=True)
+        return cls(counts=counts, n=n)
+
+    def __len__(self) -> int:
+        return self._n
+
+
 # ---------------------------------------------------------------------------
 # Role-filler pairs
 # ---------------------------------------------------------------------------
@@ -251,6 +323,7 @@ class HolonomicVSATracker:
     _step_hvs:  List[HV]  = field(default_factory=list)
     _index_hvs: List[HV]  = field(default_factory=list)
     _composite: Optional[HV] = field(default=None, repr=False)
+    _accumulator: VSAAccumulator = field(default_factory=VSAAccumulator, repr=False)
 
     def encode_step(self, content: str | bytes) -> HV:
         """Encode a reasoning step and add it to the holonomic record."""
@@ -263,10 +336,8 @@ class HolonomicVSATracker:
         self._step_hvs.append(content_hv)
         self._index_hvs.append(index_hv)
 
-        if self._composite is None:
-            self._composite = step_vector
-        else:
-            self._composite = superpose([self._composite, step_vector])
+        self._accumulator.add(step_vector)
+        self._composite = self._accumulator.to_hv()
 
         self.token_count += 1
         self.parity_block = self.token_count % 24
