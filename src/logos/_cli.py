@@ -10,6 +10,8 @@ from typing import List, Optional
 from .session import LogosSession
 from .substrate.benchmark import run_logos_benchmark
 from .substrate.cartridge import verify_cartridge
+from .substrate.cartridge_bus import merge_cartridges
+from .substrate.eval_long_horizon import run_long_horizon_eval
 
 
 def _cmd_demo(args: argparse.Namespace) -> int:
@@ -150,6 +152,58 @@ def _cmd_benchmark(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_merge(args: argparse.Namespace) -> int:
+    res = merge_cartridges(
+        path_a=args.cart_a,
+        path_b=args.cart_b,
+        output_path=args.output,
+        consolidate=args.consolidate,
+    )
+    print(json.dumps(res, indent=2, ensure_ascii=False))
+    return 0 if res.get("valid") else 1
+
+
+def _cmd_consolidate(args: argparse.Namespace) -> int:
+    session = LogosSession.from_db(args.db, use_ollama=args.ollama)
+    res = session.sleep_consolidate()
+    print(json.dumps(res, indent=2, ensure_ascii=False))
+    session.close()
+    return 0
+
+
+def _cmd_history(args: argparse.Namespace) -> int:
+    session = LogosSession.from_db(args.db)
+    res = session.query_truth_history(key=args.key)
+    print(json.dumps(res, indent=2, ensure_ascii=False))
+    session.close()
+    return 0
+
+
+def _cmd_hud_export(args: argparse.Namespace) -> int:
+    session = LogosSession.from_db(args.db)
+    out_path = Path(args.out) if args.out else None
+    payload = session.export_hud_json(output_path=out_path)
+    if out_path is not None:
+        print(str(out_path))
+    else:
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
+    session.close()
+    return 0
+
+
+def _cmd_long_eval(args: argparse.Namespace) -> int:
+    out_path = Path(args.json_out) if args.json_out else None
+    report = run_long_horizon_eval(
+        use_ollama=args.ollama,
+        qa_model=args.qa_model,
+        budget_tokens=args.budget,
+        consolidate=not args.no_consolidate,
+        output_json=out_path,
+    )
+    print(json.dumps(report, indent=2, ensure_ascii=False))
+    return 0
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         prog="logos",
@@ -207,6 +261,36 @@ def main(argv: Optional[List[str]] = None) -> int:
     ben_p.add_argument("--budget", type=int, default=1100, help="Context window budget for stress test")
     ben_p.add_argument("--json-out", default=None, help="Optional JSON output path")
     ben_p.set_defaults(func=_cmd_benchmark)
+
+    mrg_p = sub.add_parser("merge", help="Deterministically merge two .logos cartridges via bitemporal CRDT bus")
+    mrg_p.add_argument("cart_a", help="First .logos cartridge path")
+    mrg_p.add_argument("cart_b", help="Second .logos cartridge path")
+    mrg_p.add_argument("output", help="Output merged .logos cartridge path")
+    mrg_p.add_argument("--consolidate", action="store_true", help="Run sleep_consolidate after merge")
+    mrg_p.set_defaults(func=_cmd_merge)
+
+    con_p = sub.add_parser("consolidate", help="Run offline sleep consolidation on a persistent session DB")
+    con_p.add_argument("--db", required=True, help="Path to SQLite session DB")
+    con_p.add_argument("--ollama", action="store_true", help="Use local Ollama embeddings")
+    con_p.set_defaults(func=_cmd_consolidate)
+
+    his_p = sub.add_parser("history", help="Query bitemporal truth history and supersession chain")
+    his_p.add_argument("--db", required=True, help="Path to SQLite session DB")
+    his_p.add_argument("--key", default=None, help="Optional specific slot key to inspect")
+    his_p.set_defaults(func=_cmd_history)
+
+    hud_p = sub.add_parser("hud-export", help="Export Dual-Plane Constellation HUD JSON file")
+    hud_p.add_argument("--db", required=True, help="Path to SQLite session DB")
+    hud_p.add_argument("--out", default=None, help="Optional output JSON file path")
+    hud_p.set_defaults(func=_cmd_hud_export)
+
+    lev_p = sub.add_parser("long-eval", help="Run unstructured natural-language long-horizon evaluation")
+    lev_p.add_argument("--ollama", action="store_true", help="Use live Ollama embeddings, delta extractor & closed-loop QA")
+    lev_p.add_argument("--qa-model", default="qwen2.5:1.5b", help="Local Ollama model for closed-loop QA")
+    lev_p.add_argument("--budget", type=int, default=1100, help="Viewport token budget")
+    lev_p.add_argument("--no-consolidate", action="store_true", help="Skip sleep_consolidate step")
+    lev_p.add_argument("--json-out", default=None, help="Optional JSON output path")
+    lev_p.set_defaults(func=_cmd_long_eval)
 
     args = parser.parse_args(argv)
     return int(args.func(args))

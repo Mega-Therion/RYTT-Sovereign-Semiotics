@@ -102,8 +102,27 @@ class DualPlaneGlyphTree:
             return
 
         now = float(glyph.created_at)
+        # Check for inline natural-language supersession edges ("switched KEY from OLD to NEW")
+        inline_prior: Dict[str, str] = {}
+        for edge in glyph.relational.edges:
+            if edge.relation == RelationType.SUPERSEDES and edge.key and edge.target_id.startswith("slot:"):
+                parts = edge.target_id.split(":", 2)
+                if len(parts) == 3 and parts[2]:
+                    inline_prior[edge.key] = parts[2]
+
         for key, value in list(glyph.relational.active_slots.items()):
             history = self.bitemporal_ledger.setdefault(key, [])
+            if not history and key in inline_prior and inline_prior[key] != value:
+                history.append(
+                    {
+                        "glyph_id": f"{glyph.glyph_id}#prior",
+                        "value": inline_prior[key],
+                        "epistemic_tier": glyph.provenance.epistemic_tier.value,
+                        "valid_from": max(0.0, now - 1e-3),
+                        "valid_to": now,
+                        "superseded_by": glyph.glyph_id,
+                    }
+                )
             for prev_entry in history:
                 if prev_entry["superseded_by"] is None:
                     prev_id = prev_entry["glyph_id"]
@@ -165,6 +184,20 @@ class DualPlaneGlyphTree:
             edges=edges,
             summary=summary,
         )
+        ext = getattr(self.compiler, "last_extraction", None)
+        if ext is not None and ext.anti_claims:
+            existing_claims = {ag.semantic.summary for ag in self.anti_glyphs.values()}
+            for ac in ext.anti_claims:
+                claim_tok = ac.get("claim", "")
+                reason_txt = ac.get("reason", "Disproved in natural-language turn")
+                summary_line = f"{claim_tok} rejected: {reason_txt}"
+                if claim_tok and summary_line not in existing_claims:
+                    self.register_anti_glyph(
+                        episode_text=summary_line,
+                        reason=reason_txt,
+                        storage_uri=storage_uri,
+                    )
+                    existing_claims.add(summary_line)
         return self.append_ground_glyph(glyph)
 
     def append_ground_glyph(self, glyph: TensorGlyph) -> TensorGlyph:
@@ -414,6 +447,122 @@ class DualPlaneGlyphTree:
                     "revisions": len(history),
                 }
         return table
+
+    def _mean_elevated_intra_cosine(self) -> float:
+        """Compute mean pairwise cosine similarity among children of Level-2 Elevated nodes."""
+        l2_nodes = [n for n in self.nodes.values() if n.level == 2 and len(n.provenance.child_ids) >= 2]
+        if not l2_nodes:
+            return 0.0
+        scores: List[float] = []
+        for parent in l2_nodes:
+            children = [self.nodes[cid] for cid in parent.provenance.child_ids if cid in self.nodes]
+            if len(children) < 2:
+                continue
+            for i in range(len(children)):
+                for j in range(i + 1, len(children)):
+                    sim = float(np.dot(children[i].semantic.vector, children[j].semantic.vector))
+                    scores.append(sim)
+        return float(sum(scores) / len(scores)) if scores else 0.0
+
+    def sleep_consolidate(self) -> Dict[str, Any]:
+        """
+        Offline Sleep / Idle Consolidation:
+        Re-clusters Ground leaves (`level == 1`) into semantically tighter Elevated chords
+        via greedy cosine similarity clustering with bounded fanout `2 <= b <= self.fanout`,
+        while keeping every Layer-3 raw SHA-256 block immutable, preserving bitemporal truth
+        slots, and satisfying 100% Merkle + Bloom superset invariants.
+        """
+        leaves = sorted(
+            [n for n in self.nodes.values() if n.level == 1],
+            key=lambda g: (float(g.created_at), g.glyph_id),
+        )
+        frontier_before = self.frontier_notation()
+        coherence_before = self._mean_elevated_intra_cosine()
+
+        if len(leaves) < 2:
+            integrity = self.verify_integrity()
+            return {
+                "consolidated": False,
+                "leaf_count": len(leaves),
+                "clusters_formed": 0,
+                "frontier_before": frontier_before,
+                "frontier_after": frontier_before,
+                "mean_intra_cluster_cosine_before": round(coherence_before, 4),
+                "mean_intra_cluster_cosine_after": round(coherence_before, 4),
+                "coherence_gain": 0.0,
+                "raw_sha256_preserved": True,
+                "truth_slots_preserved": True,
+                "integrity": integrity,
+            }
+
+        orig_leaf_shas = {lf.glyph_id: lf.provenance.raw_sha256 for lf in leaves}
+        truth_before = self.active_truth_table()
+
+        # Reset non-leaf rollup nodes and rebuild from immutable Ground leaves
+        self.nodes = {}
+        self.vsa_accumulators = {}
+        self.active_frontier = []
+        for lvl in list(self._level_counters.keys()):
+            if lvl >= 2:
+                self._level_counters[lvl] = 0
+
+        for lf in leaves:
+            lf.provenance.parent_ids = ()
+            self.nodes[lf.glyph_id] = lf
+            acc = VSAAccumulator()
+            acc.add(HV.from_seed(lf.content_digest()))
+            self.vsa_accumulators[lf.glyph_id] = acc
+
+        # Greedy semantic cosine clustering with bounded fanout 2 <= b <= self.fanout
+        pool = list(leaves)
+        clusters: List[List[TensorGlyph]] = []
+        while len(pool) >= 2:
+            rem = len(pool)
+            if rem >= self.fanout:
+                # Avoid leaving a single orphan leaf if rem == self.fanout + 1 and fanout >= 3
+                if rem == self.fanout + 1 and self.fanout >= 3:
+                    b = self.fanout - 1
+                else:
+                    b = self.fanout
+            else:
+                b = rem
+
+            anchor = pool.pop(0)
+            ranked = sorted(
+                pool,
+                key=lambda cand: (-float(np.dot(anchor.semantic.vector, cand.semantic.vector)), cand.glyph_id),
+            )
+            chosen = ranked[: b - 1]
+            chosen_ids = {c.glyph_id for c in chosen}
+            pool = [c for c in pool if c.glyph_id not in chosen_ids]
+            clusters.append([anchor] + chosen)
+
+        l2_parents: List[TensorGlyph] = []
+        for cluster in clusters:
+            parent = self._build_parent_glyph(cluster, target_level=2)
+            l2_parents.append(parent)
+
+        self.active_frontier = [p.glyph_id for p in l2_parents] + [r.glyph_id for r in pool]
+        self._cascade_rollup()
+
+        coherence_after = self._mean_elevated_intra_cosine()
+        shas_ok = all(self.nodes[gid].provenance.raw_sha256 == sha for gid, sha in orig_leaf_shas.items())
+        truth_ok = self.active_truth_table() == truth_before
+        integrity = self.verify_integrity()
+
+        return {
+            "consolidated": True,
+            "leaf_count": len(leaves),
+            "clusters_formed": len(clusters),
+            "frontier_before": frontier_before,
+            "frontier_after": self.frontier_notation(),
+            "mean_intra_cluster_cosine_before": round(coherence_before, 4),
+            "mean_intra_cluster_cosine_after": round(coherence_after, 4),
+            "coherence_gain": round(coherence_after - coherence_before, 4),
+            "raw_sha256_preserved": shas_ok,
+            "truth_slots_preserved": truth_ok,
+            "integrity": integrity,
+        }
 
     def verify_integrity(self) -> Dict[str, Any]:
         """Verify Merkle child hashes, Bloom superset containment, and DAG acyclicity."""

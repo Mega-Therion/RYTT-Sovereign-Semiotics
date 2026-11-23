@@ -30,6 +30,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=7", "build", "twine", "jsonschema==4.25.1"]
 logos = ["mcp>=1.0"]
+neural = ["torch>=2.1"]
 
 [project.scripts]
 rytt = "rytt._cli:main"

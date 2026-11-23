@@ -15,10 +15,13 @@ from .layers import (
     BloomFilter10240,
     BloomHit,
     BloomMMU,
+    DeltaExtractionResult,
     DeterministicSpectralEmbedder,
     EpistemicTier,
     LogosLayerCompiler,
+    NaturalLanguageDeltaExtractor,
     OllamaEmbedder,
+    OllamaStateDeltaExtractor,
     ProvenanceLayer,
     RelationalLayer,
     RelationEdge,
@@ -27,13 +30,32 @@ from .layers import (
     TensorGlyph,
     build_embedder,
     extract_entities,
+    normalize_slot_key,
 )
-from .operators import Horizon1TextOperator, Horizon2MatrixProjector, KVGlyphBank
+from .operators import (
+    GlyphConditionedAttentionLM,
+    Horizon1TextOperator,
+    Horizon2MatrixProjector,
+    KVGlyphBank,
+    NumpyMatrixGlyphTrainer,
+    ProjectedGlyphBundle,
+    TorchMatrixGlyphProjector,
+    train_projector_on_glyphs,
+)
 from .orchestrator import HydratedSlice, LogosOrchestrator, SemanticEpisodeSplitter, TurnRecord, ViewportFrame
 from .session import LogosSession
-from .substrate import LogosSubstrate, export_cartridge, load_cartridge, run_logos_benchmark, verify_cartridge
+from .substrate import (
+    LogosSubstrate,
+    build_unstructured_long_horizon_workload,
+    export_cartridge,
+    load_cartridge,
+    merge_cartridges,
+    run_logos_benchmark,
+    run_long_horizon_eval,
+    verify_cartridge,
+)
 
-__version__ = "0.1.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "BLOOM_BITS",
@@ -41,9 +63,11 @@ __all__ = [
     "BloomFilter10240",
     "BloomHit",
     "BloomMMU",
+    "DeltaExtractionResult",
     "DeterministicSpectralEmbedder",
     "DualPlaneGlyphTree",
     "EpistemicTier",
+    "GlyphConditionedAttentionLM",
     "Horizon1TextOperator",
     "Horizon2MatrixProjector",
     "HydratedSlice",
@@ -52,7 +76,11 @@ __all__ = [
     "LogosOrchestrator",
     "LogosSession",
     "LogosSubstrate",
+    "NaturalLanguageDeltaExtractor",
+    "NumpyMatrixGlyphTrainer",
     "OllamaEmbedder",
+    "OllamaStateDeltaExtractor",
+    "ProjectedGlyphBundle",
     "ProvenanceLayer",
     "RelationEdge",
     "RelationType",
@@ -60,13 +88,19 @@ __all__ = [
     "SemanticEpisodeSplitter",
     "SemanticLayer",
     "TensorGlyph",
+    "TorchMatrixGlyphProjector",
     "TurnRecord",
     "ViewportFrame",
     "__version__",
     "build_embedder",
+    "build_unstructured_long_horizon_workload",
     "export_cartridge",
     "extract_entities",
     "load_cartridge",
+    "merge_cartridges",
+    "normalize_slot_key",
     "run_logos_benchmark",
+    "run_long_horizon_eval",
+    "train_projector_on_glyphs",
     "verify_cartridge",
 ]

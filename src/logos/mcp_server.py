@@ -77,6 +77,45 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
             "required": ["output_path"],
         },
     },
+    {
+        "name": "logos_merge_cartridges",
+        "description": "Deterministically merge two independent .logos cartridges via bitemporal CRDT resolution.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "path_a": {"type": "string"},
+                "path_b": {"type": "string"},
+                "output_path": {"type": "string"},
+                "consolidate": {"type": "boolean", "default": False},
+            },
+            "required": ["path_a", "path_b", "output_path"],
+        },
+    },
+    {
+        "name": "logos_sleep_consolidate",
+        "description": "Run offline semantic re-clustering of Ground leaves into tighter Elevated chords.",
+        "inputSchema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "logos_query_truth_history",
+        "description": "Query active bitemporal truth slots and full historical supersession chains.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "key": {"type": "string", "default": ""},
+            },
+        },
+    },
+    {
+        "name": "logos_export_hud_json",
+        "description": "Export Dual-Plane Constellation HUD JSON payload for web/logos-hud.html.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "output_path": {"type": "string", "default": ""},
+            },
+        },
+    },
 ]
 
 
@@ -143,6 +182,27 @@ def _dispatch_tool(session: LogosSession, name: str, args: Dict[str, Any]) -> st
         out = session.export_cartridge(Path(str(args["output_path"])))
         return json.dumps({"cartridge_path": str(out), "valid": True}, ensure_ascii=False)
 
+    if name == "logos_merge_cartridges":
+        res = LogosSession.merge_cartridges(
+            path_a=Path(str(args["path_a"])),
+            path_b=Path(str(args["path_b"])),
+            output_path=Path(str(args["output_path"])),
+            consolidate=bool(args.get("consolidate", False)),
+        )
+        return json.dumps(res, ensure_ascii=False)
+
+    if name == "logos_sleep_consolidate":
+        return json.dumps(session.sleep_consolidate(), ensure_ascii=False)
+
+    if name == "logos_query_truth_history":
+        raw_k = str(args.get("key") or "").strip()
+        return json.dumps(session.query_truth_history(key=raw_k or None), ensure_ascii=False)
+
+    if name == "logos_export_hud_json":
+        raw_out = str(args.get("output_path") or "").strip()
+        out_p = Path(raw_out) if raw_out else None
+        return json.dumps(session.export_hud_json(output_path=out_p), ensure_ascii=False)
+
     raise ValueError(f"Unknown tool: {name!r}")
 
 
@@ -160,7 +220,7 @@ def handle_jsonrpc_message(msg: Dict[str, Any], session: LogosSession) -> Option
         if method == "initialize":
             result: Dict[str, Any] = {
                 "protocolVersion": "2024-11-05",
-                "serverInfo": {"name": "logos-mcp", "version": "0.1.0"},
+                "serverInfo": {"name": "logos-mcp", "version": "0.4.0"},
                 "capabilities": {"tools": {"listChanged": False}},
             }
         elif method == "ping":
@@ -276,6 +336,36 @@ def serve_fastmcp_if_available(session: LogosSession) -> Optional[int]:
     @server.tool()
     def logos_export_cartridge(output_path: str) -> str:
         return _dispatch_tool(session, "logos_export_cartridge", {"output_path": output_path})
+
+    @server.tool()
+    def logos_merge_cartridges(
+        path_a: str,
+        path_b: str,
+        output_path: str,
+        consolidate: bool = False,
+    ) -> str:
+        return _dispatch_tool(
+            session,
+            "logos_merge_cartridges",
+            {
+                "path_a": path_a,
+                "path_b": path_b,
+                "output_path": output_path,
+                "consolidate": consolidate,
+            },
+        )
+
+    @server.tool()
+    def logos_sleep_consolidate() -> str:
+        return _dispatch_tool(session, "logos_sleep_consolidate", {})
+
+    @server.tool()
+    def logos_query_truth_history(key: str = "") -> str:
+        return _dispatch_tool(session, "logos_query_truth_history", {"key": key})
+
+    @server.tool()
+    def logos_export_hud_json(output_path: str = "") -> str:
+        return _dispatch_tool(session, "logos_export_hud_json", {"output_path": output_path})
 
     server.run()
     return 0
