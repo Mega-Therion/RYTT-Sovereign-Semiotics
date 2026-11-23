@@ -29,9 +29,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=7", "build", "twine", "jsonschema==4.25.1"]
+logos = ["mcp>=1.0"]
 
 [project.scripts]
 rytt = "rytt._cli:main"
+logos = "logos._cli:main"
+logos-mcp = "logos.mcp_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
