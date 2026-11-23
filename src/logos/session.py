@@ -193,6 +193,8 @@ class LogosSession:
         integrity = orch.tree.verify_integrity()
         return {
             "frontier_notation": orch.tree.frontier_notation(),
+            "pua_frontier_notation": orch.tree.pua_frontier_notation(),
+            "pua_frontier_hex": orch.tree.pua_frontier_hex(),
             "total_nodes": len(orch.tree.nodes),
             "frontier_nodes": len(orch.tree.active_frontier),
             "anti_glyphs": len(orch.tree.anti_glyphs),

@@ -10,7 +10,7 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 import numpy as np
 
-from rytt.compiler import RYTT_GENOME, RyttCompiler
+from rytt.compiler import RYTT_GENOME, RYTT_LIGATURES, RyttCompiler
 from rytt.embedding_init import _get_raw_glyph_features
 
 from .bloom_mmu import BloomFilter10240, extract_entities
@@ -138,9 +138,12 @@ class LogosLayerCompiler:
 
     def rytt_metadata_for(self, symbol: str) -> Tuple[str, np.ndarray]:
         """Resolve RYTT PUA codepoint and exact 22-D geometric feature vector."""
-        if symbol not in RYTT_GENOME:
-            raise KeyError(f"Symbol {symbol!r} not in RYTT_GENOME")
-        pua = RYTT_GENOME[symbol]["pua"]
+        if symbol in RYTT_GENOME:
+            pua = RYTT_GENOME[symbol]["pua"]
+        elif symbol in RYTT_LIGATURES:
+            pua = RYTT_LIGATURES[symbol]["pua"]
+        else:
+            raise KeyError(f"Symbol {symbol!r} not in RYTT_GENOME or RYTT_LIGATURES")
         geom = np.asarray(_get_raw_glyph_features(symbol), dtype=np.float32)
         return pua, geom
 

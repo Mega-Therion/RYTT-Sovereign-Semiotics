@@ -390,14 +390,15 @@ class DualPlaneGlyphTree:
     def frontier_glyphs(self) -> List[TensorGlyph]:
         return [self.nodes[gid] for gid in self.active_frontier]
 
-    def frontier_notation(self) -> str:
-        """Compact shorthand mirror of 1r -> 2ry -> 3ryt -> 1R -> 1R+2ry."""
+    def frontier_notation(self, use_pua: bool = False) -> str:
+        """Compact shorthand mirror of 1r -> 2ry -> 3ryt -> 1R -> 1R+2ry (or actual PUA glyphs when use_pua=True)."""
         if not self.active_frontier:
             return "0"
         by_level: Dict[int, List[str]] = {}
         for gid in self.active_frontier:
             node = self.nodes[gid]
-            by_level.setdefault(node.level, []).append(node.symbol)
+            char = node.rytt_pua if use_pua else node.symbol
+            by_level.setdefault(node.level, []).append(char)
         parts: List[str] = []
         for lvl in sorted(by_level.keys(), reverse=True):
             syms = "".join(by_level[lvl])
@@ -406,6 +407,21 @@ class DualPlaneGlyphTree:
             else:
                 parts.append(f"{len(syms)}{syms}^L{lvl}")
         return "+".join(parts)
+
+    def pua_frontier_notation(self) -> str:
+        """Frontier notation rendered in genuine Unicode PUA glyphs (U+E000..U+E019 / U+E800..U+E819 / chords)."""
+        return self.frontier_notation(use_pua=True)
+
+    def pua_frontier_hex(self) -> str:
+        """Frontier rendered as hex codepoints (e.g. '[U+E011, U+E018]')."""
+        if not self.active_frontier:
+            return "[]"
+        codepoints = [
+            f"U+{ord(self.nodes[gid].rytt_pua):04X}"
+            for gid in self.active_frontier
+            if gid in self.nodes and self.nodes[gid].rytt_pua
+        ]
+        return f"[{', '.join(codepoints)}]"
 
     def drill_down(self, glyph_id: str) -> List[TensorGlyph]:
         node = self.nodes.get(glyph_id)
