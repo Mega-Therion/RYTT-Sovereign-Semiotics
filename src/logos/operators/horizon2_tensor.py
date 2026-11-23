@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
@@ -9,6 +10,7 @@ import numpy as np
 from ..layers.schema import TensorGlyph, _l2_normalize
 
 
+@lru_cache(maxsize=64)
 def _deterministic_orth_matrix(rows: int, cols: int, seed: int) -> np.ndarray:
     rng = np.random.default_rng(seed)
     mat = rng.standard_normal((rows, cols)).astype(np.float64)

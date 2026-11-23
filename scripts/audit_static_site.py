@@ -6,7 +6,12 @@ from pathlib import Path
 from html.parser import HTMLParser
 
 ROOT = Path(__file__).resolve().parents[1]
-ROUTES = [ROOT / "index.html", ROOT / "web" / "playground.html", ROOT / "web" / "codex.html"]
+ROUTES = [
+    ROOT / "index.html",
+    ROOT / "web" / "playground.html",
+    ROOT / "web" / "codex.html",
+    ROOT / "web" / "logos-hud.html",
+]
 
 class Audit(HTMLParser):
     def __init__(self):

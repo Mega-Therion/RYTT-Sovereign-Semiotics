@@ -2,14 +2,17 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, Optional, Sequence
+import json
+from typing import Any, Dict, List, Optional, Sequence
 
 from .glyphs.tree import DualPlaneGlyphTree
+from .layers.bloom_mmu import BLOOM_BITS, BloomFilter10240
 from .layers.embedder import build_embedder
 from .layers.schema import EpistemicTier
 from .orchestrator.splitter import TurnRecord
 from .orchestrator.viewport import HydratedSlice, LogosOrchestrator, ViewportFrame
 from .substrate.cartridge import export_cartridge, load_cartridge, verify_cartridge
+from .substrate.cartridge_bus import merge_cartridges
 from .substrate.store import LogosSubstrate
 
 
@@ -203,9 +206,135 @@ class LogosSession:
             "kv_bank": orch.kv_bank.snapshot_stats(),
         }
 
+    def sleep_consolidate(self, autosave: bool = True) -> Dict[str, Any]:
+        """Run offline semantic re-clustering of Ground leaves into tighter Elevated chords."""
+        orch = self.orchestrator
+        report = orch.tree.sleep_consolidate()
+        orch._persist_tree_nodes()
+        if autosave and orch.substrate.db_path != ":memory:":
+            self.save()
+        return report
+
+    def query_truth_history(self, key: Optional[str] = None) -> Dict[str, Any]:
+        """Inspect active bitemporal truth slots and full historical revision chains."""
+        orch = self.orchestrator
+        active = orch.live_truth_table()
+        ledger = orch.tree.bitemporal_ledger
+        if key:
+            k_norm = key.strip()
+            return {
+                "key": k_norm,
+                "active": active.get(k_norm),
+                "history": list(ledger.get(k_norm, [])),
+                "revisions": len(ledger.get(k_norm, [])),
+            }
+        return {
+            "slot_count": len(active),
+            "active_truth_table": active,
+            "bitemporal_ledger": {k: list(v) for k, v in sorted(ledger.items())},
+        }
+
+    def export_hud_json(self, output_path: Optional[str | Path] = None) -> Dict[str, Any]:
+        """Export Dual-Plane Constellation HUD JSON telemetry for `web/logos-hud.html`."""
+        orch = self.orchestrator
+        frontier_set = set(orch.tree.active_frontier)
+        nodes_out: List[Dict[str, Any]] = []
+        for gid, node in sorted(orch.tree.nodes.items(), key=lambda kv: (kv[1].level, kv[1].created_at, kv[0])):
+            flt = BloomFilter10240.from_bytes(node.provenance.bloom_bytes)
+            bits_set = flt.bit_count()
+            pua_hex = f"U+{ord(node.rytt_pua):04X}" if node.rytt_pua else "NONE"
+            nodes_out.append(
+                {
+                    "glyph_id": node.glyph_id,
+                    "symbol": node.symbol,
+                    "plane": node.plane,
+                    "level": int(node.level),
+                    "rytt_pua": pua_hex,
+                    "is_frontier": gid in frontier_set,
+                    "created_at": float(node.created_at),
+                    "layer1": {
+                        "summary": node.semantic.summary,
+                        "keywords": list(node.semantic.keywords),
+                        "backend": node.semantic.backend,
+                        "dim": int(node.semantic.vector.shape[0]),
+                        "l2_norm": round(float((node.semantic.vector ** 2).sum() ** 0.5), 4),
+                        "preview_8d": [round(float(x), 4) for x in node.semantic.vector[:8]],
+                    },
+                    "layer2": {
+                        "live_slots": node.relational.live_slots(),
+                        "active_slots": dict(node.relational.active_slots),
+                        "superseded_slots": dict(node.relational.superseded_slots),
+                        "operator_rank": int(node.relational.rank),
+                        "edges": [e.to_dict() for e in node.relational.edges],
+                    },
+                    "layer3": {
+                        "raw_sha256": node.provenance.raw_sha256,
+                        "raw_token_count": int(node.provenance.raw_token_count),
+                        "raw_char_count": int(node.provenance.raw_char_count),
+                        "storage_uri": node.provenance.storage_uri,
+                        "epistemic_tier": node.provenance.epistemic_tier.value,
+                        "entity_count": int(node.provenance.entity_count),
+                        "bloom_bits_set": bits_set,
+                        "bloom_total_bits": BLOOM_BITS,
+                        "bloom_density": round(bits_set / float(BLOOM_BITS), 4),
+                        "parent_ids": list(node.provenance.parent_ids),
+                        "child_ids": list(node.provenance.child_ids),
+                    },
+                }
+            )
+
+        anti_out: List[Dict[str, Any]] = []
+        for gid, ag in sorted(orch.tree.anti_glyphs.items()):
+            flt = BloomFilter10240.from_bytes(ag.provenance.bloom_bytes)
+            bits_set = flt.bit_count()
+            anti_out.append(
+                {
+                    "glyph_id": ag.glyph_id,
+                    "symbol": "¬",
+                    "plane": "Quarantine",
+                    "level": 1,
+                    "anti_reason": ag.anti_reason,
+                    "summary": ag.semantic.summary,
+                    "raw_sha256": ag.provenance.raw_sha256,
+                    "epistemic_tier": "F",
+                    "bloom_bits_set": bits_set,
+                    "bloom_density": round(bits_set / float(BLOOM_BITS), 4),
+                }
+            )
+
+        payload: Dict[str, Any] = {
+            "format": "logos-hud-telemetry",
+            "version": "0.4.0",
+            "frontier_notation": orch.tree.frontier_notation(),
+            "fanout": orch.tree.fanout,
+            "total_ingested_tokens": orch.total_ingested_tokens,
+            "context_budget_tokens": orch.context_budget_tokens,
+            "active_raw_tokens": orch.active_raw_tokens(),
+            "hot_tail_turns": [t.to_dict() for t in orch.active_turns],
+            "active_truth_table": orch.live_truth_table(),
+            "bitemporal_ledger": orch.tree.bitemporal_ledger,
+            "tree_integrity": orch.tree.verify_integrity(),
+            "nodes": nodes_out,
+            "anti_glyphs": anti_out,
+        }
+        if output_path is not None:
+            out_p = Path(output_path)
+            out_p.parent.mkdir(parents=True, exist_ok=True)
+            out_p.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        return payload
+
     def close(self) -> None:
         self.orchestrator.substrate.close()
 
     @staticmethod
     def verify_cartridge(path: str | Path) -> Dict[str, Any]:
         return verify_cartridge(path)
+
+    @staticmethod
+    def merge_cartridges(
+        path_a: str | Path,
+        path_b: str | Path,
+        output_path: str | Path,
+        consolidate: bool = False,
+    ) -> Dict[str, Any]:
+        return merge_cartridges(path_a, path_b, output_path, consolidate=consolidate)

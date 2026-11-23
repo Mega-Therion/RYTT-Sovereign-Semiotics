@@ -69,6 +69,8 @@ class LogosOrchestrator:
         min_episode_tokens: int = 80,
         max_episode_tokens: int = 1200,
         kv_max_slots: int = 64,
+        use_nl_extractor: bool = True,
+        use_ollama_extractor: bool = False,
     ) -> None:
         if not (0.2 <= watermark_ratio <= 0.98):
             raise ValueError(f"watermark_ratio must be in [0.2, 0.98], got {watermark_ratio}")
@@ -79,7 +81,11 @@ class LogosOrchestrator:
 
         self.substrate = substrate or LogosSubstrate(":memory:")
         self.embedder: Embedder = embedder or DeterministicSpectralEmbedder(dim=768)
-        self.compiler = LogosLayerCompiler(embedder=self.embedder)
+        self.compiler = LogosLayerCompiler(
+            embedder=self.embedder,
+            use_nl_extractor=use_nl_extractor,
+            use_ollama_extractor=use_ollama_extractor,
+        )
         self.tree = DualPlaneGlyphTree(compiler=self.compiler, fanout=fanout)
         self.splitter = SemanticEpisodeSplitter(
             embedder=self.embedder,
@@ -227,13 +233,32 @@ class LogosOrchestrator:
             }
 
         self._turn_counter += 1
+        resolved_slots = dict(explicit_slots or {})
+        if (self.compiler.use_nl_extractor or self.compiler.use_ollama_extractor) and not explicit_slots:
+            ext = self.compiler.delta_extractor.extract(content, glyph_id=f"hot_tail#t{self._turn_counter}")
+            resolved_slots.update(ext.slots)
+            if ext.anti_claims:
+                existing_anti = {ag.semantic.summary for ag in self.tree.anti_glyphs.values()}
+                for ac in ext.anti_claims:
+                    claim_tok = ac.get("claim", "")
+                    reason_txt = ac.get("reason", "Disproved in natural-language turn")
+                    summary_line = f"{claim_tok} rejected: {reason_txt}"
+                    if claim_tok and summary_line not in existing_anti:
+                        ag = self.tree.register_anti_glyph(
+                            episode_text=summary_line,
+                            reason=reason_txt,
+                            storage_uri=f"logos://raw/{raw_sha}",
+                        )
+                        self.substrate.put_glyph(ag)
+                        existing_anti.add(summary_line)
+
         rec = TurnRecord(
             turn_id=self._turn_counter,
             role=role,
             content=content,
             token_count=tok_count,
             epistemic_tier=epistemic_tier,
-            explicit_slots=dict(explicit_slots or {}),
+            explicit_slots=resolved_slots,
             metadata=dict(metadata or {}),
         )
         self.active_turns.append(rec)
@@ -279,6 +304,16 @@ class LogosOrchestrator:
                 matched_children.extend(self._drill_matching_leaves(child, query, entities))
 
         if matched_children:
+            if len(matched_children) > 1 and query.strip():
+                q_vec, _ = self.embedder.embed(query)
+                low_ents = [e.lower() for e in entities]
+
+                def _leaf_rank(lf: TensorGlyph) -> Tuple[int, float]:
+                    flt = BloomFilter10240.from_bytes(lf.provenance.bloom_bytes)
+                    hits = sum(1 for e in low_ents if flt.might_contain(e))
+                    return (hits, lf.semantic.similarity(q_vec))
+
+                matched_children.sort(key=lambda lf: (-_leaf_rank(lf)[0], -_leaf_rank(lf)[1], lf.glyph_id))
             return matched_children
         # Semantic tie-breaker fallback inside matched subtree
         q_vec, _ = self.embedder.embed(query)

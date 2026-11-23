@@ -14,6 +14,11 @@ from rytt.compiler import RYTT_GENOME, RyttCompiler
 from rytt.embedding_init import _get_raw_glyph_features
 
 from .bloom_mmu import BloomFilter10240, extract_entities
+from .delta_extractor import (
+    DeltaExtractionResult,
+    NaturalLanguageDeltaExtractor,
+    OllamaStateDeltaExtractor,
+)
 from .embedder import DeterministicSpectralEmbedder, Embedder
 from .schema import (
     EpistemicTier,
@@ -109,10 +114,23 @@ class LogosLayerCompiler:
         embedder: Optional[Embedder] = None,
         rytt_compiler: Optional[RyttCompiler] = None,
         rank: int = 4,
+        use_nl_extractor: bool = True,
+        use_ollama_extractor: bool = False,
+        ollama_model: str = "qwen2.5:1.5b",
+        ollama_url: str = "http://127.0.0.1:11434",
     ) -> None:
         self.embedder: Embedder = embedder or DeterministicSpectralEmbedder(dim=768)
         self.rytt = rytt_compiler or RyttCompiler()
         self.rank = max(1, int(rank))
+        self.use_nl_extractor = bool(use_nl_extractor)
+        self.use_ollama_extractor = bool(use_ollama_extractor)
+        if self.use_ollama_extractor:
+            self.delta_extractor: NaturalLanguageDeltaExtractor | OllamaStateDeltaExtractor = (
+                OllamaStateDeltaExtractor(model=ollama_model, base_url=ollama_url)
+            )
+        else:
+            self.delta_extractor = NaturalLanguageDeltaExtractor()
+        self.last_extraction: Optional[DeltaExtractionResult] = None
 
     @property
     def dim(self) -> int:
@@ -194,6 +212,14 @@ class LogosLayerCompiler:
 
         # Extract deltas; enforce epistemic quarantine on Tier F (disproven claims)
         deltas = _extract_state_deltas(episode_text)
+        merged_edges: List[RelationEdge] = list(edges or [])
+        extracted_anti_claims: List[Dict[str, str]] = []
+        if self.use_nl_extractor or self.use_ollama_extractor:
+            ext = self.delta_extractor.extract(episode_text, glyph_id=glyph_id)
+            self.last_extraction = ext
+            deltas.update(ext.slots)
+            merged_edges.extend(ext.relations)
+            extracted_anti_claims = list(ext.anti_claims)
         if explicit_slots:
             deltas.update(explicit_slots)
 
@@ -207,7 +233,7 @@ class LogosLayerCompiler:
 
         op_u, op_v = self.build_rank_r_operator(sem_vec, deltas, keywords)
         relational = RelationalLayer(
-            edges=list(edges or []),
+            edges=merged_edges,
             state_deltas=deltas,
             active_slots=active_slots,
             superseded_slots={},
@@ -219,10 +245,21 @@ class LogosLayerCompiler:
         raw_bytes = episode_text.encode("utf-8")
         raw_sha256 = hashlib.sha256(raw_bytes).hexdigest()
         entities = extract_entities(episode_text)
+        for token in re.findall(r"[A-Za-z0-9_./:-]{6,}", episode_text):
+            low = token.lower()
+            if low not in _STOPWORDS:
+                if token not in entities:
+                    entities.append(token)
+                if low not in entities:
+                    entities.append(low)
         for k, v in deltas.items():
             for item in (k, v):
                 if item and item not in entities:
                     entities.append(item)
+        for ac in extracted_anti_claims:
+            cl = ac.get("claim", "")
+            if cl and cl not in entities:
+                entities.append(cl)
         bloom = BloomFilter10240()
         entity_count = bloom.add_many(entities)
 

@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="L.O.G.O.S. Dual-Plane Constellation HUD — interactive visualizer for RYTT Ground, Elevated, Super, and Anti-Glyph virtual memory trees.">
+  <title>L.O.G.O.S. Dual-Plane Constellation HUD — RYTT Sovereign Semiotics</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --bg: #050912;
+      --panel: #0c1424;
+      --panel-alt: #101b30;
+      --border: #22344f;
+      --text: #eaf0f8;
+      --muted: #98a8c0;
+      --cyan: #5fecff;
+      --gold: #f0c978;
+      --violet: #b68cff;
+      --crimson: #ff5d73;
+      --emerald: #44e3a3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 35% 25%, #0d1a30 0%, var(--bg) 70%);
+      color: var(--text);
+      font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      background: var(--cyan);
+      color: #041018;
+      padding: 0.6rem 1rem;
+      z-index: 50;
+      font-weight: 700;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 1rem; }
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+    header {
+      padding: 0.9rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5, 9, 18, 0.88);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    header a { color: var(--cyan); text-decoration: none; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; font-weight: 700; letter-spacing: 0.04em; }
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      background: rgba(95, 236, 255, 0.08);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .shell {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 2.5rem;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding: 0.85rem 1rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    button, .file-label {
+      background: var(--panel-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    button:hover, .file-label:hover { border-color: var(--cyan); color: var(--cyan); }
+    button.active { border-color: var(--cyan); background: rgba(95, 236, 255, 0.14); color: var(--cyan); }
+    input[type="file"] { display: none; }
+    .search-box {
+      background: #060d1a;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.75rem;
+      border-radius: 6px;
+      min-width: 240px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem;
+    }
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .kpi .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+    .kpi .val {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-top: 0.2rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--cyan);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .card h2 {
+      margin: 0 0 0.65rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-height: 680px;
+      background: radial-gradient(circle at center, #0e1c36 0%, #050912 72%);
+      border: 1px solid #1b2c46;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    svg#constellation-svg { width: 100%; height: 100%; display: block; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .layer-box {
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+    .layer-box h3 {
+      margin: 0 0 0.45rem;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8rem;
+      word-break: break-all;
+    }
+    .slot-pill {
+      display: inline-block;
+      margin: 0.15rem 0.25rem 0.15rem 0;
+      padding: 0.18rem 0.5rem;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.76rem;
+    }
+    .slot-live { background: rgba(68, 227, 163, 0.14); border: 1px solid var(--emerald); color: var(--emerald); }
+    .slot-stale { background: rgba(255, 93, 115, 0.12); border: 1px solid var(--crimson); color: #ff9aa8; text-decoration: line-through; }
+    .meter {
+      height: 8px;
+      background: #060c17;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.35rem;
+      border: 1px solid var(--border);
+    }
+    .meter-fill { height: 100%; background: linear-gradient(90deg, var(--cyan), var(--violet)); width: 0%; }
+    table.truth-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    table.truth-table th, table.truth-table td {
+      text-align: left;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    table.truth-table th { color: var(--muted); font-weight: 600; }
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main constellation HUD</a>
+  <header>
+    <div class="brand">
+      <strong>L.O.G.O.S. <span style="color:var(--cyan)">Dual-Plane Constellation HUD</span></strong>
+      <span class="badge" id="hud-version-badge">v0.4.0</span>
+    </div>
+    <nav aria-label="Primary navigation">
+      <a href="/">Home</a> ·
+      <a href="/web/codex.html">Codex Studio</a> ·
+      <a href="/web/playground.html">Playground</a> ·
+      <a href="/docs/LOGOS.md">L.O.G.O.S. Spec</a>
+    </nav>
+  </header>
+
+  <main class="shell" id="main">
+    <section class="toolbar" aria-label="Constellation controls">
+      <div class="btn-group">
+        <button id="btn-sample-full" class="active" aria-label="Load default multi-plane sample constellation" title="Load built-in L.O.G.O.S. sample payload">Sample Constellation (1R^L3 + 3RYT)</button>
+        <button id="btn-filter-all" aria-label="Show all glyph planes" title="Show all planes">All Planes</button>
+        <button id="btn-filter-ground" aria-label="Filter Ground plane r,y,t,t leaves" title="Highlight Ground Plane">Ground (r,y,t,t)</button>
+        <button id="btn-filter-elevated" aria-label="Filter Elevated and Super chords" title="Highlight Elevated & Super Planes">Elevated / Super (R,Y,R^L3)</button>
+        <button id="btn-filter-anti" aria-label="Filter Quarantined Anti-Glyphs" title="Highlight Quarantined Anti-Glyphs">Anti-Glyphs (¬)</button>
+        <label class="file-label" for="hud-file-input" title="Load a JSON file exported by logos hud-export">
+          Load <code>logos hud-export</code> JSON
+        </label>
+        <input id="hud-file-input" type="file" accept=".json,application/json" aria-label="Upload logos hud-export JSON file">
+      </div>
+      <div class="btn-group">
+        <input id="bloom-probe-input" class="search-box" type="search" placeholder="Layer-3 Bloom probe (e.g. ERR_9481_QUARTZ, 18443)" aria-label="Layer 3 Bloom MMU entity probe">
+        <button id="btn-run-probe" aria-label="Run Layer-3 Bloom MMU entity probe" title="Probe nodes matching query">Probe MMU</button>
+      </div>
+    </section>
+
+    <section class="kpi-strip" aria-label="Session telemetry counters">
+      <div class="kpi"><div class="label">Frontier Notation</div><div class="val" id="kpi-frontier">1R^L3+2ry</div></div>
+      <div class="kpi"><div class="label">Virtual Tokens Covered</div><div class="val" id="kpi-virtual">4,180</div></div>
+      <div class="kpi"><div class="label">Dual-Plane Nodes</div><div class="val" id="kpi-nodes">23</div></div>
+      <div class="kpi"><div class="label">Quarantined Anti-Glyphs</div><div class="val" id="kpi-anti" style="color:var(--crimson)">3</div></div>
+      <div class="kpi"><div class="label">Merkle &amp; Bloom Integrity</div><div class="val" id="kpi-integrity" style="color:var(--emerald)">VERIFIED</div></div>
+    </section>
+
+    <div class="grid">
+      <section class="card" aria-label="Radial Dual-Plane Constellation">
+        <h2>
+          <span>Radial Dual-Plane Merkle-VSA Tree</span>
+          <span class="mono" id="probe-status-label" style="color:var(--cyan);font-size:0.78rem">Click any node to inspect Layers 1–3</span>
+        </h2>
+        <div class="canvas-wrap">
+          <svg id="constellation-svg" viewBox="-360 -360 720 720" role="img" aria-label="Interactive radial map of Hot Tail core, Ground ring, Elevated ring, Super ring, and Quarantined Anti-Glyphs"></svg>
+        </div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--emerald)"></i> Hot Tail Core (LOD-0)</span>
+          <span><i class="dot" style="background:var(--cyan)"></i> Ground Plane (L1: r, y, t, t)</span>
+          <span><i class="dot" style="background:var(--gold)"></i> Elevated Plane (L2: R, Y, T, T)</span>
+          <span><i class="dot" style="background:var(--violet)"></i> Super Plane (L3: R^L3)</span>
+          <span><i class="dot" style="background:var(--crimson)"></i> Anti-Glyph Quarantine (¬)</span>
+        </div>
+      </section>
+
+      <aside class="card" aria-label="Tensor-Glyph 3-Layer Inspector">
+        <h2>
+          <span>3-Layer Tensor-Glyph Inspector</span>
+          <span class="badge" id="insp-id-badge">Select Node</span>
+        </h2>
+
+        <div class="layer-box">
+          <h3>Identity &amp; RYTT Dual-Plane Pose</h3>
+          <div class="mono" id="insp-identity">Symbol: — | Plane: — | Level: — | PUA: —</div>
+        </div>
+
+        <div class="layer-box">
+          <h3>Layer 1 · Semantic Vector &amp; Dense Summary</h3>
+          <div id="insp-summary" style="font-size:0.86rem;margin-bottom:0.4rem">—</div>
+          <div class="mono" id="insp-keywords" style="color:var(--muted)">keywords: —</div>
+          <div class="mono" id="insp-vec-stats" style="color:var(--cyan);margin-top:0.25rem">vec: —</div>
+        </div>
+
+        <div class="layer-box">
+          <h3>Layer 2 · Bitemporal Relational Operator &amp; Slots</h3>
+          <div style="margin-bottom:0.35rem"><strong style="font-size:0.76rem;color:var(--muted)">LIVE SLOTS:</strong> <span id="insp-live-slots">—</span></div>
+          <div style="margin-bottom:0.35rem"><strong style="font-size:0.76rem;color:var(--muted)">SUPERSEDED SLOTS:</strong> <span id="insp-stale-slots">—</span></div>
+          <div class="mono" id="insp-edges" style="color:var(--muted);font-size:0.76rem">edges: —</div>
+        </div>
+
+        <div class="layer-box">
+          <h3>Layer 3 · Lossless SHA-256 Anchor &amp; 10,240-Bit Bloom MMU</h3>
+          <div class="mono" id="insp-sha">sha256: —</div>
+          <div class="mono" id="insp-provenance" style="color:var(--muted);margin-top:0.2rem">coverage: —</div>
+          <div class="mono" id="insp-bloom-text" style="margin-top:0.35rem">Bloom density: —</div>
+          <div class="meter"><div class="meter-fill" id="insp-bloom-bar"></div></div>
+        </div>
+
+        <div class="layer-box" style="margin-bottom:0">
+          <h3>Active Bitemporal Truth Table (ACTIVE_TRUTH_MASK)</h3>
+          <table class="truth-table" aria-label="Active bitemporal truth slots">
+            <thead>
+              <tr><th>Slot Key</th><th>Live Value</th><th>Holder</th><th>Tier</th><th>Revs</th></tr>
+            </thead>
+            <tbody id="truth-table-body"></tbody>
+          </table>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const SAMPLE_PAYLOAD = {
+      format: "logos-hud-telemetry",
+      version: "0.4.0",
+      frontier_notation: "1R^L3+2ry",
+      fanout: 4,
+      total_ingested_tokens: 4180,
+      context_budget_tokens: 1100,
+      active_raw_tokens: 210,
+      hot_tail_turns: [
+        { turn_id: 17, role: "user", content: "Verify SQLite WAL frame sequence on replica 17 and check archive_segment_17.", token_count: 105 },
+        { turn_id: 18, role: "assistant", content: "Replica 17 WAL frames verified clean; mTLS ingress steady on gateway port 18443.", token_count: 105 }
+      ],
+      active_truth_table: {
+        GATEWAY_PORT: { value: "18443", glyph_id: "g1_t_0006", epistemic_tier: "D", revisions: 3 },
+        GATE_SCRIPT: { value: "1_engine/tools/check_claim_gate.py", glyph_id: "g1_t_0002", epistemic_tier: "D", revisions: 2 },
+        ACTIVE_DB: { value: "chyren_canonical.db", glyph_id: "g1_y_0005", epistemic_tier: "D", revisions: 2 },
+        KV_STRATEGY: { value: "append_only_pages", glyph_id: "g1_y_0005", epistemic_tier: "D", revisions: 2 },
+        PROOF_TIER: { value: "D", glyph_id: "g1_t_0006", epistemic_tier: "D", revisions: 3 }
+      },
+      tree_integrity: { valid: true, merkle_checked: 5, bloom_checked: 20, acyclic: true },
+      nodes: [
+        {
+          glyph_id: "g1_r_0000", symbol: "r", plane: "Ground", level: 1, rytt_pua: "U+E011", is_frontier: false,
+          layer1: { summary: "Turn 1 incident kickoff: ERR_9481_QUARTZ clock-skew exception; bound gateway port to 8080, active db to tmp/legacy.db.", keywords: ["ERR_9481_QUARTZ", "8080", "tmp/legacy.db", "tools/old_gate.py"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.081, -0.042, 0.119, 0.033, -0.091, 0.054, 0.012, -0.067] },
+          layer2: { live_slots: {}, active_slots: { GATEWAY_PORT: "8080", ACTIVE_DB: "tmp/legacy.db", GATE_SCRIPT: "tools/old_gate.py" }, superseded_slots: { GATEWAY_PORT: "g1_t_0003", ACTIVE_DB: "g1_y_0005", GATE_SCRIPT: "g1_t_0002" }, operator_rank: 4, edges: [] },
+          layer3: { raw_sha256: "3b7a91c4e82f1094a0c12d98f4a712e088b1c4d9a23e7f1b6089c4a21d7e5f01", raw_token_count: 230, raw_char_count: 920, storage_uri: "logos://raw/3b7a91c4", epistemic_tier: "D", entity_count: 9, bloom_bits_set: 63, bloom_total_bits: 10240, bloom_density: 0.0062, parent_ids: ["E2_R_0000"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_y_0001", symbol: "y", plane: "Ground", level: 1, rytt_pua: "U+E018", is_frontier: false,
+          layer1: { summary: "Turn 2 memory diagnostics: misaligned DMA buffer at pointer 0xdeadbeef42cafe in spectral bridge; kv strategy prefix_rebuild.", keywords: ["0xdeadbeef42cafe", "prefix_rebuild", "spectral", "DMA"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [-0.052, 0.094, 0.017, -0.088, 0.063, 0.041, -0.029, 0.077] },
+          layer2: { live_slots: {}, active_slots: { KV_STRATEGY: "prefix_rebuild", PROOF_TIER: "O" }, superseded_slots: { KV_STRATEGY: "g1_y_0005", PROOF_TIER: "g1_t_0003" }, operator_rank: 4, edges: [] },
+          layer3: { raw_sha256: "6d4e21a9c08b3712f5e1a4c983d07b2e19f4a8c3d2b7e60194c8a3f5d1e2b702", raw_token_count: 225, raw_char_count: 900, storage_uri: "logos://raw/6d4e21a9", epistemic_tier: "P", entity_count: 8, bloom_bits_set: 56, bloom_total_bits: 10240, bloom_density: 0.0055, parent_ids: ["E2_R_0000"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_t_0002", symbol: "t", plane: "Ground", level: 1, rytt_pua: "U+E013", is_frontier: false,
+          layer1: { summary: "Turn 3 verification pipeline migration: deprecated tools/old_gate.py and now use 1_engine/tools/check_claim_gate.py; sha256:9f86d081884c.", keywords: ["1_engine/tools/check_claim_gate.py", "sha256:9f86d081884c", "verifier"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.064, 0.031, -0.075, 0.102, 0.018, -0.049, 0.083, 0.021] },
+          layer2: { live_slots: { GATE_SCRIPT: "1_engine/tools/check_claim_gate.py" }, active_slots: { GATE_SCRIPT: "1_engine/tools/check_claim_gate.py" }, superseded_slots: {}, operator_rank: 4, edges: [{ source_id: "g1_t_0002", target_id: "g1_r_0000", relation: "supersedes", key: "GATE_SCRIPT", note: "GATE_SCRIPT: 'tools/old_gate.py' -> '1_engine/tools/check_claim_gate.py'" }] },
+          layer3: { raw_sha256: "9a1f83d2e47c6015b8a2d9f4c3e71b08a5d2c9e6f1b40783c2a9d5e8f1b3c403", raw_token_count: 235, raw_char_count: 940, storage_uri: "logos://raw/9a1f83d2", epistemic_tier: "D", entity_count: 10, bloom_bits_set: 70, bloom_total_bits: 10240, bloom_density: 0.0068, parent_ids: ["E2_R_0000"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_t_0003", symbol: "t", plane: "Ground", level: 1, rytt_pua: "U+E013", is_frontier: false,
+          layer1: { summary: "Turn 4 holonomy theorem: theorem_rytt_holonomy_v2 depends on 1_engine/tools/check_claim_gate.py; moved gateway port from 8080 to 9090.", keywords: ["theorem_rytt_holonomy_v2", "9090", "holonomy"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.044, -0.062, 0.088, 0.051, -0.037, 0.092, -0.014, 0.061] },
+          layer2: { live_slots: {}, active_slots: { GATEWAY_PORT: "9090", PROOF_TIER: "P" }, superseded_slots: { GATEWAY_PORT: "g1_t_0006", PROOF_TIER: "g1_t_0006" }, operator_rank: 4, edges: [{ source_id: "theorem_rytt_holonomy_v2", target_id: "1_engine/tools/check_claim_gate.py", relation: "depends_on", key: "theorem_rytt_holonomy_v2", note: "depends on gate script" }] },
+          layer3: { raw_sha256: "c4b8e217a903f6d5e1c8a4b29f7d03e6a1c5b8d2f9e40173a6c8d2e5f1b9a204", raw_token_count: 240, raw_char_count: 960, storage_uri: "logos://raw/c4b8e217", epistemic_tier: "P", entity_count: 11, bloom_bits_set: 77, bloom_total_bits: 10240, bloom_density: 0.0075, parent_ids: ["E2_R_0000"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_r_0004", symbol: "r", plane: "Ground", level: 1, rytt_pua: "U+E011", is_frontier: false,
+          layer1: { summary: "Turn 5 negative branch audit: disproved NEG_BRANCH_EULER_GAUGE (GW170817) and rejected NEG_BRANCH_PAIRWISE_SUPERPOSE (2^-t amnesia).", keywords: ["NEG_BRANCH_EULER_GAUGE", "GW170817", "NEG_BRANCH_PAIRWISE_SUPERPOSE"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [-0.071, 0.025, 0.063, -0.048, 0.091, -0.032, 0.055, 0.049] },
+          layer2: { live_slots: {}, active_slots: {}, superseded_slots: {}, operator_rank: 4, edges: [{ source_id: "g1_r_0004", target_id: "NEG_BRANCH_EULER_GAUGE", relation: "refutes", key: "NEG_BRANCH_EULER_GAUGE", note: "Violates GW170817 luminal speed bound" }] },
+          layer3: { raw_sha256: "e1d7a942c608b3f5a2e9d1c47b8f02a6c3e9d5b1f8a40276c9d2e5f1a8b3c605", raw_token_count: 210, raw_char_count: 840, storage_uri: "logos://raw/e1d7a942", epistemic_tier: "D", entity_count: 8, bloom_bits_set: 56, bloom_total_bits: 10240, bloom_density: 0.0055, parent_ids: ["E2_Y_0001"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_y_0005", symbol: "y", plane: "Ground", level: 1, rytt_pua: "U+E018", is_frontier: false,
+          layer1: { summary: "Turn 6 storage & KV lock: switched active db from tmp/legacy.db to chyren_canonical.db; settled on append_only_pages; cve_2026_8841_lattice.", keywords: ["chyren_canonical.db", "append_only_pages", "cve_2026_8841_lattice"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.058, 0.074, -0.029, 0.066, -0.053, 0.081, 0.037, -0.042] },
+          layer2: { live_slots: { ACTIVE_DB: "chyren_canonical.db", KV_STRATEGY: "append_only_pages" }, active_slots: { ACTIVE_DB: "chyren_canonical.db", KV_STRATEGY: "append_only_pages" }, superseded_slots: {}, operator_rank: 4, edges: [{ source_id: "g1_y_0005", target_id: "g1_r_0000", relation: "supersedes", key: "ACTIVE_DB", note: "ACTIVE_DB: 'tmp/legacy.db' -> 'chyren_canonical.db'" }] },
+          layer3: { raw_sha256: "f4c9b183d702a6e5c1f8b4d29a7e03c6b1d5a8e2f9c40173b6d8e2f5a1c9b706", raw_token_count: 245, raw_char_count: 980, storage_uri: "logos://raw/f4c9b183", epistemic_tier: "D", entity_count: 11, bloom_bits_set: 77, bloom_total_bits: 10240, bloom_density: 0.0075, parent_ids: ["E2_Y_0001"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_t_0006", symbol: "t", plane: "Ground", level: 1, rytt_pua: "U+E013", is_frontier: false,
+          layer1: { summary: "Turn 7 production TLS cutover: ditched port 9090 and moved gateway to 18443; proof tier is now D; ruled out NEG_BRANCH_CHRONO_CHOP.", keywords: ["18443", "PROOF_TIER", "NEG_BRANCH_CHRONO_CHOP", "Lean4"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.093, -0.038, 0.071, 0.045, 0.062, -0.059, 0.084, 0.019] },
+          layer2: { live_slots: { GATEWAY_PORT: "18443", PROOF_TIER: "D" }, active_slots: { GATEWAY_PORT: "18443", PROOF_TIER: "D" }, superseded_slots: {}, operator_rank: 4, edges: [{ source_id: "g1_t_0006", target_id: "g1_t_0003", relation: "supersedes", key: "GATEWAY_PORT", note: "GATEWAY_PORT: '9090' -> '18443'" }] },
+          layer3: { raw_sha256: "a8e2d941f603c7b5e1a8d4f29c7b03e6d1a5c8f2b9e40173d6a8c2f5e1b9d807", raw_token_count: 250, raw_char_count: 1000, storage_uri: "logos://raw/a8e2d941", epistemic_tier: "D", entity_count: 12, bloom_bits_set: 84, bloom_total_bits: 10240, bloom_density: 0.0082, parent_ids: ["E2_Y_0001"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_t_0007", symbol: "t", plane: "Ground", level: 1, rytt_pua: "U+E013", is_frontier: false,
+          layer1: { summary: "Turn 8 spectral graph pass: Laplacian eigenvalues for shard 8 and Forman-Ricci curvature bounds on batch_manifold_08.", keywords: ["batch_manifold_08", "Forman-Ricci", "Laplacian"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.039, 0.082, -0.061, 0.027, 0.074, -0.045, 0.052, 0.068] },
+          layer2: { live_slots: {}, active_slots: {}, superseded_slots: {}, operator_rank: 4, edges: [] },
+          layer3: { raw_sha256: "b7c1e842a905d3f6b2c9e1a48d7f03b6c2e9a5d1f8b40276a9c2e5f1d8b3a908", raw_token_count: 220, raw_char_count: 880, storage_uri: "logos://raw/b7c1e842", epistemic_tier: "P", entity_count: 7, bloom_bits_set: 49, bloom_total_bits: 10240, bloom_density: 0.0048, parent_ids: ["E2_Y_0001"], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_r_0008", symbol: "r", plane: "Ground", level: 1, rytt_pua: "U+E011", is_frontier: true,
+          layer1: { summary: "Turn 15 storage replication audit: verified SQLite WAL frame sequence on replica 15 and archive_segment_15 checksums.", keywords: ["archive_segment_15", "SQLite", "WAL"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [-0.041, 0.067, 0.053, -0.072, 0.038, 0.089, -0.024, 0.051] },
+          layer2: { live_slots: {}, active_slots: {}, superseded_slots: {}, operator_rank: 4, edges: [] },
+          layer3: { raw_sha256: "d2f8a143c907b5e6d1f8a4c29b7e03d6f1a5c8b2e9f40173b6d8a2e5f1c9d109", raw_token_count: 215, raw_char_count: 860, storage_uri: "logos://raw/d2f8a143", epistemic_tier: "P", entity_count: 7, bloom_bits_set: 49, bloom_total_bits: 10240, bloom_density: 0.0048, parent_ids: [], child_ids: [] }
+        },
+        {
+          glyph_id: "g1_y_0009", symbol: "y", plane: "Ground", level: 1, rytt_pua: "U+E018", is_frontier: true,
+          layer1: { summary: "Turn 16 spectral graph pass: Forman-Ricci curvature bounds on batch_manifold_16 and hypergraph shard 16 drift audit.", keywords: ["batch_manifold_16", "hypergraph", "curvature"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.072, -0.054, 0.048, 0.063, -0.081, 0.029, 0.067, -0.035] },
+          layer2: { live_slots: {}, active_slots: {}, superseded_slots: {}, operator_rank: 4, edges: [] },
+          layer3: { raw_sha256: "e9a4c281f706d3b5e2a9c4f18d7b03e6a2c5f8d1b9e40173d6a8c2f5e1b9e210", raw_token_count: 215, raw_char_count: 860, storage_uri: "logos://raw/e9a4c281", epistemic_tier: "P", entity_count: 7, bloom_bits_set: 49, bloom_total_bits: 10240, bloom_density: 0.0048, parent_ids: [], child_ids: [] }
+        },
+        {
+          glyph_id: "E2_R_0000", symbol: "R", plane: "Elevated", level: 2, rytt_pua: "U+E811", is_frontier: false,
+          layer1: { summary: "[r:g1_r_0000] ERR_9481_QUARTZ | [y:g1_y_0001] 0xdeadbeef42cafe | [t:g1_t_0002] 1_engine/tools/check_claim_gate.py | [t:g1_t_0003] theorem_rytt_holonomy_v2", keywords: ["ERR_9481_QUARTZ", "0xdeadbeef42cafe", "1_engine/tools/check_claim_gate.py", "theorem_rytt_holonomy_v2"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.052, 0.008, 0.056, 0.037, -0.018, 0.052, 0.021, 0.034] },
+          layer2: { live_slots: { GATE_SCRIPT: "1_engine/tools/check_claim_gate.py" }, active_slots: { GATE_SCRIPT: "1_engine/tools/check_claim_gate.py" }, superseded_slots: { GATEWAY_PORT: "g1_t_0006", ACTIVE_DB: "g1_y_0005", KV_STRATEGY: "g1_y_0005", PROOF_TIER: "g1_t_0006" }, operator_rank: 4, edges: [{ source_id: "E2_R_0000", target_id: "g1_r_0000", relation: "derived_from", key: "", note: "rollup L1->2" }] },
+          layer3: { raw_sha256: "7f2c9a18e403d6b5f1c8a4e29d7b03f6c1a5e8d2b9f40173d6a8c2e5f1b97f01", raw_token_count: 930, raw_char_count: 3720, storage_uri: "logos://merkle/7f2c9a18", epistemic_tier: "P", entity_count: 38, bloom_bits_set: 254, bloom_total_bits: 10240, bloom_density: 0.0248, parent_ids: ["S3_R_0000"], child_ids: ["g1_r_0000", "g1_y_0001", "g1_t_0002", "g1_t_0003"] }
+        },
+        {
+          glyph_id: "E2_Y_0001", symbol: "Y", plane: "Elevated", level: 2, rytt_pua: "U+E818", is_frontier: false,
+          layer1: { summary: "[r:g1_r_0004] NEG_BRANCH_EULER_GAUGE | [y:g1_y_0005] chyren_canonical.db & append_only_pages | [t:g1_t_0006] gateway 18443 & tier D | [t:g1_t_0007] batch_manifold_08", keywords: ["18443", "chyren_canonical.db", "append_only_pages", "cve_2026_8841_lattice"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.045, 0.048, 0.018, 0.031, 0.062, -0.019, 0.078, 0.032] },
+          layer2: { live_slots: { ACTIVE_DB: "chyren_canonical.db", KV_STRATEGY: "append_only_pages", GATEWAY_PORT: "18443", PROOF_TIER: "D" }, active_slots: { ACTIVE_DB: "chyren_canonical.db", KV_STRATEGY: "append_only_pages", GATEWAY_PORT: "18443", PROOF_TIER: "D" }, superseded_slots: {}, operator_rank: 4, edges: [{ source_id: "E2_Y_0001", target_id: "g1_t_0006", relation: "derived_from", key: "", note: "rollup L1->2" }] },
+          layer3: { raw_sha256: "8a4d1c92f507e3b6a2d9c4f18e7b03a6d2c5f8e1b9a40173e6d8c2f5a1b98a02", raw_token_count: 925, raw_char_count: 3700, storage_uri: "logos://merkle/8a4d1c92", epistemic_tier: "P", entity_count: 38, bloom_bits_set: 258, bloom_total_bits: 10240, bloom_density: 0.0252, parent_ids: ["S3_R_0000"], child_ids: ["g1_r_0004", "g1_y_0005", "g1_t_0006", "g1_t_0007"] }
+        },
+        {
+          glyph_id: "S3_R_0000", symbol: "R", plane: "Super", level: 3, rytt_pua: "U+E811", is_frontier: true,
+          layer1: { summary: "Super-Plane L3 Rollup Chord covering Epochs 1–16: [R:E2_R_0000] + [Y:E2_Y_0001] consolidated via sleep_consolidate() with 100% Bloom union.", keywords: ["18443", "1_engine/tools/check_claim_gate.py", "chyren_canonical.db", "ERR_9481_QUARTZ", "0xdeadbeef42cafe"], backend: "deterministic-spectral", dim: 768, l2_norm: 1.0, preview_8d: [0.051, 0.029, 0.039, 0.035, 0.024, 0.018, 0.052, 0.033] },
+          layer2: { live_slots: { GATEWAY_PORT: "18443", GATE_SCRIPT: "1_engine/tools/check_claim_gate.py", ACTIVE_DB: "chyren_canonical.db", KV_STRATEGY: "append_only_pages", PROOF_TIER: "D" }, active_slots: { GATEWAY_PORT: "18443", GATE_SCRIPT: "1_engine/tools/check_claim_gate.py", ACTIVE_DB: "chyren_canonical.db", KV_STRATEGY: "append_only_pages", PROOF_TIER: "D" }, superseded_slots: {}, operator_rank: 4, edges: [{ source_id: "S3_R_0000", target_id: "E2_R_0000", relation: "derived_from", key: "", note: "rollup L2->3" }, { source_id: "S3_R_0000", target_id: "E2_Y_0001", relation: "derived_from", key: "", note: "rollup L2->3" }] },
+          layer3: { raw_sha256: "9c6e2f14a805b3d7c1e9f4a28b7d03c6e1f5a8b2d9c40173b6d8a2e5f1c99c03", raw_token_count: 3750, raw_char_count: 15000, storage_uri: "logos://merkle/9c6e2f14", epistemic_tier: "P", entity_count: 112, bloom_bits_set: 712, bloom_total_bits: 10240, bloom_density: 0.0695, parent_ids: [], child_ids: ["E2_R_0000", "E2_Y_0001"] }
+        }
+      ],
+      anti_glyphs: [
+        { glyph_id: "anti_0000", symbol: "¬", plane: "Quarantine", level: 1, anti_reason: "naive disformal scalar coupling violates the GW170817 luminal propagation speed bound", summary: "NEG_BRANCH_EULER_GAUGE rejected: naive disformal scalar coupling violates GW170817 bound", raw_sha256: "f1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f01", epistemic_tier: "F", bloom_bits_set: 42, bloom_density: 0.0041 },
+        { glyph_id: "anti_0001", symbol: "¬", plane: "Quarantine", level: 1, anti_reason: "iterative binary superposition induces exponential 2^-t signal amnesia", summary: "NEG_BRANCH_PAIRWISE_SUPERPOSE rejected: iterative binary superposition causes 2^-t amnesia", raw_sha256: "a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8002", epistemic_tier: "F", bloom_bits_set: 39, bloom_density: 0.0038 },
+        { glyph_id: "anti_0002", symbol: "¬", plane: "Quarantine", level: 1, anti_reason: "fixed byte-offset slicing tears multi-step proofs mid-derivation", summary: "NEG_BRANCH_CHRONO_CHOP rejected: fixed byte-offset slicing tears proofs mid-derivation", raw_sha256: "b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f809103", epistemic_tier: "F", bloom_bits_set: 38, bloom_density: 0.0037 }
+      ]
+    };
+
+    let currentPayload = SAMPLE_PAYLOAD;
+    let activeFilter = "all";
+    let probeHits = new Set();
+    let selectedId = "S3_R_0000";
+
+    function renderTruthTable(tt) {
+      const tbody = document.getElementById("truth-table-body");
+      tbody.innerHTML = "";
+      Object.entries(tt || {}).sort((a, b) => a[0].localeCompare(b[0])).forEach(([k, info]) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="color:var(--cyan)">${k}</td>
+          <td style="color:var(--emerald);font-weight:700">${info.value}</td>
+          <td>${info.glyph_id}</td>
+          <td>[${info.epistemic_tier}]</td>
+          <td>${info.revisions}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function inspectNode(item) {
+      if (!item) return;
+      selectedId = item.glyph_id;
+      document.getElementById("insp-id-badge").textContent = item.glyph_id;
+
+      if (item.plane === "Quarantine") {
+        document.getElementById("insp-identity").textContent =
+          `Symbol: ¬ | Plane: Quarantine (Anti-Glyph) | Tier: [F]`;
+        document.getElementById("insp-summary").textContent = item.summary;
+        document.getElementById("insp-keywords").textContent = `quarantine_reason: ${item.anti_reason}`;
+        document.getElementById("insp-vec-stats").textContent = `status: TOMBSTONED (excluded from active slots)`;
+        document.getElementById("insp-live-slots").innerHTML = `<span class="mono" style="color:var(--crimson)">0 live slots (epistemic quarantine)</span>`;
+        document.getElementById("insp-stale-slots").textContent = "—";
+        document.getElementById("insp-edges").textContent = "edges: quarantined dead-end branch";
+        document.getElementById("insp-sha").textContent = `sha256: ${item.raw_sha256}`;
+        document.getElementById("insp-provenance").textContent = `tier: [F] | bits_set: ${item.bloom_bits_set} / 10240`;
+        const pct = Math.min(100, (item.bloom_density || 0.004) * 800);
+        document.getElementById("insp-bloom-text").textContent =
+          `10,240-bit Bloom filter: ${item.bloom_bits_set} bits set (${((item.bloom_density || 0) * 100).toFixed(2)}% density)`;
+        document.getElementById("insp-bloom-bar").style.width = `${pct}%`;
+        renderConstellation();
+        return;
+      }
+
+      const l1 = item.layer1 || {};
+      const l2 = item.layer2 || {};
+      const l3 = item.layer3 || {};
+      document.getElementById("insp-identity").textContent =
+        `Symbol: ${item.symbol} (${item.rytt_pua}) | Plane: ${item.plane} | Level: L${item.level} | Frontier: ${item.is_frontier ? "YES" : "NO"}`;
+      document.getElementById("insp-summary").textContent = l1.summary || "—";
+      document.getElementById("insp-keywords").textContent = `keywords: ${(l1.keywords || []).join(", ") || "—"}`;
+      document.getElementById("insp-vec-stats").textContent =
+        `backend: ${l1.backend} | dim=${l1.dim} | ||V||₂=${l1.l2_norm} | V[:4]=[${(l1.preview_8d || []).slice(0, 4).join(", ")}]`;
+
+      const liveEntries = Object.entries(l2.live_slots || {});
+      document.getElementById("insp-live-slots").innerHTML = liveEntries.length
+        ? liveEntries.map(([k, v]) => `<span class="slot-pill slot-live">${k}=${v}</span>`).join("")
+        : `<span class="mono" style="color:var(--muted)">none</span>`;
+
+      const staleEntries = Object.entries(l2.superseded_slots || {});
+      document.getElementById("insp-stale-slots").innerHTML = staleEntries.length
+        ? staleEntries.map(([k, target]) => `<span class="slot-pill slot-stale">${k} → ${target}</span>`).join("")
+        : `<span class="mono" style="color:var(--muted)">none</span>`;
+
+      const edgeList = (l2.edges || []).slice(0, 4).map(e => `${e.relation}(${e.source_id}→${e.target_id})`).join(" · ");
+      document.getElementById("insp-edges").textContent =
+        `rank-r=${l2.operator_rank || 4} | edges (${(l2.edges || []).length}): ${edgeList || "none"}`;
+
+      document.getElementById("insp-sha").textContent = `sha256: ${l3.raw_sha256}`;
+      document.getElementById("insp-provenance").textContent =
+        `uri: ${l3.storage_uri} | tier: [${l3.epistemic_tier}] | coverage: ${l3.raw_token_count} tok (${l3.raw_char_count} chars) | children: ${(l3.child_ids || []).length}`;
+      const densityPct = ((l3.bloom_density || 0) * 100).toFixed(2);
+      document.getElementById("insp-bloom-text").textContent =
+        `10,240-bit Bloom MMU: ${l3.bloom_bits_set} / ${l3.bloom_total_bits} bits (${densityPct}% fill, ${l3.entity_count} entities)`;
+      document.getElementById("insp-bloom-bar").style.width = `${Math.min(100, (l3.bloom_density || 0.01) * 900)}%`;
+      renderConstellation();
+    }
+
+    function renderConstellation() {
+      const svg = document.getElementById("constellation-svg");
+      svg.innerHTML = "";
+      const ns = "http://www.w3.org/2000/svg";
+
+      // Orbital guide rings
+      const rings = [
+        { r: 105, color: "#1c3352", label: "SUPER (L3)" },
+        { r: 175, color: "#213a5c", label: "ELEVATED (L2)" },
+        { r: 255, color: "#1c3352", label: "GROUND (L1)" },
+        { r: 318, color: "#3a1d2e", label: "QUARANTINE (¬)" }
+      ];
+      rings.forEach(ring => {
+        const c = document.createElementNS(ns, "circle");
+        c.setAttribute("cx", "0");
+        c.setAttribute("cy", "0");
+        c.setAttribute("r", String(ring.r));
+        c.setAttribute("fill", "none");
+        c.setAttribute("stroke", ring.color);
+        c.setAttribute("stroke-dasharray", "4 4");
+        svg.appendChild(c);
+      });
+
+      const nodes = currentPayload.nodes || [];
+      const anti = currentPayload.anti_glyphs || [];
+      const ground = nodes.filter(n => n.level === 1);
+      const elevated = nodes.filter(n => n.level === 2);
+      const superNodes = nodes.filter(n => n.level >= 3);
+
+      const posMap = {};
+      function assignRing(list, radius, offsetRad) {
+        list.forEach((n, idx) => {
+          const angle = offsetRad + (2 * Math.PI * idx) / Math.max(1, list.length);
+          posMap[n.glyph_id] = { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius, item: n };
+        });
+      }
+      assignRing(superNodes, 105, -Math.PI / 2);
+      assignRing(elevated, 175, -Math.PI / 3);
+      assignRing(ground, 255, -Math.PI / 2);
+      assignRing(anti, 318, Math.PI / 5);
+
+      // Draw Merkle parent->child beams
+      nodes.forEach(parent => {
+        const pPos = posMap[parent.glyph_id];
+        if (!pPos) return;
+        ((parent.layer3 && parent.layer3.child_ids) || []).forEach(cid => {
+          const cPos = posMap[cid];
+          if (!cPos) return;
+          const line = document.createElementNS(ns, "line");
+          line.setAttribute("x1", String(pPos.x));
+          line.setAttribute("y1", String(pPos.y));
+          line.setAttribute("x2", String(cPos.x));
+          line.setAttribute("y2", String(cPos.y));
+          line.setAttribute("stroke", "rgba(95, 236, 255, 0.25)");
+          line.setAttribute("stroke-width", "1.5");
+          svg.appendChild(line);
+        });
+      });
+
+      // Hot Tail Core
+      const coreGroup = document.createElementNS(ns, "g");
+      const coreCircle = document.createElementNS(ns, "circle");
+      coreCircle.setAttribute("cx", "0");
+      coreCircle.setAttribute("cy", "0");
+      coreCircle.setAttribute("r", "48");
+      coreCircle.setAttribute("fill", "rgba(68, 227, 163, 0.14)");
+      coreCircle.setAttribute("stroke", "#44e3a3");
+      coreCircle.setAttribute("stroke-width", "2");
+      coreGroup.appendChild(coreCircle);
+
+      const coreLabel = document.createElementNS(ns, "text");
+      coreLabel.setAttribute("x", "0");
+      coreLabel.setAttribute("y", "-4");
+      coreLabel.setAttribute("text-anchor", "middle");
+      coreLabel.setAttribute("fill", "#44e3a3");
+      coreLabel.setAttribute("font-size", "11");
+      coreLabel.setAttribute("font-weight", "700");
+      coreLabel.textContent = "HOT TAIL";
+      coreGroup.appendChild(coreLabel);
+
+      const coreSub = document.createElementNS(ns, "text");
+      coreSub.setAttribute("x", "0");
+      coreSub.setAttribute("y", "14");
+      coreSub.setAttribute("text-anchor", "middle");
+      coreSub.setAttribute("fill", "#eaf0f8");
+      coreSub.setAttribute("font-size", "10");
+      coreSub.textContent = `${currentPayload.active_raw_tokens || 0} tok`;
+      coreGroup.appendChild(coreSub);
+      svg.appendChild(coreGroup);
+
+      // Draw glyph nodes
+      Object.values(posMap).forEach(({ x, y, item }) => {
+        const isAnti = item.plane === "Quarantine";
+        const isGround = item.level === 1 && !isAnti;
+        const isElev = item.level >= 2 && !isAnti;
+
+        let dimmed = false;
+        if (activeFilter === "ground" && !isGround) dimmed = true;
+        if (activeFilter === "elevated" && !isElev) dimmed = true;
+        if (activeFilter === "anti" && !isAnti) dimmed = true;
+        if (probeHits.size > 0 && !probeHits.has(item.glyph_id)) dimmed = true;
+
+        const color = isAnti ? "#ff5d73" : (item.level === 1 ? "#5fecff" : (item.level === 2 ? "#f0c978" : "#b68cff"));
+        const radius = item.level >= 3 ? 24 : (item.level === 2 ? 20 : 16);
+        const isSelected = item.glyph_id === selectedId;
+
+        const g = document.createElementNS(ns, "g");
+        g.style.cursor = "pointer";
+        g.style.opacity = dimmed ? "0.22" : "1";
+        g.addEventListener("click", () => inspectNode(item));
+
+        if (isSelected || probeHits.has(item.glyph_id)) {
+          const halo = document.createElementNS(ns, "circle");
+          halo.setAttribute("cx", String(x));
+          halo.setAttribute("cy", String(y));
+          halo.setAttribute("r", String(radius + 6));
+          halo.setAttribute("fill", "none");
+          halo.setAttribute("stroke", probeHits.has(item.glyph_id) ? "#44e3a3" : "#ffffff");
+          halo.setAttribute("stroke-width", "2");
+          g.appendChild(halo);
+        }
+
+        const c = document.createElementNS(ns, "circle");
+        c.setAttribute("cx", String(x));
+        c.setAttribute("cy", String(y));
+        c.setAttribute("r", String(radius));
+        c.setAttribute("fill", "#0a1324");
+        c.setAttribute("stroke", color);
+        c.setAttribute("stroke-width", item.is_frontier ? "3" : "1.8");
+        g.appendChild(c);
+
+        const t = document.createElementNS(ns, "text");
+        t.setAttribute("x", String(x));
+        t.setAttribute("y", String(y + 4));
+        t.setAttribute("text-anchor", "middle");
+        t.setAttribute("fill", color);
+        t.setAttribute("font-size", item.level >= 2 ? "13" : "12");
+        t.setAttribute("font-weight", "700");
+        t.setAttribute("font-family", "ui-monospace, monospace");
+        t.textContent = item.level >= 3 ? `${item.symbol}^L${item.level}` : item.symbol;
+        g.appendChild(t);
+
+        const idLbl = document.createElementNS(ns, "text");
+        idLbl.setAttribute("x", String(x));
+        idLbl.setAttribute("y", String(y + radius + 12));
+        idLbl.setAttribute("text-anchor", "middle");
+        idLbl.setAttribute("fill", "#98a8c0");
+        idLbl.setAttribute("font-size", "9.5");
+        idLbl.setAttribute("font-family", "ui-monospace, monospace");
+        idLbl.textContent = item.glyph_id;
+        g.appendChild(idLbl);
+
+        svg.appendChild(g);
+      });
+    }
+
+    function loadPayload(payload) {
+      currentPayload = payload;
+      probeHits.clear();
+      document.getElementById("kpi-frontier").textContent = payload.frontier_notation || "0";
+      document.getElementById("kpi-virtual").textContent = Number(payload.total_ingested_tokens || 0).toLocaleString();
+      document.getElementById("kpi-nodes").textContent = String((payload.nodes || []).length);
+      document.getElementById("kpi-anti").textContent = String((payload.anti_glyphs || []).length);
+      const valid = payload.tree_integrity && payload.tree_integrity.valid;
+      const intEl = document.getElementById("kpi-integrity");
+      intEl.textContent = valid ? "VERIFIED" : "INVALID";
+      intEl.style.color = valid ? "var(--emerald)" : "var(--crimson)";
+
+      renderTruthTable(payload.active_truth_table || {});
+      const allItems = [...(payload.nodes || []), ...(payload.anti_glyphs || [])];
+      const defaultNode = allItems.find(n => n.is_frontier) || allItems[allItems.length - 1];
+      if (defaultNode) inspectNode(defaultNode);
+      else renderConstellation();
+    }
+
+    function setFilter(filterName, btnId) {
+      activeFilter = filterName;
+      ["btn-filter-all", "btn-filter-ground", "btn-filter-elevated", "btn-filter-anti"].forEach(id => {
+        document.getElementById(id).classList.toggle("active", id === btnId);
+      });
+      renderConstellation();
+    }
+
+    document.getElementById("btn-sample-full").addEventListener("click", () => loadPayload(SAMPLE_PAYLOAD));
+    document.getElementById("btn-filter-all").addEventListener("click", () => setFilter("all", "btn-filter-all"));
+    document.getElementById("btn-filter-ground").addEventListener("click", () => setFilter("ground", "btn-filter-ground"));
+    document.getElementById("btn-filter-elevated").addEventListener("click", () => setFilter("elevated", "btn-filter-elevated"));
+    document.getElementById("btn-filter-anti").addEventListener("click", () => setFilter("anti", "btn-filter-anti"));
+
+    document.getElementById("btn-run-probe").addEventListener("click", () => {
+      const q = document.getElementById("bloom-probe-input").value.trim().toLowerCase();
+      probeHits.clear();
+      if (!q) {
+        document.getElementById("probe-status-label").textContent = "Click any node to inspect Layers 1–3";
+        renderConstellation();
+        return;
+      }
+      const all = [...(currentPayload.nodes || []), ...(currentPayload.anti_glyphs || [])];
+      all.forEach(item => {
+        const hay = JSON.stringify(item).toLowerCase();
+        if (hay.includes(q)) probeHits.add(item.glyph_id);
+      });
+      document.getElementById("probe-status-label").textContent =
+        `Bloom MMU Probe "${q}": ${probeHits.size} matching glyph(s)`;
+      const firstHit = all.find(item => probeHits.has(item.glyph_id));
+      if (firstHit) inspectNode(firstHit);
+      else renderConstellation();
+    });
+
+    document.getElementById("hud-file-input").addEventListener("change", (ev) => {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(String(reader.result));
+          loadPayload(parsed);
+          document.getElementById("probe-status-label").textContent = `Loaded ${file.name}`;
+        } catch (err) {
+          document.getElementById("probe-status-label").textContent = `JSON parse error: ${err}`;
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    loadPayload(SAMPLE_PAYLOAD);
+  </script>
+</body>
+</html>
